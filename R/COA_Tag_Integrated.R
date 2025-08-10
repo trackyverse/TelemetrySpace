@@ -60,6 +60,40 @@ COA_TagInt <- function(
     testY = testY
   )
 
+  if (!is.numeric(nind) || !is.vector(nind) || length(nind) != 1) {
+    cli::cli_abort("'nind' must be a numeric vector that has a length of 1.")
+  }
+  if (!is.numeric(nrec) || !is.vector(nrec) || length(nind) != 1) {
+    cli::cli_abort("'nrec' must be a numeric vector that has a length of 1.")
+  }
+  if (!is.numeric(ntime) || !is.vector(ntime)) {
+    cli::cli_abort("'ntime' must be a numeric vector that has a length of 1.")
+  }
+  if (!is.numeric(ntrans) || !is.vector(ntrans)) {
+    cli::cli_abort("'ntrans' must be a numeric vector that has a length of 1.")
+  }
+  if (!is.array(y) || length(dim(y)) != 3) {
+    cli::cli_abort("'y' must be a 3-dimensional numeric array.")
+  }
+  if (!is.numeric(recX) || !is.vector(recX)) {
+    cli::cli_abort("'recX' must be a numeric vector.")
+  }
+  if (!is.numeric(recY) || !is.vector(recY)) {
+    cli::cli_abort("'recY' must be a numeric vector.")
+  }
+  if (!is.numeric(xlim) || !is.vector(xlim) || length(xlim) != 2) {
+    cli::cli_abort("'xlim' must be a numeric vector that has a length of 2.")
+  }
+  if (!is.numeric(ylim) || !is.vector(ylim) || length(ylim) != 2) {
+    cli::cli_abort("'ylim' must be a numeric vector that has a length of 2.")
+  }
+
+  if (!is.numeric(recX) || !is.vector(recX)) {
+    cli::cli_abort("'testX' must be a numeric vector.")
+  }
+  if (!is.numeric(recY) || !is.vector(recY)) {
+    cli::cli_abort("'testY' must be a numeric vector.")
+
   fit_model <- rstan::sampling(
     stanmodels$COA_Tag_Integrated,
     data = standata,
