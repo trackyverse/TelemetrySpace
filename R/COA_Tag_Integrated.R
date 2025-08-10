@@ -73,6 +73,9 @@ COA_TagInt <- function(
   if (!is.numeric(ntrans) || !is.vector(ntrans)) {
     cli::cli_abort("'ntrans' must be a numeric vector that has a length of 1.")
   }
+  if (!is.numeric(ntest) || !is.vector(ntest) || length(ntest) != 1) {
+    cli::cli_abort("'ntest' must be a numeric vector that has a length of 1.")
+  }
   if (!is.array(y) || length(dim(y)) != 3) {
     cli::cli_abort("'y' must be a 3-dimensional numeric array.")
   }
@@ -89,12 +92,12 @@ COA_TagInt <- function(
     cli::cli_abort("'ylim' must be a numeric vector that has a length of 2.")
   }
 
-  if (!is.numeric(recX) || !is.vector(recX)) {
+  if (!is.numeric(testX) || !is.vector(testX)) {
     cli::cli_abort("'testX' must be a numeric vector.")
   }
-  if (!is.numeric(recY) || !is.vector(recY)) {
+  if (!is.numeric(testY) || !is.vector(testY)) {
     cli::cli_abort("'testY' must be a numeric vector.")
-
+  }
   fit_model <- rstan::sampling(
     stanmodels$COA_Tag_Integrated,
     data = standata,
