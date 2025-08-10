@@ -5,7 +5,7 @@
 \alias{Y}
 \title{Counts of detection per time steps}
 \format{
-An array with demensions of 1 by 10 (number of time steps) by 30 number
+An array with dimensions of 1 by 10 (number of time steps) by 30 number
 of receivers.
 }
 \usage{
