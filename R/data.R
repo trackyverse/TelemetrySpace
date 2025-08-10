@@ -59,7 +59,15 @@
 #'
 #' Array of counts of detection per time step per receivers
 #'
-#' @format An array with demensions of 1 by 10 (number of time steps) by 30 number
+#' @format An array with dimensions of 1 by 10 (number of time steps) by 30 number
 #' of receivers.
 #'
 "Y"
+#' Counts of detection per time steps for test tag
+#'
+#' Array of counts of detection per time step per receivers for test tag
+#'
+#' @format An array with dimensions of 1 by 10 (number of time steps) by 30 number
+#' of receivers.
+#'
+"testY"
