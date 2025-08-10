@@ -508,7 +508,11 @@ test_that("test testX to see if errors", {
       iter = 2000,
       control = list(adapt_delta = 0.95)
     ),
-    regexp = "'testX' must be an array with dimension of the number of test tags."
+    regexp = paste0(
+      "'testX' must be a numeric array with length equal to ",
+      nsentinal,
+      " \\(the number of test tags\\)\\."
+    )
   )
   expect_error(
     COA_TagInt(
@@ -531,11 +535,50 @@ test_that("test testX to see if errors", {
       iter = 2000,
       control = list(adapt_delta = 0.95)
     ),
-    regexp = "'testX' must be an array with dimension of the number of test tags."
+    # regexp = "'testX' must be a numeric array with length equal to [0-9]+ \\(the number of test tags\\)\\."
+
+    regexp = paste0(
+      "'testX' must be a numeric array with length equal to ",
+      nsentinal,
+      " \\(the number of test tags\\)\\."
+    )
+
+  )
+  expect_error(
+    COA_TagInt(
+      nind = model_param_ex$nind,  # number of individuals
+      nrec = model_param_ex$nrec, # number of receivers
+      ntime = model_param_ex$tsteps, # number of time steps
+      ntrans = model_param_ex$ntrans,
+      ntest = nsentinal,
+      test = testY,
+      testX = array(testloc$east, dim = 3),
+      testY = array(testloc$north, dim = c(nsentinal)),
+      # number of expected transmissions per tag per time interval
+      y = Y, # array of detections
+      recX = rlocs$east, # E-W receiver coordinates
+      recY = rlocs$north, # N-S receiver coordinates
+      xlim = example_extent$xlim, # E-W boundary of spatial extent (receiver array + buffer)
+      ylim = example_extent$ylim, # N-S boundary of spatial extent (receiver array + buffer)
+      chains = 2,
+      warmup = 1000,
+      iter = 2000,
+      control = list(adapt_delta = 0.95)
+    ),
+    # regexp = "'testX' must be a numeric array with length equal to [0-9]+ \\(the number of test tags\\)\\."
+
+    regexp = paste0(
+      "'testX' must be a numeric array with length equal to ",
+      nsentinal,
+      " \\(the number of test tags\\)\\."
+    )
+
   )
 
 }
 )
+
+
 # ---- check testY-----
 test_that("test testY to see if errors", {
 
@@ -561,8 +604,44 @@ test_that("test testY to see if errors", {
       iter = 2000,
       control = list(adapt_delta = 0.95)
     ),
-    regexp = "'testY' must be an array with dimension of the number of test tags."
+      regexp = paste0(
+        "'testY' must be a numeric array with length equal to ",
+        nsentinal,
+        " \\(the number of test tags\\)\\."
+      )
+
   )
+  expect_error(
+    COA_TagInt(
+      nind = model_param_ex$nind,  # number of individuals
+      nrec = model_param_ex$nrec, # number of receivers
+      ntime = model_param_ex$tsteps, # number of time steps
+      ntrans = model_param_ex$ntrans,
+      ntest = nsentinal,
+      test = testY,
+      testX = array(testloc$east, dim = c(nsentinal)),
+      testY = array(testloc$north, dim = 3),
+      # number of expected transmissions per tag per time interval
+      y = Y, # array of detections
+      recX = rlocs$east, # E-W receiver coordinates
+      recY = rlocs$north, # N-S receiver coordinates
+      xlim = example_extent$xlim, # E-W boundary of spatial extent (receiver array + buffer)
+      ylim = example_extent$xlim,
+      # N-S boundary of spatial extent (receiver array + buffer)
+      chains = 2,
+      warmup = 1000,
+      iter = 2000,
+      control = list(adapt_delta = 0.95)
+    ),
+      regexp = paste0(
+        "'testY' must be a numeric array with length equal to ",
+        nsentinal,
+        " \\(the number of test tags\\)\\."
+      )
+
+  )
+
+
   expect_error(
     COA_TagInt(
       nind = model_param_ex$nind,  # number of individuals
@@ -584,7 +663,12 @@ test_that("test testY to see if errors", {
       iter = 2000,
       control = list(adapt_delta = 0.95)
     ),
-    regexp = "'testY' must be an array with dimension of the number of test tags."
+    regexp = paste0(
+      "'testY' must be a numeric array with length equal to ",
+      nsentinal,
+      " \\(the number of test tags\\)\\."
+    )
+
   )
 
 }
