@@ -79,6 +79,9 @@ COA_TagInt <- function(
   if (!is.array(y) || length(dim(y)) != 3) {
     cli::cli_abort("'y' must be a 3-dimensional numeric array.")
   }
+  if (!is.array(test) || length(dim(test)) != 3) {
+    cli::cli_abort("'test' must be a 3-dimensional numeric array.")
+  }
   if (!is.numeric(recX) || !is.vector(recX)) {
     cli::cli_abort("'recX' must be a numeric vector.")
   }
