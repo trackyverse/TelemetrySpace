@@ -27,20 +27,20 @@
 #' @seealso [rstan::sampling()]
 #' @export
 COA_TagInt <- function(
-  nind,
-  nrec,
-  ntime,
-  ntest,
-  ntrans,
-  y,
-  test,
-  recX,
-  recY,
-  xlim,
-  ylim,
-  testX,
-  testY,
-  ...
+    nind,
+    nrec,
+    ntime,
+    ntest,
+    ntrans,
+    y,
+    test,
+    recX,
+    recY,
+    xlim,
+    ylim,
+    testX,
+    testY,
+    ...
 ) {
   rstan::rstan_options(auto_write = TRUE)
   options(mc.cores = parallel::detectCores())
@@ -95,14 +95,18 @@ COA_TagInt <- function(
     cli::cli_abort("'ylim' must be a numeric vector that has a length of 2.")
   }
 
-  if (!is.numeric(testX) || !is.array(testX)) {
-    cli::cli_abort("'testX' must be an array with dimension of the number
-                   of test tags.")
+  if (!is.numeric(testX) || !is.array(testX) || length(testX) != ntest) {
+    cli::cli_abort(
+      "'testX' must be a numeric array with length equal to {.val {ntest}} (the number of test tags)."
+    )
   }
-  if (!is.numeric(testY) || !is.array(testY)) {
-    cli::cli_abort("'testY' must be an array with dimension of the number
-                   of test tags.")
+
+  if (!is.numeric(testY) || !is.array(testY) || length(testY) != ntest) {
+    cli::cli_abort(
+      "'testY' must be a numeric array with length equal to {.val {ntest}} (the number of test tags)."
+    )
   }
+
   fit_model <- rstan::sampling(
     stanmodels$COA_Tag_Integrated,
     data = standata,
