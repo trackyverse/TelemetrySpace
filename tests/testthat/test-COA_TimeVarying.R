@@ -350,8 +350,8 @@ fit <- COA_TimeVarying(
   xlim = example_extent$xlim, # E-W boundary of spatial extent (receiver array + buffer)
   ylim = example_extent$ylim, # N-S boundary of spatial extent (receiver array + buffer)
   chains = 2,
-  warmup = 1000,
-  iter = 2000,
+  warmup = 3000,
+  iter = 6000,
   control = list(adapt_delta = 0.95),
   seed = 4
 )
