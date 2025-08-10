@@ -96,10 +96,12 @@ COA_TagInt <- function(
   }
 
   if (!is.numeric(testX) || !is.array(testX)) {
-    cli::cli_abort("'testX' must be a numeric vector.")
+    cli::cli_abort("'testX' must be an array with dimension of the number
+                   of test tags.")
   }
   if (!is.numeric(testY) || !is.array(testY)) {
-    cli::cli_abort("'testY' must be a numeric vector.")
+    cli::cli_abort("'testY' must be an array with dimension of the number
+                   of test tags.")
   }
   fit_model <- rstan::sampling(
     stanmodels$COA_Tag_Integrated,
