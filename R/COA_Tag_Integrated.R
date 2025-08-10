@@ -52,6 +52,7 @@ COA_TagInt <- function(
     ntest = ntest,
     ntrans = ntrans,
     y = y,
+    test = test,
     recX = recX,
     recY = recY,
     xlim = xlim,
