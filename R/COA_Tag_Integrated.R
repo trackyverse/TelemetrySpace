@@ -92,10 +92,10 @@ COA_TagInt <- function(
     cli::cli_abort("'ylim' must be a numeric vector that has a length of 2.")
   }
 
-  if (!is.numeric(testX) || !is.vector(testX)) {
+  if (!is.numeric(testX) || !is.array(testX)) {
     cli::cli_abort("'testX' must be a numeric vector.")
   }
-  if (!is.numeric(testY) || !is.vector(testY)) {
+  if (!is.numeric(testY) || !is.array(testY)) {
     cli::cli_abort("'testY' must be a numeric vector.")
   }
   fit_model <- rstan::sampling(
