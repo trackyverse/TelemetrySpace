@@ -325,7 +325,7 @@ test_that("test ylim to see if errors", {
       y = Y, # array of detections
       recX = rlocs$east, # E-W receiver coordinates
       recY = rlocs$north, # N-S receiver coordinates
-      xlim = example_extent$ylim, # E-W boundary of spatial extent (receiver array + buffer)
+      xlim = example_extent$xlim, # E-W boundary of spatial extent (receiver array + buffer)
       ylim = "1", # N-S boundary of spatial extent (receiver array + buffer)
       chains = 2,
       warmup = 1000,
