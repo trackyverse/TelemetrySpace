@@ -168,7 +168,7 @@ public:
       current_statement__ = 38;
       ntest = context__.vals_i("ntest")[(1 - 1)];
       current_statement__ = 38;
-      stan::math::check_greater_or_equal(function__, "ntest", ntest, 1);
+      stan::math::check_greater_or_equal(function__, "ntest", ntest, 0);
       current_statement__ = 39;
       context__.validate_dims("data initialization", "ntrans", "int",
         std::vector<size_t>{});
