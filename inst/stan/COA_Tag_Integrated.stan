@@ -3,7 +3,7 @@ data {
   int<lower = 0> nind;               // number of individuals
   int<lower = 0> nrec;               // number of receivers
   int<lower = 0> ntime;              // number of time steps
-  int<lower = 1> ntest;              // number of test tags
+  int<lower = 0> ntest;              // number of test tags
   int<lower = 0> ntrans;
   // number of trials/expected number of transmissions per time step
   array[nind, nrec, ntime] int<lower = 0> y;
