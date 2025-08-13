@@ -79,15 +79,16 @@ expected_lengths <- function(recX = NULL,
 
 validate_standata <- function(standata, lengths) {
 
-  if ("y" %in% names(standata)) {
+  array_vars <- intersect(c("y", "test"), names(standata))
 
-    y <- standata$y
-    check_array(y)
-  }
+  # Check arrays
+  purrr::walk(array_vars, ~{
+    check_array(standata[[.x]], arg_name = .x)  # Your existing check
+  })
 
   purrr::imap(lengths, function(len, name) {
 
-    if (name != "y" && !is.null(len) && !is.null(standata[[name]])) {
+    if (!(name %in% array_vars) && !is.null(len) && !is.null(standata[[name]])) {
 
       check_num_vec_len(standata[[name]],
                         vec_length = len,
