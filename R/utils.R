@@ -42,6 +42,29 @@ check_array <- function(x, arg_name = NULL) {
 }
 
 
+#' Error functions
+#'
+#' @param x is a vector to pass to check
+#' @param len is the length of the to make the array. This needs to be the
+#' same length as `ntest` or the number of tags.
+#' @param arg_name the name of the argument to check
+#'
+#' @keywords internal
+#' @name error_functions
+#'
+check_array_tag <- function(x, len, arg_name = NULL) {
+
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+
+  if (!is.numeric(x) || !is.array(x) || !all(dim(x) == len)) {
+    cli::cli_abort(
+      "`{arg_name}` must be a numeric array with length equal to {.val {len}} (the number of test tags)."
+    )
+  }
+}
+
 #' expected lengths of variables in standata
 #'
 #' @param recX is the receiver or station y coordinates
