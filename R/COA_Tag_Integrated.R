@@ -61,7 +61,8 @@ COA_TagInt <- function(
   )
 
   # validate this list prior to sending it to the model
-  exp_len <- expected_lengths(recX = recX, recY = recY)
+  exp_len <- expected_lengths(recX = recX, recY = recY,
+                              ntest = ntest)
 
   validate_standata(standata, exp_len)
   # set rstan options
