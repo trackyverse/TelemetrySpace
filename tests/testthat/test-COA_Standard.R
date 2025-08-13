@@ -4,15 +4,15 @@
 
 # Base arguments for COA_Standard
 coa_args <- list(
-  nind   = model_param_ex$nind,
-  nrec   = model_param_ex$nrec,
-  ntime  = model_param_ex$tsteps,
+  nind = model_param_ex$nind,
+  nrec = model_param_ex$nrec,
+  ntime = model_param_ex$tsteps,
   ntrans = model_param_ex$ntrans,
-  y      = Y,
-  recX   = rlocs$east,
-  recY   = rlocs$north,
-  xlim   = example_extent$xlim,
-  ylim   = example_extent$ylim,
+  y = Y,
+  recX = rlocs$east,
+  recY = rlocs$north,
+  xlim = example_extent$xlim,
+  ylim = example_extent$ylim,
   chains = 2,
   warmup = 1000,
   iter   = 2000,
@@ -28,27 +28,27 @@ call_coa <- function(overrides) {
 params_table <- list(
   list(
     param = "nind",
-    bad   = list("a", NA, c(1, 2)),
+    bad = list("a", NA, c(1, 2)),
     regex = "`nind` must be a numeric vector that has a length of 1."
   ),
   list(
     param = "nrec",
-    bad   = list("a", NA, c(1, 2)),
+    bad = list("a", NA, c(1, 2)),
     regex = "`nrec` must be a numeric vector that has a length of 1."
   ),
   list(
     param = "ntime",
-    bad   = list("a", NA, c(1, 2)),
+    bad = list("a", NA, c(1, 2)),
     regex = "`ntime` must be a numeric vector that has a length of 1."
   ),
   list(
     param = "ntrans",
-    bad   = list(c(model_param_ex$ntrans, model_param_ex$ntrans), "1"),
+    bad = list(c(model_param_ex$ntrans, model_param_ex$ntrans), "1"),
     regex = "`ntrans` must be a numeric vector that has a length of 1."
   ),
   list(
     param = "y",
-    bad   = list(c(1, 2, 3), "a"),
+    bad = list(c(1, 2, 3), "a"),
     regex = "`y` must be a 3-dimensional numeric array."
   ),
   list(
@@ -63,12 +63,12 @@ params_table <- list(
   ),
   list(
     param = "xlim",
-    bad   = list("a", c(1, 2, 3)),
+    bad = list("a", c(1, 2, 3)),
     regex = "`xlim` must be a numeric vector that has a length of 2."
   ),
   list(
     param = "ylim",
-    bad   = list("a", c(1, 2, 3)),
+    bad = list("a", c(1, 2, 3)),
     regex = "`ylim` must be a numeric vector that has a length of 2."
   )
 )
