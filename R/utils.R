@@ -79,14 +79,21 @@ expected_lengths <- function(recX = NULL,
 
 validate_standata <- function(standata, lengths) {
 
-  array_vars <- intersect(c("y", "test"), names(standata))
+  array_vars <- intersect(c("y", "test", "testX",
+                            "testY"), names(standata))
 
-  # Check arrays
-  purrr::walk(array_vars, ~{
-    check_array(standata[[.x]], arg_name = .x)  # Your existing check
-  })
+  for (var in array_vars) {
+    # check station locations
+    if (var %in% c("testX", "testY")) {
+      check_array_tag(standata[[var]], len = lengths[[var]], arg_name = var)
+    } else {
+      # Check 3d array used for counts
+      check_array(standata[[var]], arg_name = var)
+    }
+  }
 
-  purrr::imap(lengths, function(len, name) {
+  # check vectors
+  mapply(FUN = function(len, name) {
 
     if (!(name %in% array_vars) && !is.null(len) && !is.null(standata[[name]])) {
 
@@ -94,7 +101,9 @@ validate_standata <- function(standata, lengths) {
                         vec_length = len,
                         arg_name = name)
     }
-  })
+  },
+  lengths, names(lengths)
+  )
 }
 
 
