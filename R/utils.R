@@ -65,17 +65,20 @@ check_array_tag <- function(x, len, arg_name = NULL) {
   }
 }
 
+
 #' expected lengths of variables in standata
 #'
 #' @param recX is the receiver or station y coordinates
 #' @param recY is the receiver or station y coordinates
+#' @param ntest is the number of reference tags
 #'
 #'
 #' @keywords internal
 #' @name expected_lengths
 
 expected_lengths <- function(recX = NULL,
-                             recY = NULL) {
+                             recY = NULL,
+                             ntest = NULL) {
   lengths <- list(
     nind = 1,
     nrec = 1,
@@ -86,8 +89,8 @@ expected_lengths <- function(recX = NULL,
     recY = length(recY),
     xlim = 2,
     ylim = 2,
-    testX = 1,
-    testY = 1
+    testX = ntest,
+    testY = ntest
   )
   return(lengths)
 }
