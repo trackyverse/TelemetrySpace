@@ -17,7 +17,9 @@ Imports:
     cli,
     dplyr,
     methods,
+    purrr,
     RcppParallel (>= 5.0.1),
+    rlang,
     rstan (>= 2.18.1),
     rstantools (>= 2.4.0),
     stats
