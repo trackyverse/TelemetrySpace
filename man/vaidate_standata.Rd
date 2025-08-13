@@ -10,7 +10,7 @@ validate_standata(standata, lengths)
 \arguments{
 \item{standata}{is a list of data that will be supplied to the model}
 
-\item{expected_lengths}{is the length of each object}
+\item{lengths}{is the length of each object}
 }
 \description{
 Validate standata
