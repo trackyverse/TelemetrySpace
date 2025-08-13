@@ -4,12 +4,14 @@
 \alias{expected_lengths}
 \title{expected lengths of variables in standata}
 \usage{
-expected_lengths(recX = NULL, recY = NULL)
+expected_lengths(recX = NULL, recY = NULL, ntest = NULL)
 }
 \arguments{
 \item{recX}{is the receiver or station y coordinates}
 
 \item{recY}{is the receiver or station y coordinates}
+
+\item{ntest}{is the number of reference tags}
 }
 \description{
 expected lengths of variables in standata
