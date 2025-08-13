@@ -87,12 +87,12 @@ params_table <- list(
   list(
     param = "testX",
     bad   = list("a", NA),
-    regex = "`testX` must be a numeric vector that has a length of 1."
+    regex = "`testX` must be a numeric array with length equal to 1 (the number of test tags)."
   ),
   list(
     param = "testY",
     bad   = list("a", NA),
-    regex = "`testY` must be a numeric vector that has a length of 1."
+    regex = "`testY` must be a numeric array with length equal to 1 (the number of test tags)."
   )
 )
 
