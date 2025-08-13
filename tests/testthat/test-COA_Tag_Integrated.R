@@ -101,16 +101,17 @@ params_table
 
 test_that("parameter validation works", {
 
-  purrr::walk(params_table, function(pt) {
-
-    purrr::walk(pt$bad, function(bad_val) {
+  for (pt in params_table) {
+    for (bad_val in pt$bad) {
       expect_error(
         call_coa_tagint(setNames(list(bad_val), pt$param)),
         regexp = pt$regex
       )
-    })
-  })
+    }
+  }
 })
+
+
 
 
 # ---- run model and check of it works ----
