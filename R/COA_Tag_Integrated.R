@@ -42,9 +42,8 @@ COA_TagInt <- function(
     testY,
     ...
 ) {
-  rstan::rstan_options(auto_write = TRUE)
-  options(mc.cores = parallel::detectCores())
 
+  # First move everything into a list
   standata <- list(
     nind = nind,
     nrec = nrec,
@@ -61,52 +60,16 @@ COA_TagInt <- function(
     testY = testY
   )
 
-  if (!is.numeric(nind) || !is.vector(nind) || length(nind) != 1) {
-    cli::cli_abort("'nind' must be a numeric vector that has a length of 1.")
-  }
-  if (!is.numeric(nrec) || !is.vector(nrec) || length(nind) != 1) {
-    cli::cli_abort("'nrec' must be a numeric vector that has a length of 1.")
-  }
-  if (!is.numeric(ntime) || !is.vector(ntime)) {
-    cli::cli_abort("'ntime' must be a numeric vector that has a length of 1.")
-  }
-  if (!is.numeric(ntrans) || !is.vector(ntrans)) {
-    cli::cli_abort("'ntrans' must be a numeric vector that has a length of 1.")
-  }
-  if (!is.numeric(ntest) || !is.vector(ntest) || length(ntest) != 1) {
-    cli::cli_abort("'ntest' must be a numeric vector that has a length of 1.")
-  }
-  if (!is.array(y) || length(dim(y)) != 3) {
-    cli::cli_abort("'y' must be a 3-dimensional numeric array.")
-  }
-  if (!is.array(test) || length(dim(test)) != 3) {
-    cli::cli_abort("'test' must be a 3-dimensional numeric array.")
-  }
-  if (!is.numeric(recX) || !is.vector(recX)) {
-    cli::cli_abort("'recX' must be a numeric vector.")
-  }
-  if (!is.numeric(recY) || !is.vector(recY)) {
-    cli::cli_abort("'recY' must be a numeric vector.")
-  }
-  if (!is.numeric(xlim) || !is.vector(xlim) || length(xlim) != 2) {
-    cli::cli_abort("'xlim' must be a numeric vector that has a length of 2.")
-  }
-  if (!is.numeric(ylim) || !is.vector(ylim) || length(ylim) != 2) {
-    cli::cli_abort("'ylim' must be a numeric vector that has a length of 2.")
-  }
+  # validate this list prior to sending it to the model
+  exp_len <- expected_lengths(recX = recX, recY = recY)
 
-  if (!is.numeric(testX) || !is.array(testX) || length(testX) != ntest) {
-    cli::cli_abort(
-      "'testX' must be a numeric array with length equal to {.val {ntest}} (the number of test tags)."
-    )
-  }
+  validate_standata(standata, exp_len)
+  # set rstan options
+  rstan::rstan_options(auto_write = TRUE)
+  # set coores - this probably should be an argument
+  options(mc.cores = parallel::detectCores())
 
-  if (!is.numeric(testY) || !is.array(testY) || length(testY) != ntest) {
-    cli::cli_abort(
-      "'testY' must be a numeric array with length equal to {.val {ntest}} (the number of test tags)."
-    )
-  }
-
+  # fit model
   fit_model <- rstan::sampling(
     stanmodels$COA_Tag_Integrated,
     data = standata,
