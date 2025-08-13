@@ -71,7 +71,7 @@ expected_lengths <- function(recX = NULL,
 #' Validate standata
 #'
 #' @param standata is a list of data that will be supplied to the model
-#' @param expected_lengths is the length of each object
+#' @param lengths is the length of each object
 #'
 #'
 #' @keywords internal
