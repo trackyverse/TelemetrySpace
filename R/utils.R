@@ -2,6 +2,7 @@
 #'
 #' @param x is a vector to pass to check
 #' @param vec_length is the length of the vector to check default is 1.
+#' @param arg_name the name of the argument to check
 #'
 #'
 #' @keywords internal
@@ -23,7 +24,7 @@ check_num_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
 #'
 #' @param x is a vector to pass to check
 #' @param vec_length is the length of the vector to check default is 1.
-#'
+#' @param arg_name the name of the argument to check
 #'
 #' @keywords internal
 #' @name error_functions
