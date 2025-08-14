@@ -31,17 +31,17 @@ call_coa_tagint <- function(overrides) {
 params_table <- list(
   list(
     param = "nind",
-    bad = list("a", NA, c(1, 2)),
+    bad = list("bc", NA, c(1, 2)),
     regex = "`nind` must be a numeric vector that has a length of 1."
   ),
   list(
     param = "nrec",
-    bad = list("a", NA, c(1, 2)),
+    bad = list("bc", NA, c(1, 2)),
     regex = "`nrec` must be a numeric vector that has a length of 1."
   ),
   list(
     param = "ntime",
-    bad = list("a", NA, c(1, 2)),
+    bad = list("bc", NA, c(1, 2)),
     regex = "`ntime` must be a numeric vector that has a length of 1."
   ),
   list(
@@ -51,47 +51,47 @@ params_table <- list(
   ),
   list(
     param = "ntest",
-    bad = list(c(nsentinal, nsentinal), "1"),
+    bad = list(c(3, 6, 3), "1"),
     regex = "`ntest` must be a numeric vector that has a length of 1."
   ),
   list(
     param = "y",
-    bad = list(c(1, 2, 3), "a"),
+    bad = list(c(1, 2, 3), "bc"),
     regex = "`y` must be a 3-dimensional numeric array."
   ),
   list(
     param = "test",
-    bad = list(c(1, 2, 3), "a"),
+    bad = list(c(1, 2, 3), "bc"),
     regex = "`test` must be a 3-dimensional numeric array."
   ),
   list(
     param = "recX",
-    bad   = list("a", NA),
+    bad   = list("bc", NA),
     regex = "`recX` must be a numeric vector that has a length of 1."
   ),
   list(
     param = "recY",
-    bad   = list("a", NA),
+    bad   = list("bc", NA),
     regex = "`recY` must be a numeric vector that has a length of 1."
   ),
   list(
     param = "xlim",
-    bad = list("a", c(1, 2, 3)),
+    bad = list("bc", c(1, 2, 3)),
     regex = "`xlim` must be a numeric vector that has a length of 2."
   ),
   list(
     param = "ylim",
-    bad = list("a", c(1, 2, 3)),
+    bad = list("bc", c(1, 2, 3)),
     regex = "`ylim` must be a numeric vector that has a length of 2."
   ),
   list(
     param = "testX",
-    bad   = list("a", NA),
+    bad   = list("bc", NA),
     regex = "`testX` must be a numeric array with length equal to 1 \\(the number of test tags\\)\\."
   ),
   list(
     param = "testY",
-    bad   = list("a", NA),
+    bad   = list("bc", NA),
     regex = "`testY` must be a numeric array with length equal to 1 \\(the number of test tags\\)\\."
   )
 )
