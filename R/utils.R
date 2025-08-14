@@ -32,7 +32,7 @@ check_array <- function(x, arg_name = NULL) {
     arg_name <- rlang::as_label(rlang::enexpr(x))
   }
 
-  if (!is.array(x) || length(dim(x)) != 3 || !is.numeric(x)) {
+  if (!is.array(x) || !is.numeric(x) || length(dim(x)) != 3) {
     cli::cli_abort("`{arg_name}` must be a 3-dimensional numeric array.")
   }
 
@@ -53,7 +53,8 @@ check_array_tag <- function(x, len, arg_name = NULL) {
     arg_name <- rlang::as_label(rlang::enexpr(x))
   }
 
-  if (!is.numeric(x) || is.null(dim(x)) ||  length(x) != len) {
+
+  if (!is.array(x) || !is.numeric(x) || length(x) != len) {
     cli::cli_abort(
       "`{arg_name}` must be a numeric array with length equal to {.val {len}} (the number of test tags)."
     )
