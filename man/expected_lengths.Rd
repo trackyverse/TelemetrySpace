@@ -2,19 +2,19 @@
 % Please edit documentation in R/utils.R
 \name{expected_lengths}
 \alias{expected_lengths}
-\title{expected lengths of variables in standata}
+\title{Expected lengths of variables in \code{standata}}
 \usage{
 expected_lengths(recX = NULL, recY = NULL, ntest_len = NULL)
 }
 \arguments{
-\item{recX}{is the receiver or station y coordinates}
+\item{recX}{is the receiver or station x coordinates (e.g, lon).}
 
-\item{recY}{is the receiver or station y coordinates}
+\item{recY}{is the receiver or station y coordinates (e.g., lat).}
 
 \item{ntest_len}{is the number of reference tags which is used as length
-by \code{testX} and \code{testY}}
+by \code{testX} and \code{testY}.}
 }
 \description{
-expected lengths of variables in standata
+Expected lengths of variables in \code{standata}
 }
 \keyword{internal}

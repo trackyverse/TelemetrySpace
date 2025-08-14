@@ -1,8 +1,8 @@
 #' Error functions
 #'
-#' @param x is a vector to pass to check
-#' @param vec_length is the length of the vector to check default is 1.
-#' @param arg_name the name of the argument to check
+#' @param x is a vector to pass to check.
+#' @param vec_length is the length of the vector to check.
+#' @param arg_name the name of the argument to check.
 #'
 #'
 #' @keywords internal
@@ -20,8 +20,8 @@ check_num_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
   }
 }
 
-#' @param x is a vector to pass to check
-#' @param arg_name the name of the argument to check
+#' @param x is a vector to pass to check.
+#' @param arg_name the name of the argument to check.
 #'
 #' @keywords internal
 #' @name error_functions
@@ -39,10 +39,10 @@ check_array <- function(x, arg_name = NULL) {
 }
 
 
-#' @param x is a vector to pass to check
-#' @param len is the length of the to make the array. This needs to be the
+#' @param x is a vector to pass to check.
+#' @param len is the length to make the array. This needs to be the
 #' same length as `ntest` or the number of tags.
-#' @param arg_name the name of the argument to check
+#' @param arg_name the name of the argument to check.
 #'
 #' @keywords internal
 #' @name error_functions
@@ -62,12 +62,12 @@ check_array_tag <- function(x, len, arg_name = NULL) {
 }
 
 
-#' expected lengths of variables in standata
+#' Expected lengths of variables in `standata`
 #'
-#' @param recX is the receiver or station y coordinates
-#' @param recY is the receiver or station y coordinates
+#' @param recX is the receiver or station x coordinates (e.g, lon).
+#' @param recY is the receiver or station y coordinates (e.g., lat).
 #' @param ntest_len is the number of reference tags which is used as length
-#' by `testX` and `testY`
+#' by `testX` and `testY`.
 #'
 #'
 #' @keywords internal
@@ -97,10 +97,10 @@ expected_lengths <- function(recX = NULL,
   return(lengths)
 }
 
-#' Validate standata
+#' Validate `standata`
 #'
-#' @param standata is a list of data that will be supplied to the model
-#' @param lengths is the length of each object
+#' @param standata is a list of data that will be supplied to the model.
+#' @param lengths is the length of each object.
 #'
 #'
 #' @keywords internal

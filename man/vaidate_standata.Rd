@@ -3,16 +3,16 @@
 \name{vaidate_standata}
 \alias{vaidate_standata}
 \alias{validate_standata}
-\title{Validate standata}
+\title{Validate \code{standata}}
 \usage{
 validate_standata(standata, lengths)
 }
 \arguments{
-\item{standata}{is a list of data that will be supplied to the model}
+\item{standata}{is a list of data that will be supplied to the model.}
 
-\item{lengths}{is the length of each object}
+\item{lengths}{is the length of each object.}
 }
 \description{
-Validate standata
+Validate \code{standata}
 }
 \keyword{internal}

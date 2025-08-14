@@ -14,13 +14,13 @@ check_array(x, arg_name = NULL)
 check_array_tag(x, len, arg_name = NULL)
 }
 \arguments{
-\item{x}{is a vector to pass to check}
+\item{x}{is a vector to pass to check.}
 
-\item{vec_length}{is the length of the vector to check default is 1.}
+\item{vec_length}{is the length of the vector to check.}
 
-\item{arg_name}{the name of the argument to check}
+\item{arg_name}{the name of the argument to check.}
 
-\item{len}{is the length of the to make the array. This needs to be the
+\item{len}{is the length to make the array. This needs to be the
 same length as \code{ntest} or the number of tags.}
 }
 \description{
