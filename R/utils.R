@@ -66,7 +66,8 @@ check_array_tag <- function(x, len, arg_name = NULL) {
 #'
 #' @param recX is the receiver or station y coordinates
 #' @param recY is the receiver or station y coordinates
-#' @param ntest is the number of reference tags
+#' @param ntest_len is the number of reference tags which is used as length
+#' by `testX` and `testY`
 #'
 #'
 #' @keywords internal
