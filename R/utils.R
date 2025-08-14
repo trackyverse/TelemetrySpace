@@ -53,7 +53,7 @@ check_array_tag <- function(x, len, arg_name = NULL) {
     arg_name <- rlang::as_label(rlang::enexpr(x))
   }
 
-  if (!is.numeric(x) || !is.array(x) ||  prod(dim(x)) != len) {
+  if (!is.numeric(x) || is.null(dim(x)) ||  length(x) != len) {
     cli::cli_abort(
       "`{arg_name}` must be a numeric array with length equal to {.val {len}} (the number of test tags)."
     )
