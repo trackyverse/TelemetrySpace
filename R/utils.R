@@ -75,6 +75,11 @@ check_array_tag <- function(x, len, arg_name = NULL) {
 expected_lengths <- function(recX = NULL,
                              recY = NULL,
                              ntest = NULL) {
+
+  if (!is.null(ntest)) {
+  check_num_vec_len(ntest, vec_length = 1, arg_name = "ntest")
+  }
+
   lengths <- list(
     nind = 1,
     nrec = 1,
@@ -85,8 +90,8 @@ expected_lengths <- function(recX = NULL,
     recY = length(recY),
     xlim = 2,
     ylim = 2,
-    testX = ntest,
-    testY = ntest
+    testX = ntest[[1]],
+    testY = ntest[[1]]
   )
   return(lengths)
 }
