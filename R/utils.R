@@ -90,8 +90,8 @@ expected_lengths <- function(recX = NULL,
     recY = length(recY),
     xlim = 2,
     ylim = 2,
-    testX = ntest[[1]],
-    testY = ntest[[1]]
+    testX = ntest_len,
+    testY = ntest_len
   )
   return(lengths)
 }
