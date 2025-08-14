@@ -25,9 +25,5 @@ same length as \code{ntest} or the number of tags.}
 }
 \description{
 Error functions
-
-Error functions
-
-Error functions
 }
 \keyword{internal}

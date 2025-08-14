@@ -20,10 +20,7 @@ check_num_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
   }
 }
 
-#' Error functions
-#'
 #' @param x is a vector to pass to check
-#' @param vec_length is the length of the vector to check default is 1.
 #' @param arg_name the name of the argument to check
 #'
 #' @keywords internal
@@ -42,8 +39,6 @@ check_array <- function(x, arg_name = NULL) {
 }
 
 
-#' Error functions
-#'
 #' @param x is a vector to pass to check
 #' @param len is the length of the to make the array. This needs to be the
 #' same length as `ntest` or the number of tags.
