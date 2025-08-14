@@ -74,10 +74,10 @@ check_array_tag <- function(x, len, arg_name = NULL) {
 
 expected_lengths <- function(recX = NULL,
                              recY = NULL,
-                             ntest = NULL) {
+                             ntest_len = NULL) {
 
-  if (!is.null(ntest)) {
-  check_num_vec_len(ntest, vec_length = 1, arg_name = "ntest")
+  if (!is.null(ntest_len)) {
+  check_num_vec_len(ntest_len, vec_length = 1, arg_name = "ntest")
   }
 
   lengths <- list(
