@@ -103,10 +103,18 @@ test_that("parameter validation works", {
 
   for (pt in params_table) {
     for (bad_val in pt$bad) {
-      expect_error(
-        call_coa_tagint(setNames(list(bad_val), pt$param)),
-        regexp = pt$regex
-      )
+      tryCatch({
+        expect_error(
+          call_coa_tagint(setNames(list(bad_val), pt$param)),
+          regexp = pt$regex,
+          label = sprintf("param=%s, bad_val=%s", pt$param, deparse(bad_val))
+        )
+      },
+      error = function(e) {
+        cat("\n Error for param:", pt$param,
+            " bad_val:", deparse(bad_val), "\n")
+        stop(e)
+      })
     }
   }
 })
