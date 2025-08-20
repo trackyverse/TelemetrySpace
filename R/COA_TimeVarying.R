@@ -33,9 +33,8 @@ COA_TimeVarying <- function(
   ylim,
   ...
 ) {
-  rstan::rstan_options(auto_write = TRUE)
-  options(mc.cores = parallel::detectCores())
 
+  # First move everything into a list
   standata <- list(
     nind = nind,
     nrec = nrec,
@@ -47,7 +46,17 @@ COA_TimeVarying <- function(
     xlim = xlim,
     ylim = ylim
   )
+  # validate this list prior to sending it to the model
+  exp_len <- expected_lengths(recX = recX, recY = recY)
 
+  validate_standata(standata, exp_len)
+
+    # set rstan options
+  rstan::rstan_options(auto_write = TRUE)
+  # set coores - this probably should be an argument
+  options(mc.cores = parallel::detectCores())
+
+  # fit model
   fit_model <- rstan::sampling(stanmodels$COA_TimeVarying, data = standata, ...)
 
   # Save chains after discarding warmup

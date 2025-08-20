@@ -11,12 +11,14 @@ Authors@R: c(
   comment = c(ORCID = "0000-0002-4178-4900")))
 License: GPL (>=3)
 Depends:
-    R (>= 3.4.0),
+    R (>= 3.5),
     Rcpp (>= 0.12.17)
 Imports: 
+    cli,
     dplyr,
     methods,
     RcppParallel (>= 5.0.1),
+    rlang,
     rstan (>= 2.18.1),
     rstantools (>= 2.4.0),
     stats
