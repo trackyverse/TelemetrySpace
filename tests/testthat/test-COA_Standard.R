@@ -166,7 +166,7 @@ test_that("check generated quantities", {
   # check name
   expect_true("yrep" %in% names(draws))
   # check length
-  expect_true(dim(draws$yrep)[1] == 2000)
+  expect_true(dim(draws$yrep)[1] %in% 2000)
 
   # for speed make this 100 if we want to check all increase this
 
