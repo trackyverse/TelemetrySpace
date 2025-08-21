@@ -96,23 +96,6 @@ test_that("parameter validation works", {
 })
 
 
-
-
-
-<<<<<<< HEAD:tests/testthat/test-coa.R
-### Format data for model fitting
-fit <- coa(
-  n_ind = nind, # number of individuals
-  n_rec = nrec, # number of receivers
-  n_time = tsteps, # number of time steps
-  n_trans = 30, # number of expected transmissions per tag per time interval
-  det = Y, # array of detections
-  rec_x = as.vector(rlocs$east), # E-W receiver coordinates
-  rec_y = as.vector(rlocs$north), # N-S receiver coordinates
-  lim_x = xlim, # E-W boundary of spatial extent (receiver array + buffer)
-  lim_y = ylim,
-=======
-
 # ---- run model and check of it works ----
 fit <- COA_Standard(
   nind = model_param_ex$nind, # number of individuals
@@ -124,7 +107,6 @@ fit <- COA_Standard(
   recY = rlocs$north, # N-S receiver coordinates
   xlim = example_extent$xlim, # E-W boundary of spatial extent (receiver array + buffer)
   ylim = example_extent$ylim, # N-S boundary of spatial extent (receiver array + buffer)
->>>>>>> upstream/master:tests/testthat/test-COA_Standard.R
   chains = 2,
   warmup = 1000,
   iter = 2000,
