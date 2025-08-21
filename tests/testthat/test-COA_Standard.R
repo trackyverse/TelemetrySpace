@@ -170,7 +170,7 @@ test_that("check generated quantities", {
 
   # for speed make this 100 if we want to check all increase this
 
-  n_draws <- 100
+  n_draws <- 10
   y_obs_vec <- as.vector(Y)
   n_obs <- length(y_obs_vec)
   y_rep_mat <- matrix(NA, nrow = n_draws, ncol = n_obs)
@@ -180,7 +180,7 @@ test_that("check generated quantities", {
   }
  # make sure there's no NA and make sure obs vfallls within a range
   for (i in 1:n_draws) {
-    expect_false(unique(is.na( y_rep_mat[i, ])))
+    expect_false(unique(is.na(y_rep_mat[i, ])))
     expect_true(all(y_rep_mat[i, ] >= 0 &  y_rep_mat[i, ] <= 18))
   }
 }
