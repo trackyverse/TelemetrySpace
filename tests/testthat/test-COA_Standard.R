@@ -155,9 +155,33 @@ test_that("check to see if coa returns proper info", {
 
 test_that("check to see model converged and has a good rhat", {
 
-rhat <- fit$summary[, "Rhat"]
-expect_true(all(rhat > 0.95 & rhat < 1.05))
+  rhat <- fit$summary[, "Rhat"]
+  expect_true(all(rhat > 0.95 & rhat < 1.05))
 }
 )
 
+test_that("check generated quantities", {
 
+  draws <- rstan::extract(fit$model)
+  # check name
+  expect_true("yrep" %in% names(draws))
+  # check length
+  expect_true(dim(draws$yrep)[1] == 2000)
+
+  # for speed make this 100 if we want to check all increase this
+
+  n_draws <- 100
+  y_obs_vec <- as.vector(Y)
+  n_obs <- length(y_obs_vec)
+  y_rep_mat <- matrix(NA, nrow = n_draws, ncol = n_obs)
+
+  for (i in 1:n_draws) {
+    y_rep_mat[i, ] <- as.vector(draws$yrep[i, , , ])
+  }
+ # make sure there's no NA and make sure obs vfallls within a range
+  for (i in 1:n_draws) {
+    expect_false(unique(is.na( y_rep_mat[i, ])))
+    expect_true(all(y_rep_mat[i, ] >= 0 &  y_rep_mat[i, ] <= 18))
+  }
+}
+)
