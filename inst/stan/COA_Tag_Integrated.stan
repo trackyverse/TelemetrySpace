@@ -95,4 +95,33 @@ model {
 }  //end of model
 
 
+ // generate quantities
+generated quantities {
+  array[nind, nrec, ntime] int yrep; // replicated data
+  array[ntest, nrec, ntime] int testrep; // replicated test data
+
+  for (t in 1:ntime) {
+    for (j in 1:nrec) {
+      for (i in 1:nind) {
+        real p = p0[t, j] * exp(-alpha1 * square(d[i, j, t]));
+        // guard against tiny floating-point errors outside [0,1]
+        p = fmin(fmax(p, 1e-9), 1 - 1e-9);
+        yrep[i, j, t] = binomial_rng(ntrans, p);
+      }
+    }
+  }
+
+  // replicate test tags
+  for (t in 1:ntime) {
+    for (j in 1:nrec) {
+      for (s in 1:ntest) {
+        real ptest = p0[t, j] * exp(-alpha1 * square(td[s, j]));
+        ptest = fmin(fmax(ptest, 1e-9), 1 - 1e-9);
+        testrep[s, j, t] = binomial_rng(ntrans, ptest);
+      }
+    }
+  }
+}
+// end of generate quantities
+
 
