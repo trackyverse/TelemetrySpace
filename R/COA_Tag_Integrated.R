@@ -27,24 +27,23 @@
 #' @seealso [rstan::sampling()]
 #' @export
 COA_TagInt <- function(
-  nind,
-  nrec,
-  ntime,
-  ntest,
-  ntrans,
-  y,
-  test,
-  recX,
-  recY,
-  xlim,
-  ylim,
-  testX,
-  testY,
-  ...
+    nind,
+    nrec,
+    ntime,
+    ntest,
+    ntrans,
+    y,
+    test,
+    recX,
+    recY,
+    xlim,
+    ylim,
+    testX,
+    testY,
+    ...
 ) {
-  rstan::rstan_options(auto_write = TRUE)
-  options(mc.cores = parallel::detectCores())
 
+  # First move everything into a list
   standata <- list(
     nind = nind,
     nrec = nrec,
@@ -52,6 +51,7 @@ COA_TagInt <- function(
     ntest = ntest,
     ntrans = ntrans,
     y = y,
+    test = test,
     recX = recX,
     recY = recY,
     xlim = xlim,
@@ -60,6 +60,17 @@ COA_TagInt <- function(
     testY = testY
   )
 
+  # validate this list prior to sending it to the model
+  exp_len <- expected_lengths(recX = recX, recY = recY,
+                              ntest_len = ntest)
+
+  validate_standata(standata, exp_len)
+  # set rstan options
+  rstan::rstan_options(auto_write = TRUE)
+  # set coores - this probably should be an argument
+  options(mc.cores = parallel::detectCores())
+
+  # fit model
   fit_model <- rstan::sampling(
     stanmodels$COA_Tag_Integrated,
     data = standata,

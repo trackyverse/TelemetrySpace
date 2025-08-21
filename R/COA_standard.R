@@ -1,6 +1,6 @@
-# Save this file as `R/COA_TimeVarying.R`
+# Save this file as `R/COA_standard.R`
 
-#' Fits a test-tag integrated Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan
+#' Fits a Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan
 #'
 
 #' @param nind   Number of tagged individuals
@@ -16,22 +16,23 @@
 #' This can include setting `chains`, `iter`, `warmup`, and `control`. Please see
 #' `rstan::sampling` for more info.
 #'
-#' @return COA_TimeVarying returns an object of class `stanfit` returned by `rstan::sampling`. See the 'rstan' package documentation for details.
-#' @return This function returns a list containing the following components: 1) a summary of the detection function parameters; 2) the time required for model fitting; 3) time-varying detection probabilites for each receiver; 4) the estimated COAs for each individual in each time step and 95 percent credible interval; and 5) a dataframe containing values for each parameter and latent parameter from chain iterations. These can be used to plot posterior distributions and the credible interval around each estimated COA.
+#' @return COA_Standard returns an object of class `stanfit` returned by `rstan::sampling`. See the `rstan` package documentation for details.
+#' @return This function returns a list containing the following components: 1) a summary of the detection function parameters; 2) the time required for model fitting; 3) the estimated COAs for each individual in each time step and 95 percent credible interval; and 4) a dataframe containing values for each parameter and latent parameter from chain iterations. These can be used to plot posterior distributions and the credible interval around each estimated COA.
+#' @seealso [rstan::sampling()]
+#'
 #'
 #' @export
-#'
-COA_TimeVarying <- function(
-  nind,
-  nrec,
-  ntime,
-  ntrans,
-  y,
-  recX,
-  recY,
-  xlim,
-  ylim,
-  ...
+COA_Standard <- function(
+    nind,
+    nrec,
+    ntime,
+    ntrans,
+    y,
+    recX,
+    recY,
+    xlim,
+    ylim,
+    ...
 ) {
 
   # First move everything into a list
@@ -51,22 +52,23 @@ COA_TimeVarying <- function(
 
   validate_standata(standata, exp_len)
 
-    # set rstan options
+  # set rstan options
   rstan::rstan_options(auto_write = TRUE)
   # set coores - this probably should be an argument
   options(mc.cores = parallel::detectCores())
 
   # fit model
-  fit_model <- rstan::sampling(stanmodels$COA_TimeVarying, data = standata, ...)
+  fit_model <- rstan::sampling(stanmodels$COA_Standard, data = standata, ...)
 
   # Save chains after discarding warmup
-  fit_estimates <- as.data.frame(fit_model) # Note this returns parameters and latent states/derived values
+  fit_estimates <- as.data.frame(fit_model)
+  # Note this returns parameters and latent states/derived values
 
   # Summary statistics and convergence diagnostics
   fit_summary <- rstan::summary(fit_model, pars = c("p0", "sigma"))$summary
   #fit_summary <- fit_sum$summary
 
-  # How much time did fitting take (in minutes)?
+  # How much time did fitting take?
   fit_time <- sum(print(rstan::get_elapsed_time(fit_model))) / 60
 
   # Extract COA estimates
@@ -100,37 +102,10 @@ COA_TimeVarying <- function(
     coas[, 6, i] <- apply(ns, 2, stats::quantile, probs = 0.025)
     coas[, 7, i] <- apply(ns, 2, stats::quantile, probs = 0.975)
   }
+
   coas <- as.data.frame(coas[,, 1])
-  # Extract time-varying detection probability estimates
-  d_probs <- array(NA, dim = c(nrec, ntime))
-  p0est <- NULL
-
-  for (i in 1:ntime) {
-    p0est <- dplyr::select(
-      fit_estimates,
-      dplyr::starts_with(paste("p0[", i, ",", sep = ''))
-    )
-    for (j in 1:nrec) {
-      d_probs[j, i] <- stats::median(p0est[, j])
-    }
-  }
-
   # Report results
-  model_results <- list(
-    fit_model,
-    fit_summary,
-    fit_time,
-    coas,
-    d_probs,
-    fit_estimates
-  )
-  names(model_results) <- c(
-    'model',
-    'summary',
-    'time',
-    'coas',
-    'detection_probs',
-    'all_estimates'
-  )
+  model_results <- list(fit_model, fit_summary, fit_time, coas, fit_estimates)
+  names(model_results) <- c('model', 'summary', 'time', 'coas', 'all_estimates')
   return(model_results)
 }
