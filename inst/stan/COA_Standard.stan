@@ -63,19 +63,4 @@ model {
   }
 }  //end of model
 
- // generate quantities
-generated quantities {
-  array[nind, nrec, ntime] int yrep; // replicated data, same dimensions as observed detections
-
-  for (t in 1:ntime) {
-    for (i in 1:nind) {
-      for (j in 1:nrec) {
-        real p = p0 * exp(-alpha1 * square(d[i, j, t]));
-        yrep[i, j, t] = binomial_rng(ntrans, p);
-      }
-    }
-  }
-}
-
-// end of generate quantities
 
