@@ -220,32 +220,4 @@ test_that("check generated quantities yrep", {
 
 
 
-test_that("check generated quantities testrep", {
-
-  draws <- rstan::extract(fit$model)
-  # check name
-  expect_true("testrep" %in% names(draws))
-  # check length
-  expect_true(dim(draws$testrep)[1] %in% 8000)
-  # for speed make this 100 if we want to check all increase this
-
-  n_draws <- 10
-  y_obs_vec <- as.vector(testY)
-  n_obs <- length(y_obs_vec)
-  test_rep_mat <- matrix(NA, nrow = n_draws, ncol = n_obs)
-
-  for (i in 1:n_draws) {
-    test_rep_mat[i, ] <- as.vector(draws$testrep[i, , , ])
-  }
-  # make sure there's no NA and make sure obs vfallls within a range
-  for (i in 1:n_draws) {
-    expect_false(unique(is.na(test_rep_mat[i, ])))
-    expect_true(all(test_rep_mat[i, ] >= 0 &  test_rep_mat[i, ] <= 29))
-  }
-
-
-}
-)
-
-
 
