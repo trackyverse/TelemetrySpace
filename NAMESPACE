@@ -3,7 +3,6 @@
 export(COA_Standard)
 export(COA_TagInt)
 export(COA_TimeVarying)
-export(coa)
 export(distf)
 import(Rcpp)
 import(methods)
