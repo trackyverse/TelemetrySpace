@@ -4,3 +4,7 @@
 ^vignettes/_Estimate_COA_vignette\.Rmd$
 ^LICENSE\.md$
 ^\.github$
+^Dockerfile$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
