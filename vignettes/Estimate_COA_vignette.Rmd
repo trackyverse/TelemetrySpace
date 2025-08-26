@@ -1,7 +1,7 @@
 ---
 title: "Estimate activity centers from acoustic telemetry data"
 author: "Megan Winton"
-date: "2018-06-06, updated 2025-06-06"
+date: "2018-06-06, updated 2025-08-26"
 output: rmarkdown::github_document
 vignette: >
   %\VignetteIndexEntry{Estimate activity centers from acoustic telemetry data}
@@ -292,10 +292,10 @@ fit <- COA_Standard(
 
 ```
 ##         warmup sample
-## chain:1  9.113  8.330
-## chain:2  9.393  8.835
-## chain:3  9.117  8.799
-## chain:4  9.113  8.947
+## chain:1  2.298  1.985
+## chain:2  1.830  2.315
+## chain:3  1.749  1.337
+## chain:4  1.759  2.078
 ```
 
 The function will automatically spit out the run-time associated with each of the 4 chains used for fitting and returns a list with four objects:
@@ -307,11 +307,11 @@ summary(fit)
 
 ```
 ##               Length Class      Mode   
-## Model           1    stanfit    S4     
-## Summary        20    -none-     numeric
-## Time            1    -none-     numeric
-## COAs           70    -none-     numeric
-## All_estimates 325    data.frame list
+## model           1    stanfit    S4     
+## summary        20    -none-     numeric
+## time            1    -none-     numeric
+## coas            7    data.frame list   
+## all_estimates 325    data.frame list
 ```
 
 The first contains the Stan model object (accessible via `fit$Model`, which will allow you to use `rstan` plotting tools and diagnostic plots - see rstan documentation for details).
@@ -320,50 +320,48 @@ The second element is a table of parameter estimates and associated quantiles fr
 
 
 ``` r
-fit$Summary
+fit$summary
 ```
 
 ```
-##            mean     se_mean         sd      2.5%       25%       50%       75%
-## p0    0.2814455 0.000182420 0.02576805 0.2338013 0.2636471 0.2802505 0.2979745
-## sigma 0.2850106 0.000111228 0.01477459 0.2565463 0.2748903 0.2848939 0.2948635
-##           97.5%    n_eff      Rhat
-## p0    0.3349949 19953.45 0.9999904
-## sigma 0.3144220 17644.21 1.0001049
+##            mean      se_mean         sd      2.5%       25%       50%       75%
+## p0    0.2822800 0.0004478783 0.02520083 0.2361652 0.2644027 0.2813702 0.2994305
+## sigma 0.2845763 0.0002817552 0.01493595 0.2554774 0.2742519 0.2845919 0.2947178
+##           97.5%    n_eff     Rhat
+## p0    0.3329404 3165.990 1.000794
+## sigma 0.3141591 2810.101 1.001010
 ```
 
 The third returns the time required to run the model (in minutes). Note that Stan will automatically detect and use multiple cores. If the computer used to run this has multiple cores, the time returned will be longer than the actual run time (because it will sum the time for each core). To return the realized run time, divide `fit$Time` by the number of cores.
 
 
 ``` r
-fit$Time
+fit$time
 ```
 
 ```
-## [1] 1.194117
+## [1] 0.25585
 ```
 
 The fourth returns an array of COA estimates, where each matrix corresponds to one individual, the rows correspond to each time step, and the columns include the median posterior estimate of the east-west (x) and north-south (y) coordinates. The 95% credible interval (Bayesian version of a confidence interval) for each coordinate is also provided.
 
 
 ``` r
-fit$COAs
+fit$coas
 ```
 
 ```
-## , , 1
-## 
-##       time           x         y    x.lower     x.upper    y.lower   y.upper
-##  [1,]    1 -0.04599045 0.2918886 -0.1480133  0.05674008 0.18619063 0.4014491
-##  [2,]    2 -0.02287516 0.3592691 -0.1469319  0.09859156 0.22004281 0.4998208
-##  [3,]    3 -0.09874094 0.3841066 -0.2547006  0.05151606 0.19528865 0.5658126
-##  [4,]    4 -0.12403982 0.2845538 -0.2852384  0.02556586 0.10801029 0.4695239
-##  [5,]    5 -0.16858826 0.3251796 -0.3323877 -0.01515096 0.14340092 0.5123981
-##  [6,]    6 -0.12754451 0.7034541 -0.4744519  0.18435496 0.11547406 0.8859781
-##  [7,]    7 -0.04960690 0.3670266 -0.1689375  0.06828256 0.23623692 0.4983832
-##  [8,]    8 -0.15497258 0.4030025 -0.2786477 -0.03704178 0.26491777 0.5395534
-##  [9,]    9 -0.04940582 0.3337128 -0.2160406  0.11340251 0.13034994 0.5499460
-## [10,]   10 -0.10065221 0.3133152 -0.2961367  0.07977581 0.08222951 0.5690382
+##    time           x         y    x_lower     x_upper    y_lower   y_upper
+## 1     1 -0.04419208 0.2936790 -0.1462210  0.05951826 0.18845035 0.4023171
+## 2     2 -0.02330482 0.3578317 -0.1420680  0.09773196 0.21932718 0.5005321
+## 3     3 -0.09875625 0.3839595 -0.2569494  0.04730306 0.19878372 0.5686053
+## 4     4 -0.12329253 0.2816735 -0.2786449  0.02481079 0.10911757 0.4669253
+## 5     5 -0.16831392 0.3242430 -0.3259290 -0.02445424 0.15206068 0.5067735
+## 6     6 -0.13019674 0.7062093 -0.4725975  0.17890991 0.17035957 0.8814318
+## 7     7 -0.05163113 0.3667484 -0.1700821  0.07165783 0.23090152 0.4937734
+## 8     8 -0.15522780 0.4049252 -0.2793242 -0.03514842 0.27458678 0.5346351
+## 9     9 -0.05002765 0.3329523 -0.2220192  0.11698386 0.12850061 0.5501859
+## 10   10 -0.09807742 0.3133353 -0.2885934  0.07443582 0.08394051 0.5651978
 ```
 
 The last element (`fit$All_estimates`) contains the estimates from each non-warm-up iteration for all 4 chains. (If you're not familiar with Bayesian lingo and this just seems like statistical jargon, all you need to know is that this is what you'll use to plot the uncertainty cloud around COA estimates and/or the distribution of parameter estimates as presented in the paper.) This includes estimates of all latent parameters for each individual in each time step (aka this element contains tons of parameter estimates), so we will need to subset out parameters for plotting.
@@ -378,11 +376,11 @@ EN_fit <- list(NA)
 for (i in 1:nind){
   EN_fit[[i]] <- bind_cols(
     # East-West
-    fit$All_estimates |> 
+    fit$all_estimates |> 
       select(starts_with(paste("sx[", i, ",", sep=''))) |> 
       pivot_longer(everything(), values_to = "X"),
     # North-South
-    fit$All_estimates |> 
+    fit$all_estimates |> 
       select(starts_with(paste("sy[", i, ",", sep=''))) |> 
       pivot_longer(everything(), values_to = "Y") |> 
       select(Y)
@@ -394,7 +392,7 @@ for (i in 1:nind){
 ## Plot posterior estimates
 # Select individual for plotting
 post_fit <- EN_fit[[1]]
-coa_fit <- as.data.frame(fit$COAs[, , 1])
+coa_fit <- as.data.frame(fit$coas[, , 1])
 
 # Plot in ggplot
 plotCOAs <- ggplot(aes(x = X, y = Y), data = post_fit) +
@@ -437,10 +435,10 @@ fit_vary <- COA_TimeVarying(
 
 ```
 ##         warmup sample
-## chain:1 84.485 72.149
-## chain:2 83.771 97.417
-## chain:3 83.200 73.776
-## chain:4 84.639 72.528
+## chain:1 24.266 14.747
+## chain:2 22.624 17.264
+## chain:3 23.072 14.642
+## chain:4 22.762 14.569
 ```
 
 ``` r
@@ -448,21 +446,21 @@ summary(fit_vary)
 ```
 
 ```
-##                Length Class      Mode   
-## Model             1   stanfit    S4     
-## Summary        3010   -none-     numeric
-## Time              1   -none-     numeric
-## COAs             70   -none-     numeric
-## DetectionProbs  300   -none-     numeric
-## All_estimates   923   data.frame list
+##                 Length Class      Mode   
+## model              1   stanfit    S4     
+## summary         3010   -none-     numeric
+## time               1   -none-     numeric
+## coas               7   data.frame list   
+## detection_probs  300   -none-     numeric
+## all_estimates    923   data.frame list
 ```
 
 ``` r
-fit_vary$Time
+fit_vary$time
 ```
 
 ```
-## [1] 10.86608
+## [1] 2.565767
 ```
 
 ``` r
@@ -474,11 +472,11 @@ EN_vary <- list(NA)
 for (i in 1:nind){
   EN_vary[[i]] <- bind_cols(
     # East-West
-    fit_vary$All_estimates |> 
+    fit_vary$all_estimates |> 
       select(starts_with(paste("sx[", i, ",", sep=''))) |> 
       pivot_longer(everything(), values_to = "X"),
     # North-South
-    fit_vary$All_estimates |> 
+    fit_vary$all_estimates |> 
       select(starts_with(paste("sy[", i, ",", sep=''))) |> 
       pivot_longer(everything(), values_to = "Y") |> 
       select(Y)
@@ -490,7 +488,7 @@ for (i in 1:nind){
 ## Plot posterior estimates
 # Select individual for plotting
 post_vary <- EN_vary[[1]]
-coa_vary <- as.data.frame(fit_vary$COAs[, , 1])
+coa_vary <- as.data.frame(fit_vary$coas[, , 1])
 
 # Plot in ggplot
 plotTVary <- ggplot(aes(x = X, y = Y), data = post_vary) +
@@ -542,10 +540,10 @@ fit_tag <- COA_TagInt(
 
 ```
 ##         warmup sample
-## chain:1 65.397 47.740
-## chain:2 66.056 47.202
-## chain:3 71.868 45.785
-## chain:4 68.570 46.512
+## chain:1 19.695 10.553
+## chain:2 18.609 10.535
+## chain:3 19.143 10.438
+## chain:4 20.521  9.958
 ```
 
 ``` r
@@ -553,21 +551,21 @@ summary(fit_tag)
 ```
 
 ```
-##                Length Class      Mode   
-## Model             1   stanfit    S4     
-## Summary        3010   -none-     numeric
-## Time              1   -none-     numeric
-## COAs             70   -none-     numeric
-## DetectionProbs  300   -none-     numeric
-## All_estimates   953   data.frame list
+##                 Length Class      Mode   
+## model              1   stanfit    S4     
+## summary         3010   -none-     numeric
+## time               1   -none-     numeric
+## coas               7   data.frame list   
+## detection_probs  300   -none-     numeric
+## all_estimates    953   data.frame list
 ```
 
 ``` r
-fit_tag$Time # See the comment about run time when your computer has multiple cores above.
+fit_tag$time # See the comment about run time when your computer has multiple cores above.
 ```
 
 ```
-## [1] 7.652167
+## [1] 1.990867
 ```
 
 ``` r
@@ -579,11 +577,11 @@ EN_tag <- list(NA)
 for (i in 1:nind){
   EN_tag[[i]] <- bind_cols(
     # East-West
-    fit_tag$All_estimates |> 
+    fit_tag$all_estimates |> 
       select(starts_with(paste("sx[", i, ",", sep=''))) |> 
       pivot_longer(everything(), values_to = "X"),
     # North-South
-    fit_tag$All_estimates |> 
+    fit_tag$all_estimates |> 
       select(starts_with(paste("sy[", i, ",", sep=''))) |> 
       pivot_longer(everything(), values_to = "Y") |> 
       select(Y)
@@ -595,7 +593,7 @@ for (i in 1:nind){
 ## Plot posterior estimates
 # Select individual for plotting
 post_tag <- EN_tag[[1]]
-coa_tag <- as.data.frame(fit_tag$COAs[, , 1])
+coa_tag <- as.data.frame(fit_tag$coas[, , 1])
 
 # Plot in ggplot
 plotTagInt <- ggplot(aes(x = X, y = Y), data = post_tag) +
