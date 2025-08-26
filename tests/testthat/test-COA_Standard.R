@@ -113,11 +113,8 @@ fit <- COA_Standard(
   control = list(adapt_delta = 0.95)
 )
 
-# ppc(det = Y,
-#     model = fit,
-#     n = 100)
 
-
+# bayesplot::ppc_dens_overlay(y = as.vector(Y), yrep = fit$generated_quantities)
 
 # rstan::traceplot(fit$model, pars = c("alpha0", "alpha1",
 #                                      "sigma", "lp__"))
