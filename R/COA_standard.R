@@ -105,7 +105,8 @@ COA_Standard <- function(
 
   coas <- as.data.frame(coas[,, 1])
   # Report results
-  model_results <- list(fit_model, fit_summary, fit_time, coas, fit_estimates)
-  names(model_results) <- c('model', 'summary', 'time', 'coas', 'all_estimates')
+  model_results <- list(fit_model, fit_summary, fit_time, coas, fit_estimates, standata)
+  names(model_results) <- c('model', 'summary', 'time', 'coas', 'all_estimates',
+                            'data')
   return(model_results)
 }
