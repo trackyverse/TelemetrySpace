@@ -148,15 +148,12 @@ validate_standata <- function(standata, lengths) {
 #' @name transform_gq
 
 transform_gq <- function(input,
-                         ndraws = NULL) {
 
   # check arrays
   lapply(input, check_array)
   check_array(obs)
   # default number of draws
-  if (is.null(ndraws)) {
-    ndraws <- 10
-  }
+    ndraws <- length(input)
   # number of observations
   n_obs <- as.vector(y) |>
     length()
