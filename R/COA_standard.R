@@ -73,6 +73,10 @@ COA_Standard <- function(
 
   fit_generated_quantities <- generated_quantities(model = fit_model,
                                                    standata = standata)
+
+  tran_fit_gq <- transform_gq(fit_generated_quantities,
+                              obs = y
+                              )
   # Extract COA estimates
   coas <- array(NA, dim = c(ntime, 7, nind))
   dimnames(coas)[[2]] <- c(
@@ -112,7 +116,7 @@ COA_Standard <- function(
                         fit_time,
                         coas,
                         fit_estimates,
-                        fit_generated_quantities)
+                        tran_fit_gq)
   names(model_results) <- c('model', 'summary', 'time', 'coas', 'all_estimates',
                             'generated_quantities')
   return(model_results)
