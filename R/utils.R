@@ -148,14 +148,16 @@ validate_standata <- function(standata, lengths) {
 #' @name transform_gq
 
 transform_gq <- function(input,
+                         obs) {
 
   # check arrays
   lapply(input, check_array)
   check_array(obs)
+
   # default number of draws
     ndraws <- length(input)
   # number of observations
-  n_obs <- as.vector(y) |>
+  n_obs <- as.vector(obs) |>
     length()
   # blank matrix to dump into
   rep_mat <- matrix(NA, nrow = ndraws, ncol = n_obs)
