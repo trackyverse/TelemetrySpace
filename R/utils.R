@@ -140,9 +140,8 @@ validate_standata <- function(standata, lengths) {
 #'
 #' @param input list of three dimensional array
 #' @param obs observation array
-#' @param ndraws number of draws defaults to 10.
 #'
-#' @return a `matricies` or `data.frame` of generated  quantities.
+#' @return a `matrices` or `data.frame` of generated  quantities.
 #'
 #' @keywords internal
 #' @name transform_gq
