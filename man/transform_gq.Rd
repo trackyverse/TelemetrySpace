@@ -4,17 +4,15 @@
 \alias{transform_gq}
 \title{Transform structure of the output of \code{generated_quantities()}}
 \usage{
-transform_gq(input, obs, ndraws = NULL)
+transform_gq(input, obs)
 }
 \arguments{
 \item{input}{list of three dimensional array}
 
 \item{obs}{observation array}
-
-\item{ndraws}{number of draws defaults to 10.}
 }
 \value{
-a \code{matricies} or \code{data.frame} of generated  quantities.
+a \code{matrices} or \code{data.frame} of generated  quantities.
 }
 \description{
 Transform structure of the output of \code{generated_quantities()}
