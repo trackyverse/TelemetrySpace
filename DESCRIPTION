@@ -47,4 +47,5 @@ Config/testthat/edition: 3
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-URL: https://telemetryspace.trackyverse.org
+URL: https://telemetryspace.trackyverse.org, https://github.com/trackyverse/TelemetrySpace
+BugReports: https://github.com/trackyverse/TelemetrySpace/issues
