@@ -1,6 +1,6 @@
 #' Generate Quantities
 #'
-#' Used internally to calculate generate quantities for each draw
+#' Used internally to calculate generated quantities for each draw
 #'
 #' @param model Stan model object
 #' @param standata Data fed to Stan model
