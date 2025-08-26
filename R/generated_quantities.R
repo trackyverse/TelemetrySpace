@@ -21,7 +21,7 @@ generated_quantities <- function(model,
   # extract posteriors
   post <- rstan::extract(model)
 
-  # pull everything out from post and put into function enviornment
+  # pull everything out from post and put into function environment
   list2env(post, envir = environment())
 
   # pull everything from standata
