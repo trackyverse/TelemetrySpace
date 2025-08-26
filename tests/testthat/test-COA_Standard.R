@@ -1,5 +1,5 @@
-library(testthat)
-library(TelemetrySpace)
+# library(testthat)
+# library(TelemetrySpace)
 # ---- test each argument if it errors appropriately -----
 
 # Base arguments for COA_Standard
