@@ -182,5 +182,6 @@ transform_gq <- function(input,
     paste0("tag_", idx[1], "_rec_", idx[2], "_time_", idx[3])
   })
 
+  return(rep_mat)
 }
 
