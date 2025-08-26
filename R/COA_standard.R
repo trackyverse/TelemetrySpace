@@ -75,8 +75,7 @@ COA_Standard <- function(
                                                    standata = standata)
 
   tran_fit_gq <- transform_gq(fit_generated_quantities,
-                              obs = y
-                              )
+                              obs = y)
   # Extract COA estimates
   coas <- array(NA, dim = c(ntime, 7, nind))
   dimnames(coas)[[2]] <- c(
