@@ -5,9 +5,11 @@
 
 The `TelemetrySpace` package implements the model described in [Winton et al. 2018](https://doi.org/10.1111/2041-210X.13080), *A spatial point process model to estimate individual centres of activity from passive acoustic telemetry data*.
 
+<!-- badges: start -->
 [![R-CMD-check](https://github.com/trackyverse/TelemetrySpace/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/trackyverse/TelemetrySpace/actions/workflows/R-CMD-check.yaml)
 [![TelemetrySpace status badge](https://trackyverse.r-universe.dev/TelemetrySpace/badges/version)](https://trackyverse.r-universe.dev/TelemetrySpace)
-
+[![name status badge](https://trackyverse.r-universe.dev/badges/:name)](https://trackyverse.r-universe.dev/)
+<!-- badges: end -->
 
 
 
