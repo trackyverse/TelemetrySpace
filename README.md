@@ -20,3 +20,23 @@ install.packages('TelemetrySpace', repos = c('https://ocean-tracking-network.r-u
 ```
 
 The `TelemetrySpace` package uses [Stan](http://mc-stan.org/) for model fitting. If you would like to use more-up-to-date versions of Stan or [RStan](https://mc-stan.org/rstan/) dependencies, please follow the instructions at https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started.
+
+### Docker
+
+We also offer a Docker image with all dependencies pre-installed. To use the Docker image, first install [Docker](https://www.docker.com/get-started). Then, you can run an R session with `TelemetrySpace` installed by running the following command in your terminal:
+
+```
+docker pull ghcr.io/trackyverse/telemetryspace:latest
+docker run --rm -it \
+  -p 8888:8888 \
+  ghcr.io/trackyverse/telemetryspace:latest
+```
+
+To bring your data into the Docker container, you can mount a local directory to the Docker container using the `-v` flag. For example, to mount your `~/data` directory to `/data` in the Docker container, you can run:
+
+```
+docker run --rm -it \
+  -p 8888:8888 \
+  -v $PWD/data:/data \
+  ghcr.io/trackyverse/telemetryspace:latest
+```
