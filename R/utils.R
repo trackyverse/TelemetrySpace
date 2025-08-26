@@ -78,7 +78,7 @@ expected_lengths <- function(recX = NULL,
                              ntest_len = NULL) {
 
   if (!is.null(ntest_len)) {
-  check_num_vec_len(ntest_len, vec_length = 1, arg_name = "ntest")
+    check_num_vec_len(ntest_len, vec_length = 1, arg_name = "ntest")
   }
 
   lengths <- list(
@@ -135,4 +135,48 @@ validate_standata <- function(standata, lengths) {
   )
 }
 
+
+#' Transform structure of the output of `generated_quantities()`
+#'
+#' @param input list of three dimensional array
+#'
+#' @return a `matricies` or `data.frame` of generated  quantities.
+#'
+#' @keywords internal
+#' @name transform_gq
+
+transform_gq <- function(input,
+                         ndraws = NULL) {
+  check_array(input)
+  # default number of draws
+  if (is.null(ndraws)) {
+    ndraws <- 10
+  }
+  # number of observations
+  n_obs <- as.vector(y) |>
+    length()
+  # blank matrix to dump into
+  rep_mat <- matrix(NA, nrow = ndraws, ncol = n_obs)
+
+  # dump output of generate quantities into a vector
+  rep_mat <- do.call(rbind, lapply(input, function(x) as.vector(x)))
+
+  # add in rownames
+  rownames(rep_mat) <- paste0("yrep_", seq_along(input))
+
+  # start grabbing col names
+  dim_x <- dim(input[[1]])
+
+  grid <- expand.grid(
+    tag  = seq_len(dim_x[1]),
+    rec  = seq_len(dim_x[2]),
+    time = seq_len(dim_x[3])
+  )
+
+  # add in col names
+  colnames(rep_mat) <- apply(grid, 1, function(idx) {
+    paste0("tag_", idx[1], "_rec_", idx[2], "_time_", idx[3])
+  })
+
+}
 
