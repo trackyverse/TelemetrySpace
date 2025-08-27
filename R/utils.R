@@ -135,29 +135,26 @@ validate_standata <- function(standata, lengths) {
   )
 }
 
-
-#' Transform structure of the output of `generated_quantities()`
+#' Transform classes and structure of the output of different data objects
 #'
+#' Transforms output of `generated_quantities()`
 #' @param input list of three dimensional array
-#' @param obs observation array
 #'
-#' @return a `matrices` or `data.frame` of generated  quantities.
+#' @return a `matrices` of generated  quantities.
 #'
 #' @keywords internal
-#' @name transform_gq
+#' @name transform_objects
 
-transform_gq <- function(input,
-                         obs) {
+transform_gq <- function(input) {
 
   # check arrays
   lapply(input, check_array)
-  check_array(obs)
 
   # default number of draws
-    ndraws <- length(input)
+  ndraws <- length(input)
   # number of observations
-  n_obs <- as.vector(obs) |>
-    length()
+  n_obs <- length(input[[1]])
+
   # blank matrix to dump into
   rep_mat <- matrix(NA, nrow = ndraws, ncol = n_obs)
 
