@@ -60,6 +60,31 @@ check_array_tag <- function(x, len, arg_name = NULL) {
     )
   }
 }
+#' @param x is a `Stan` object
+#' @param arg_name the name of the argument to check.
+#'
+#' @keywords internal
+#' @name error_function
+
+check_stan_object <- function(x, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+
+  # valid classes from rstan and cmdstanr
+  valid_classes <- c("stanfit",
+                     "stanmodel",
+                     "CmdStanMCMC",
+                     "CmdStanMLE",
+                     "CmdStanVB",
+                     "CmdStanModel")
+
+  if (!inherits(x, valid_classes)) {
+    cli::cli_abort(
+      "`{arg_name}` must a `Stan` object (from {.pkg rstan} or {.pkg cmdstanr})."
+    )
+  }
+}
 
 
 #' Expected lengths of variables in `standata`
