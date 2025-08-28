@@ -70,7 +70,9 @@ generated_quantities <- function(model,
                         )
       )
 
-    # generate quantities
+    }
+    # ----- generate quantities ------
+    # First for number of detections for each tagged individual
     for (t in 1:ntime) {
       for (i in 1:nind) {
         for (j in 1:nrec) {
