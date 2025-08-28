@@ -55,18 +55,20 @@ generated_quantities <- function(model,
 
     out <- array(NA, c(nind, nrec, ntime),
                  dimnames = list(
-                   tag  = seq_len(nind),
-                   rec  = seq_len(nrec),
+                   tag = seq_len(nind),
+                   rec = seq_len(nrec),
                    time = seq_len(ntime)
                  )
     )
 
-    # if yrep is choosen us d else use td
-    # if (mode %in% "yrep") {
-    #   d1 <- d[draw]
-    # } else {
-    #   td1 <- td[draw]
-    # }
+    if (check_test_tag) {
+      out_test <- array(NA, c(ntest, nrec, ntime),
+                        dimnames = list(
+                          tag = seq_len(ntest),
+                          rec = seq_len(nrec),
+                          time = seq_len(ntime)
+                        )
+      )
 
     # generate quantities
     for (t in 1:ntime) {
