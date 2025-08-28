@@ -112,6 +112,10 @@ generated_quantities <- function(model,
       out_test_list[[k]] <- out_test
     }
   }
+  if (check_test_tag) {
+    return(list(yrep = out_list,
+                testrep = out_test_list))
+  } else {
+    return(out_list)
   }
-  return(out_list)
 }
