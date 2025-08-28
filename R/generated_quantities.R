@@ -36,6 +36,10 @@ generated_quantities <- function(model,
   # list to dump stuf into
   out_list <- vector("list", length = ndraws)
 
+  if (check_test_tag) {
+    out_test_list <- vector("list", length = ndraws)
+  }
+
   for (k in seq_along(ndraw)) {
     # grab extracted values for ndarws
     draw <- ndraw[k]
