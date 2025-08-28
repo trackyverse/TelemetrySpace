@@ -1,5 +1,5 @@
-# library(testthat)
-# library(TelemetrySpace)
+# ----- Model checked from setup-test-env is object model_coa_standard -----
+
 # ---- test each argument if it errors appropriately -----
 
 # Base arguments for COA_Standard
@@ -98,9 +98,9 @@ test_that("parameter validation works", {
 
 # ---- run model and check of it works ----
 
-# fit_1$generated_quantities
+# model_coa_standard$generated_quantities
 
-# bayesplot::ppc_dens_overlay(y = as.vector(Y), yrep = fit_1$generated_quantities)
+# bayesplot::ppc_dens_overlay(y = as.vector(Y), yrep = model_coa_standard$generated_quantities)
 
 
 
@@ -109,20 +109,20 @@ test_that("parameter validation works", {
 
 
 test_that("test COA_standard model results to make sure its consisitent", {
-  mean_p0 <- fit_1$summary[1]
+  mean_p0 <- model_coa_standard$summary[1]
   expected_mean_p0 <- 0.2818
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
 
 })
-test_that("check to see if fit_1 classes", {
+test_that("check to see if model_coa_standard classes", {
 
-  expect_type(fit_1, "list")
-  expect_s4_class(fit_1$model, "stanfit")
-  expect_s3_class(fit_1$coas, "data.frame")
-  expect_s3_class(fit_1$all_estimates, "data.frame")
-  expect_type(fit_1$summary, "double")
-  expect_true(is.matrix(fit_1$summary))
-  expect_true(is.numeric(fit_1$time))
+  expect_type(model_coa_standard, "list")
+  expect_s4_class(model_coa_standard$model, "stanfit")
+  expect_s3_class(model_coa_standard$coas, "data.frame")
+  expect_s3_class(model_coa_standard$all_estimates, "data.frame")
+  expect_type(model_coa_standard$summary, "double")
+  expect_true(is.matrix(model_coa_standard$summary))
+  expect_true(is.numeric(model_coa_standard$time))
 
 })
 
@@ -130,23 +130,23 @@ test_that("check to see if fit_1 classes", {
 
 test_that("check to see if coa returns proper info", {
 
-  expect_true("coas" %in% names(fit_1))
-  expect_equal(nrow(fit_1$coas), model_param_ex$tsteps)
-  expect_equal(colnames(fit_1$coas), c(
+  expect_true("coas" %in% names(model_coa_standard))
+  expect_equal(nrow(model_coa_standard$coas), model_param_ex$tsteps)
+  expect_equal(colnames(model_coa_standard$coas), c(
     "time", "x", "y", "x_lower",
     "x_upper", "y_lower", "y_upper"
   ))
 
-  for (col in colnames(fit_1$coas)) {
-    expect_type(fit_1$coas[[col]], "double")
-    expect_true(all(is.finite(fit_1$coas[[col]])))
+  for (col in colnames(model_coa_standard$coas)) {
+    expect_type(model_coa_standard$coas[[col]], "double")
+    expect_true(all(is.finite(model_coa_standard$coas[[col]])))
   }
 }
 )
 
 test_that("check to see model converged and has a good rhat", {
 
-  rhat <- fit_1$summary[, "Rhat"]
+  rhat <- model_coa_standard$summary[, "Rhat"]
   expect_true(all(rhat > 0.95 & rhat < 1.05))
 }
 )

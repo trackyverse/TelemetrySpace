@@ -1,4 +1,5 @@
-# library(testthat)
+# ----- Model checked from setup-test-env is object model_coa_time_vary -----
+
 # ---- test each argument if it errors appropriately -----
 # ---- Check if nind errors -----
 
@@ -102,30 +103,30 @@ test_that("parameter validation works", {
 
 
 # ---- run model and check of it works ----
-# summary(fit_2)
+# summary(model_coa_time_vary)
 
-# bayesplot::ppc_dens_overlay(y = as.vector(Y), yrep = fit_2$generated_quantities)
-# rstan::traceplot(fit_2$model, pars = c(
+# bayesplot::ppc_dens_overlay(y = as.vector(Y), yrep = model_coa_time_vary$generated_quantities)
+# rstan::traceplot(model_coa_time_vary$model, pars = c(
 #   # "alpha0",
 #   "alpha1",
 #   "sigma", "lp__"))
-# fit_2$coas
+# model_coa_time_vary$coas
 test_that("test COA_TimeVarying model results to make sure its consisitent", {
-  mean_p0 <- fit_2$summary[1]
+  mean_p0 <- model_coa_time_vary$summary[1]
   expected_mean_p0 <- 0.498
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
 })
 
 
-test_that("check to see if fit_2 classes", {
+test_that("check to see if model_coa_time_vary classes", {
 
-  expect_type(fit_2, "list")
-  expect_s4_class(fit_2$model, "stanfit")
-  expect_s3_class(fit_2$coas, "data.frame")
-  expect_s3_class(fit_2$all_estimates, "data.frame")
-  expect_type(fit_2$summary, "double")
-  expect_true(is.matrix(fit_2$summary))
-  expect_true(is.numeric(fit_2$time))
+  expect_type(model_coa_time_vary, "list")
+  expect_s4_class(model_coa_time_vary$model, "stanfit")
+  expect_s3_class(model_coa_time_vary$coas, "data.frame")
+  expect_s3_class(model_coa_time_vary$all_estimates, "data.frame")
+  expect_type(model_coa_time_vary$summary, "double")
+  expect_true(is.matrix(model_coa_time_vary$summary))
+  expect_true(is.numeric(model_coa_time_vary$time))
 
 })
 
@@ -133,23 +134,23 @@ test_that("check to see if fit_2 classes", {
 
 test_that("check to see if coa returns proper info", {
 
-  expect_true("coas" %in% names(fit_2))
-  expect_equal(nrow(fit_2$coas), model_param_ex$tsteps)
-  expect_equal(colnames(fit_2$coas), c(
+  expect_true("coas" %in% names(model_coa_time_vary))
+  expect_equal(nrow(model_coa_time_vary$coas), model_param_ex$tsteps)
+  expect_equal(colnames(model_coa_time_vary$coas), c(
     "time", "x", "y", "x_lower",
     "x_upper", "y_lower", "y_upper"
   ))
 
-  for (col in colnames(fit_2$coas)) {
-    expect_type(fit_2$coas[[col]], "double")
-    expect_true(all(is.finite(fit_2$coas[[col]])))
+  for (col in colnames(model_coa_time_vary$coas)) {
+    expect_type(model_coa_time_vary$coas[[col]], "double")
+    expect_true(all(is.finite(model_coa_time_vary$coas[[col]])))
   }
 }
 )
 
 test_that("check to see model converged and has a good rhat", {
 
-  rhat <- fit_2$summary[, "Rhat"]
+  rhat <- model_coa_time_vary$summary[, "Rhat"]
   expect_true(all(rhat > 0.95 & rhat < 1.05))
 }
 )

@@ -1,7 +1,4 @@
-# library(testthat)
-# library(TelemetrySpace)
-
-nsentinal <- 1
+# ----- Model checked from setup-test-env is object model_coa_tag_int-----
 
 # ---- test each argument if it errors appropriately -----
 coa_args <- list(
@@ -124,26 +121,26 @@ test_that("parameter validation works", {
 
 # ---- run model and check of it works ----
 
-# rstan::traceplot(fit_3$model, pars = c("alpha0", "alpha1",
+# rstan::traceplot(model_coa_tag_int$model, pars = c("alpha0", "alpha1",
 #                                      "sigma", "lp__"))
 
 test_that("test COA_TagInt model results to make sure its consisitent", {
-  mean_p0 <- fit_3$summary[1]
+  mean_p0 <- model_coa_tag_int$summary[1]
 
   expected_mean_p0 <- 0.486
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
 })
 
 
-test_that("check to see if fit_3 classes", {
+test_that("check to see if model_coa_tag_int classes", {
 
-  expect_type(fit_3, "list")
-  expect_s4_class(fit_3$model, "stanfit")
-  expect_s3_class(fit_3$coas, "data.frame")
-  expect_s3_class(fit_3$all_estimates, "data.frame")
-  expect_type(fit_3$summary, "double")
-  expect_true(is.matrix(fit_3$summary))
-  expect_true(is.numeric(fit_3$time))
+  expect_type(model_coa_tag_int, "list")
+  expect_s4_class(model_coa_tag_int$model, "stanfit")
+  expect_s3_class(model_coa_tag_int$coas, "data.frame")
+  expect_s3_class(model_coa_tag_int$all_estimates, "data.frame")
+  expect_type(model_coa_tag_int$summary, "double")
+  expect_true(is.matrix(model_coa_tag_int$summary))
+  expect_true(is.numeric(model_coa_tag_int$time))
 
 })
 
@@ -151,23 +148,23 @@ test_that("check to see if fit_3 classes", {
 
 test_that("check to see if coa returns proper info", {
 
-  expect_true("coas" %in% names(fit_3))
-  expect_equal(nrow(fit_3$coas), model_param_ex$tsteps)
-  expect_equal(colnames(fit_3$coas), c(
+  expect_true("coas" %in% names(model_coa_tag_int))
+  expect_equal(nrow(model_coa_tag_int$coas), model_param_ex$tsteps)
+  expect_equal(colnames(model_coa_tag_int$coas), c(
     "time", "x", "y", "x_lower",
     "x_upper", "y_lower", "y_upper"
   ))
 
-  for (col in colnames(fit_3$coas)) {
-    expect_type(fit_3$coas[[col]], "double")
-    expect_true(all(is.finite(fit_3$coas[[col]])))
+  for (col in colnames(model_coa_tag_int$coas)) {
+    expect_type(model_coa_tag_int$coas[[col]], "double")
+    expect_true(all(is.finite(model_coa_tag_int$coas[[col]])))
   }
 }
 )
 
 test_that("check to see model converged and has a good rhat", {
 
-  rhat <- fit_3$summary[, "Rhat"]
+  rhat <- model_coa_tag_int$summary[, "Rhat"]
   expect_true(all(rhat > 0.95 & rhat < 1.05))
 }
 )
