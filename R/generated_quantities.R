@@ -43,9 +43,16 @@ generated_quantities <- function(model,
   for (k in seq_along(ndraw)) {
     # grab extracted values for ndarws
     draw <- ndraw[k]
-    p0_1 <- p0[k]
     a1 <- alpha1[k]
+
+    if (length(dim(p0)) %in% 3) {
+      # p0 has shape [ndraws, ntime, nrec]
+      p0_1 <- p0[draw, , ]
+    } else {
+      p0_1 <- p0[draw]
+    }
     # create blank array with the name of eveyrhting
+
     out <- array(NA, c(nind, nrec, ntime),
                  dimnames = list(
                    tag  = seq_len(nind),
