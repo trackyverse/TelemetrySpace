@@ -80,8 +80,11 @@ generated_quantities <- function(model,
           d <- sqrt((sx[draw, i, t] - recX[j]) ^ 2 +
                       (sy[draw, i, t] - recY[j]) ^ 2)
           # make this work for when p0 is dimensions
-          base <- if (length(dim(p0_1)) %in% 2) p0[t, j] else p0_1
-          # create pobablity
+           if (is.matrix(p0_1)) {
+            base <- p0_1[t, j]
+           } else{
+              base <- p0_1
+            }
           p <- base * exp(-a1 * d ^ 2)
           # make sure the pobablity is above 0
           p <- min(max(p, 1e-9), 1 - 1e-9)
