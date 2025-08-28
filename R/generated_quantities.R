@@ -95,6 +95,23 @@ generated_quantities <- function(model,
       }
     }
     out_list[[k]] <- out
+    if (check_test_tag) {
+      for (l in 1:ntime) {
+        for (m in 1:nrec) {
+          for (s in 1:ntest) {
+            # Euclidean distance between test tag s and receiver m
+            td <- sqrt((testX[s] - recX[m]) ^ 2 + (testY[s] - recY[m]) ^ 2)
+            # Probability
+            ptest <- p0_1[l, m] * exp(-a1 * td ^ 2)
+            ptest <- min(max(ptest, 1e-9), 1 - 1e-9)
+            # Simulate detection
+            out_test[s, m, l] <- rbinom(1, ntrans, ptest)
+          }
+        }
+      }
+      out_test_list[[k]] <- out_test
+    }
+  }
   }
   return(out_list)
 }
