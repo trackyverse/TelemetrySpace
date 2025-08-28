@@ -15,6 +15,8 @@ generated_quantities <- function(model,
                                  ndraws = NULL) {
   check_stan_object(model)
   check_numeric(ndraws)
+
+  check_test_tag <- "ntest" %in% names(standata)
   # Set default number of draws
   if (is.null(ndraws)) {
     ndraws <- 10
