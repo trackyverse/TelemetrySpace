@@ -13,6 +13,8 @@
 generated_quantities <- function(model,
                                  standata,
                                  ndraws = NULL) {
+  check_stan_object(model)
+  check_numeric(ndraws)
   # Set default number of draws
   if (is.null(ndraws)) {
     ndraws <- 10
