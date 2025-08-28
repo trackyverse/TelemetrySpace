@@ -88,7 +88,7 @@ generated_quantities <- function(model,
           p <- base * exp(-a1 * d ^ 2)
           # make sure the pobablity is above 0
           p <- min(max(p, 1e-9), 1 - 1e-9)
-          # then run int using a the iteration of transmission by probality
+          # then run int using a the iteration of transmission by probability
           # to get the number of detections
           out[i, j, t] <- rbinom(1, ntrans, p)
         }
