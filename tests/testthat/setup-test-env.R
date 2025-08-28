@@ -29,7 +29,7 @@ standata_1 <- list(
 
 # ----- run each model ------
 # ----- standard coa ------
-fit_1 <- do.call(
+model_coa_standard <- do.call(
   COA_Standard,
   c(standata,
     list(
@@ -41,7 +41,7 @@ fit_1 <- do.call(
   )
 )
 # ----- time integrated -----
-fit_2 <- do.call(
+model_coa_time_vary <- do.call(
   COA_TimeVarying,
   c(standata,
     list(
@@ -54,7 +54,7 @@ fit_2 <- do.call(
 )
 
 # ----- tag integraged -----
-fit_3 <- do.call(
+model_coa_tag_int <- do.call(
   COA_TagInt,
   c(standata_1,
     list(
