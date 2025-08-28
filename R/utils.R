@@ -86,6 +86,21 @@ check_stan_object <- function(x, arg_name = NULL) {
   }
 }
 
+#' @param x is a value.
+#' @param arg_name the name of the argument to check.
+
+check_numeric <- function(x, arg_name = NULL) {
+
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+
+  if (!is.numeric(x)) {
+    cli::cli_abort(
+      "`{arg_name}` must a numeric."
+    )
+  }
+}
 
 #' Expected lengths of variables in `standata`
 #'
