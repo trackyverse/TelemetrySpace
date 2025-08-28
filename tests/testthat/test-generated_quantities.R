@@ -3,8 +3,9 @@
 
 
 all_models <- list(
-  fit_1, fit_2,
-  fit_3
+  model_coa_standard,
+  model_coa_time_vary,
+  model_coa_tag_int
 )
 
 all_data <- list(
@@ -55,6 +56,29 @@ test_that("generated_quantities produces p0_1 with correct dimensions", {
   }
 
 })
+# test_that("check generated quantities yrep", {
+#
+#   draws <- rstan::extract(model_coa_tag_int$model)
+#   # check name
+#   expect_true("yrep" %in% names(draws))
+#   # check length
+#   expect_true(dim(draws$yrep)[1] %in% 8000)
+#   # for speed make this 100 if we want to check all increase this
+#   n_draws <- 10
+#   y_obs_vec <- as.vector(Y)
+#   n_obs <- length(y_obs_vec)
+#   y_rep_mat <- matrix(NA, nrow = n_draws, ncol = n_obs)
+#
+#   for (i in 1:n_draws) {
+#     y_rep_mat[i, ] <- as.vector(draws$yrep[i, , , ])
+#   }
+#   # make sure there's no NA and make sure obs vfallls within a range
+#   for (i in 1:n_draws) {
+#     expect_false(unique(is.na( y_rep_mat[i, ])))
+#     expect_true(all(y_rep_mat[i, ] >= 0 &  y_rep_mat[i, ] <= 25))
+#   }
+# }
+# )
 
 
 
