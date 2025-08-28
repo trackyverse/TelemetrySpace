@@ -97,44 +97,32 @@ test_that("parameter validation works", {
 
 
 # ---- run model and check of it works ----
-fit <- COA_Standard(
-  nind = model_param_ex$nind, # number of individuals
-  nrec = model_param_ex$nrec, # number of receivers
-  ntime = model_param_ex$tsteps, # number of time steps
-  ntrans = model_param_ex$ntrans, # number of expected transmissions per tag per time interval
-  y = Y, # array of detections
-  recX = rlocs$east, # E-W receiver coordinates
-  recY = rlocs$north, # N-S receiver coordinates
-  xlim = example_extent$xlim, # E-W boundary of spatial extent (receiver array + buffer)
-  ylim = example_extent$ylim, # N-S boundary of spatial extent (receiver array + buffer)
-  chains = 2,
-  warmup = 1000,
-  iter = 2000,
-  control = list(adapt_delta = 0.95)
-)
+
+# fit_1$generated_quantities
+
+# bayesplot::ppc_dens_overlay(y = as.vector(Y), yrep = fit_1$generated_quantities)
 
 
-# bayesplot::ppc_dens_overlay(y = as.vector(Y), yrep = fit$generated_quantities)
 
 # rstan::traceplot(fit$model, pars = c("alpha0", "alpha1",
 #                                      "sigma", "lp__"))
 
 
 test_that("test COA_standard model results to make sure its consisitent", {
-  mean_p0 <- fit$summary[1]
+  mean_p0 <- fit_1$summary[1]
   expected_mean_p0 <- 0.2818
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
 
 })
-test_that("check to see if fit classes", {
+test_that("check to see if fit_1 classes", {
 
-  expect_type(fit, "list")
-  expect_s4_class(fit$model, "stanfit")
-  expect_s3_class(fit$coas, "data.frame")
-  expect_s3_class(fit$all_estimates, "data.frame")
-  expect_type(fit$summary, "double")
-  expect_true(is.matrix(fit$summary))
-  expect_true(is.numeric(fit$time))
+  expect_type(fit_1, "list")
+  expect_s4_class(fit_1$model, "stanfit")
+  expect_s3_class(fit_1$coas, "data.frame")
+  expect_s3_class(fit_1$all_estimates, "data.frame")
+  expect_type(fit_1$summary, "double")
+  expect_true(is.matrix(fit_1$summary))
+  expect_true(is.numeric(fit_1$time))
 
 })
 
@@ -142,23 +130,23 @@ test_that("check to see if fit classes", {
 
 test_that("check to see if coa returns proper info", {
 
-  expect_true("coas" %in% names(fit))
-  expect_equal(nrow(fit$coas), model_param_ex$tsteps)
-  expect_equal(colnames(fit$coas), c(
+  expect_true("coas" %in% names(fit_1))
+  expect_equal(nrow(fit_1$coas), model_param_ex$tsteps)
+  expect_equal(colnames(fit_1$coas), c(
     "time", "x", "y", "x_lower",
     "x_upper", "y_lower", "y_upper"
   ))
 
-  for (col in colnames(fit$coas)) {
-    expect_type(fit$coas[[col]], "double")
-    expect_true(all(is.finite(fit$coas[[col]])))
+  for (col in colnames(fit_1$coas)) {
+    expect_type(fit_1$coas[[col]], "double")
+    expect_true(all(is.finite(fit_1$coas[[col]])))
   }
 }
 )
 
 test_that("check to see model converged and has a good rhat", {
 
-  rhat <- fit$summary[, "Rhat"]
+  rhat <- fit_1$summary[, "Rhat"]
   expect_true(all(rhat > 0.95 & rhat < 1.05))
 }
 )
