@@ -12,9 +12,32 @@ all_data <- list(
 )
 # set the number of draws to test
 ndraws_test <- 5
+
+
+# ----- create function to loop over for errors -----
+call_generated_quantities  <- function(overrides) {
+  do.call(generated_quantities, modifyList(gq_args, overrides))
+}
+gq_args <- list(
+  model = model_coa_standard,
+  standata = standata,
+  ndraws = ndraws_test
+)
+# ----- check if params error properly ------
+params_table <- list(
+  list(
+    param = "model",
+    bad = list("a", NA, c(1, 2)),
+    regex = "`model` must be a Stan object \\(from rstan or cmdstanr\\)\\."
+  ),
+  list(
+    param = "ndraws",
+    bad = list("a", NA, c(1, 2)),
+    regex = "`ndraws`  must be a numeric vector that has a length of 1."
+  )
+)
+
 yreps <- list()
-
-
 # ----- loop over generated quantities -----
 for (i in seq_along(all_models)) {
   # Call your function
@@ -28,6 +51,7 @@ bs_returned <- c(1, 1, 2)
 
 # length of yrep give the 5 draws
 length_yrep <- ndraws_test
+
 
 # -----  checks the structure of the structure of generated_quantites -------
 test_that("generated_quantities returns correct structure", {
@@ -52,10 +76,53 @@ test_that("generated_quantities returns correct structure", {
 
         expect_true(is.array(one_draw))
         expect_true(any(dim(one_draw) %in% c(1, 10, 30)))
+
+        dn <- dimnames(one_draw)
+        expect_named(dn, c("tag", "rec", "time"))
+        expect_equal(dn$tag, "1")
+        expect_equal(dn$rec, as.character(1:30))
+        expect_equal(dn$time, as.character(1:10))
       }
     }
   }
 }
 )
 
-# ------ test if numerically they make sense are are numbers ------
+
+# do not test actual values as these will change
+test_that("generated_quantities returns correct integer ", {
+
+  for(s in seq_along(yreps)) {
+
+    bs <- yreps[[s]]
+
+    for (n in seq_along(bs)) {
+      post_draws <- bs[[n]]
+      one_draw <- post_draws[[1]]
+      expect_type(one_draw, "integer")
+    }
+  }
+}
+)
+
+# ---- see if it errors properly -----
+test_that("parameter validation works", {
+
+  for (pt in params_table) {
+    for (bad_val in pt$bad) {
+      tryCatch({
+        expect_error(
+          call_generated_quantities(setNames(list(bad_val), pt$param)),
+          regexp = pt$regex,
+          label = sprintf("param=%s, bad_val=%s", pt$param, deparse1(bad_val))
+        )
+      },
+      error = function(e) {
+        cat("\n Error for param:", pt$param,
+            " bad_val:", deparse(bad_val), "\n")
+        stop(e)
+      })
+    }
+  }
+})
+
