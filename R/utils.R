@@ -172,6 +172,13 @@ validate_standata <- function(standata, lengths) {
 
 transform_gq <- function(input) {
 
+  # if (length(input) %in% 1) {
+    input <- unlist(input, recursive = FALSE)
+  # } else {
+  #   input <- unlist(input, recursive = TRUE) |>
+  #     unlist(recursive = FALSE)
+  # }
+
   # check arrays
   lapply(input, check_array)
 
