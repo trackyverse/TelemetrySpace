@@ -14,7 +14,7 @@ generated_quantities <- function(model,
                                  standata,
                                  ndraws = NULL) {
   check_stan_object(model)
-  check_numeric(ndraws)
+
 
   check_test_tag <- "ntest" %in% names(standata)
   # Set default number of draws
@@ -22,6 +22,7 @@ generated_quantities <- function(model,
     ndraws <- 10
   }
 
+  check_num_vec_len(ndraws, vec_length = 1)
   # extract posteriors
   post <- rstan::extract(model)
 
