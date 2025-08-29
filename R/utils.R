@@ -82,11 +82,7 @@ check_stan_object <- function(x, arg_name = NULL) {
 
   if (!inherits(x, valid_classes)) {
     cli::cli_abort(
-      "`{arg_name}` must a `Stan` object (from {.pkg rstan} or {.pkg cmdstanr})."
-    )
-  }
-}
-
+      "`{arg_name}` must be a Stan object (from {.pkg rstan} or {.pkg cmdstanr})."
     )
   }
 }
