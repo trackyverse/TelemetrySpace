@@ -51,12 +51,6 @@ generated_quantities <- function(model,
     } else {
       p0 <- plogis(alpha0[draw])
     }
-    # if (length(dim(p0)) %in% 3) {
-    #   # p0 has shape [ndraws, ntime, nrec]
-    #   p0_1 <- p0[draw, , ]
-    # } else {
-    #   p0_1 <- p0[draw]
-    # }
     # create blank array with the name of eveyrhting
 
     yrep <- array(NA, c(nind, nrec, ntime),
