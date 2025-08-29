@@ -34,10 +34,10 @@ generated_quantities <- function(model,
   # create vector to loop over
   ndraw <- seq_len(ndraws)
   # list to dump stuf into
-  out_list <- vector("list", length = ndraws)
+  yrep_list <- vector("list", length = ndraws)
 
   if (check_test_tag) {
-    out_test_list <- vector("list", length = ndraws)
+    yrep_test_list <- vector("list", length = ndraws)
   }
 
   for (k in seq_along(ndraw)) {
@@ -53,21 +53,21 @@ generated_quantities <- function(model,
     }
     # create blank array with the name of eveyrhting
 
-    out <- array(NA, c(nind, nrec, ntime),
-                 dimnames = list(
-                   tag = seq_len(nind),
-                   rec = seq_len(nrec),
-                   time = seq_len(ntime)
-                 )
+    yrep <- array(NA, c(nind, nrec, ntime),
+                  dimnames = list(
+                    tag = seq_len(nind),
+                    rec = seq_len(nrec),
+                    time = seq_len(ntime)
+                  )
     )
 
     if (check_test_tag) {
-      out_test <- array(NA, c(ntest, nrec, ntime),
-                        dimnames = list(
-                          tag = seq_len(ntest),
-                          rec = seq_len(nrec),
-                          time = seq_len(ntime)
-                        )
+      yrep_test <- array(NA, c(ntest, nrec, ntime),
+                         dimnames = list(
+                           tag = seq_len(ntest),
+                           rec = seq_len(nrec),
+                           time = seq_len(ntime)
+                         )
       )
 
     }
@@ -90,11 +90,13 @@ generated_quantities <- function(model,
           p <- min(max(p, 1e-9), 1 - 1e-9)
           # then run int using a the iteration of transmission by probability
           # to get the number of detections
-          out[i, j, t] <- rbinom(1, ntrans, p)
+          yrep[i, j, t] <- rbinom(1, ntrans, p)
         }
       }
     }
-    out_list[[k]] <- out
+    yrep_list[[k]] <- yrep
+
+    # ----- run generated quantities for ntest ------
     if (check_test_tag) {
       for (l in 1:ntime) {
         for (m in 1:nrec) {
@@ -105,17 +107,17 @@ generated_quantities <- function(model,
             ptest <- p0_1[l, m] * exp(-a1 * td ^ 2)
             ptest <- min(max(ptest, 1e-9), 1 - 1e-9)
             # Simulate detection
-            out_test[s, m, l] <- rbinom(1, ntrans, ptest)
+            yrep_test[s, m, l] <- rbinom(1, ntrans, ptest)
           }
         }
       }
-      out_test_list[[k]] <- out_test
+      yrep_test_list[[k]] <- yrep_test
     }
   }
   if (check_test_tag) {
-    return(list(yrep = out_list,
-                testrep = out_test_list))
+    return(list(yrep = yrep_list,
+                testrep = yrep_test_list))
   } else {
-    return(out_list)
+    return(list(yrep = yrep_list))
   }
 }
