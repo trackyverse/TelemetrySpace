@@ -60,11 +60,12 @@ check_array_tag <- function(x, len, arg_name = NULL) {
     )
   }
 }
+
 #' @param x is a `Stan` object
 #' @param arg_name the name of the argument to check.
 #'
 #' @keywords internal
-#' @name error_function
+#' @name error_functions
 
 check_stan_object <- function(x, arg_name = NULL) {
   if (is.null(arg_name)) {
@@ -88,6 +89,9 @@ check_stan_object <- function(x, arg_name = NULL) {
 
 #' @param x is a value.
 #' @param arg_name the name of the argument to check.
+#'
+#' @keywords internal
+#' @name error_functions
 
 check_numeric <- function(x, arg_name = NULL) {
 
@@ -177,10 +181,10 @@ validate_standata <- function(standata, lengths) {
 
 #' Transform classes and structure of the output of different data objects
 #'
-#' Transforms output of `generated_quantities()`
+#' Transforms output of `generated_quantities()`,
 #' @param input list of three dimensional array
 #'
-#' @return a `matrices` of generated  quantities.
+#' @return a `matrices` of generated quantities.
 #'
 #' @keywords internal
 #' @name transform_objects
