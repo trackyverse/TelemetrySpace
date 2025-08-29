@@ -36,7 +36,8 @@ model_coa_standard <- do.call(
       chains = 2,
       warmup = 1000,
       iter = 2000,
-      control = list(adapt_delta = 0.95)
+      control = list(adapt_delta = 0.95),
+      seed = 4
     )
   )
 )
@@ -48,7 +49,8 @@ model_coa_time_vary <- do.call(
       chains = 2,
       warmup = 3000,
       iter = 7000,
-      control = list(adapt_delta = 0.95)
+      control = list(adapt_delta = 0.95),
+      seed = 4
     )
   )
 )
@@ -61,7 +63,8 @@ model_coa_tag_int <- do.call(
       chains = 2,
       warmup = 4000,
       iter = 8000,
-      control = list(adapt_delta = 0.95)
+      control = list(adapt_delta = 0.95),
+      seed = 4
     )
   )
 )
