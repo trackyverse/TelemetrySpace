@@ -45,12 +45,18 @@ generated_quantities <- function(model,
     draw <- ndraw[k]
     a1 <- alpha1[k]
 
-    if (length(dim(p0)) %in% 3) {
+    if (length(dim(alpha0)) %in% 3) {
       # p0 has shape [ndraws, ntime, nrec]
-      p0_1 <- p0[draw, , ]
+      p0 <- plogis(alpha0[draw, , ])
     } else {
-      p0_1 <- p0[draw]
+      p0 <- plogis(alpha0[draw])
     }
+    # if (length(dim(p0)) %in% 3) {
+    #   # p0 has shape [ndraws, ntime, nrec]
+    #   p0_1 <- p0[draw, , ]
+    # } else {
+    #   p0_1 <- p0[draw]
+    # }
     # create blank array with the name of eveyrhting
 
     yrep <- array(NA, c(nind, nrec, ntime),
@@ -80,11 +86,11 @@ generated_quantities <- function(model,
           d <- sqrt((sx[draw, i, t] - recX[j]) ^ 2 +
                       (sy[draw, i, t] - recY[j]) ^ 2)
           # make this work for when p0 is dimensions
-           if (is.matrix(p0_1)) {
-            base <- p0_1[t, j]
-           } else{
-              base <- p0_1
-            }
+          if (is.matrix(p0)) {
+            base <- p0[t, j]
+          } else{
+            base <- p0
+          }
           p <- base * exp(-a1 * d ^ 2)
           # make sure the pobablity is above 0
           p <- min(max(p, 1e-9), 1 - 1e-9)
@@ -104,7 +110,7 @@ generated_quantities <- function(model,
             # Euclidean distance between test tag s and receiver m
             td <- sqrt((testX[s] - recX[m]) ^ 2 + (testY[s] - recY[m]) ^ 2)
             # Probability
-            ptest <- p0_1[l, m] * exp(-a1 * td ^ 2)
+            ptest <- p0[l, m] * exp(-a1 * td ^ 2)
             ptest <- min(max(ptest, 1e-9), 1 - 1e-9)
             # Simulate detection
             yrep_test[s, m, l] <- rbinom(1, ntrans, ptest)
