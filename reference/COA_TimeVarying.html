@@ -42,7 +42,19 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">COA_TimeVarying</span><span class="op">(</span><span class="va">nind</span>, <span class="va">nrec</span>, <span class="va">ntime</span>, <span class="va">ntrans</span>, <span class="va">y</span>, <span class="va">recX</span>, <span class="va">recY</span>, <span class="va">xlim</span>, <span class="va">ylim</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">COA_TimeVarying</span><span class="op">(</span></span>
+<span>  <span class="va">nind</span>,</span>
+<span>  <span class="va">nrec</span>,</span>
+<span>  <span class="va">ntime</span>,</span>
+<span>  <span class="va">ntrans</span>,</span>
+<span>  <span class="va">y</span>,</span>
+<span>  <span class="va">recX</span>,</span>
+<span>  <span class="va">recY</span>,</span>
+<span>  <span class="va">xlim</span>,</span>
+<span>  <span class="va">ylim</span>,</span>
+<span>  ndraws <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -85,10 +97,14 @@
 <dd><p>North-south boundaries of spatial extent (receiver array + buffer)</p></dd>
 
 
+<dt id="arg-ndraws">ndraws<a class="anchor" aria-label="anchor" href="#arg-ndraws"></a></dt>
+<dd><p>to be passed to <code>generated_quantities</code>. Changes the number of draws. Default is 10.</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Additional arguments passed to <code>sampling</code> from <code>rstan</code>.
 This can include setting <code>chains</code>, <code>iter</code>, <code>warmup</code>, and <code>control</code>. Please see
-<code><a href="https://mc-stan.org/rstan/reference/stanmodel-method-sampling.html" class="external-link">rstan::sampling</a></code> for more info.</p></dd>
+<code><a href="https://mc-stan.org/rstan/reference/stanmodel-method-sampling.html" class="external-link">rstan::sampling()</a></code> for more info.</p></dd>
 
 </dl></div>
     <div class="section level2">

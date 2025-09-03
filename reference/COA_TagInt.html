@@ -56,6 +56,7 @@
 <span>  <span class="va">ylim</span>,</span>
 <span>  <span class="va">testX</span>,</span>
 <span>  <span class="va">testY</span>,</span>
+<span>  ndraws <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -116,10 +117,14 @@
 <dd><p>Test tag coordinates in the north-south direction (should be projected and scaled for computational efficiency)</p></dd>
 
 
+<dt id="arg-ndraws">ndraws<a class="anchor" aria-label="anchor" href="#arg-ndraws"></a></dt>
+<dd><p>to be passed to <code>generated_quantities</code>. Changes the number of draws. Default is 10.</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Additional arguments passed to <code>sampling</code> from <code>rstan</code>.
 This can include setting <code>chains</code>, <code>iter</code>, <code>warmup</code>, and <code>control</code>. Please see
-<code><a href="https://mc-stan.org/rstan/reference/stanmodel-method-sampling.html" class="external-link">rstan::sampling</a></code> for more info.</p></dd>
+<code><a href="https://mc-stan.org/rstan/reference/stanmodel-method-sampling.html" class="external-link">rstan::sampling()</a></code> for more info.</p></dd>
 
 </dl></div>
     <div class="section level2">
