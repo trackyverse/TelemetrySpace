@@ -8,7 +8,6 @@
 #' @keywords internal
 #' @name error_functions
 
-
 check_num_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
   if (is.null(arg_name)) {
     arg_name <- rlang::as_label(rlang::enexpr(x))
@@ -28,7 +27,6 @@ check_num_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
 #' @name error_functions
 
 check_array <- function(x, arg_name = NULL) {
-
   if (is.null(arg_name)) {
     arg_name <- rlang::as_label(rlang::enexpr(x))
   }
@@ -36,7 +34,6 @@ check_array <- function(x, arg_name = NULL) {
   if (!is.array(x) || !is.numeric(x) || length(dim(x)) != 3) {
     cli::cli_abort("`{arg_name}` must be a 3-dimensional numeric array.")
   }
-
 }
 
 
@@ -49,11 +46,9 @@ check_array <- function(x, arg_name = NULL) {
 #' @name error_functions
 #'
 check_array_tag <- function(x, len, arg_name = NULL) {
-
   if (is.null(arg_name)) {
     arg_name <- rlang::as_label(rlang::enexpr(x))
   }
-
 
   if (!is.array(x) || !is.numeric(x) || length(x) != len) {
     cli::cli_abort(
@@ -74,12 +69,14 @@ check_stan_object <- function(x, arg_name = NULL) {
   }
 
   # valid classes from rstan and cmdstanr
-  valid_classes <- c("stanfit",
+  valid_classes <- c(
+"stanfit",
                      "stanmodel",
                      "CmdStanMCMC",
                      "CmdStanMLE",
                      "CmdStanVB",
-                     "CmdStanModel")
+                     "CmdStanModel"
+)
 
   if (!inherits(x, valid_classes)) {
     cli::cli_abort(
