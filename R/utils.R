@@ -127,11 +127,11 @@ expected_lengths <- function(rec_x = NULL, rec_y = NULL, ntest_len = NULL) {
 #' @name vaidate_standata
 
 validate_standata <- function(standata, lengths) {
-  array_vars <- intersect(c("y", "test", "testX", "testY"), names(standata))
+  array_vars <- intersect(c("det", "test", "test_x", "test_y"), names(standata))
 
   for (var in array_vars) {
     # check station locations
-    if (var %in% c("testX", "testY")) {
+    if (var %in% c("test_x", "test_y")) {
       check_array_tag(standata[[var]], len = lengths[[var]], arg_name = var)
     } else {
       # Check 3d array used for counts
