@@ -11,17 +11,22 @@ Spatial point process and random field models for electronic tagging data
 \references{
 Stan Development Team (2017). RStan: the R interface to Stan. R package version 2.16.2. http://mc-stan.org
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://telemetryspace.trackyverse.org}
+  \item \url{https://github.com/trackyverse/TelemetrySpace}
+  \item Report bugs at \url{https://github.com/trackyverse/TelemetrySpace/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Michael O'Brien \email{mike@obrien.page} (\href{https://orcid.org/0000-0003-1420-6395}{ORCID})
 
 Authors:
 \itemize{
   \item Megan Winton \email{megan.winton@gmail.com} (\href{https://orcid.org/0000-0003-2628-7022}{ORCID})
-}
-
-Other contributors:
-\itemize{
-  \item Benjamin L. Hlina \email{benjamin.hlina@gmail.com} (\href{https://orcid.org/0000-0002-4178-4900}{ORCID}) [contributor]
+  \item Benjamin L. Hlina \email{benjamin.hlina@gmail.com} (\href{https://orcid.org/0000-0002-4178-4900}{ORCID})
 }
 
 }
