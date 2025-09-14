@@ -1,21 +1,21 @@
 n_sentinel <- 1
 # ----- standata 1 ------
 standata <- list(
-  n_ind = model_param_ex$n_ind, # number of individuals
-  n_rec = model_param_ex$n_rec, # number of receivers
+  n_ind = model_param_ex$nind, # number of individuals
+  n_rec = model_param_ex$nrec, # number of receivers
   n_time = model_param_ex$tsteps, # number of time steps
-  n_trans = model_param_ex$n_trans, # number of expected transmissions per tag per time interval
+  n_trans = model_param_ex$ntrans, # number of expected transmissions per tag per time interval
   det = Y, # array of detections
   rec_x = rlocs$east, # E-W receiver coordinates
   rec_y = rlocs$north, # N-S receiver coordinates
-  x_lim = example_extent$x_lim, # E-W boundary of spatial extent (receiver array + buffer)
-  y_lim = example_extent$y_lim
+  x_lim = example_extent$xlim, # E-W boundary of spatial extent (receiver array + buffer)
+  y_lim = example_extent$ylim
 )
 standata_test_tag <- list(
   n_ind = model_param_ex$n_ind, # number of individuals
   n_rec = model_param_ex$n_rec, # number of receivers
   n_time = model_param_ex$tsteps, # number of time steps
-  n_trans = model_param_ex$n_trans, # number of expected transmissions per tag per time interval
+  n_trans = model_param_ex$ntrans, # number of expected transmissions per tag per time interval
   det = Y, # array of detections
   rec_x = rlocs$east, # E-W receiver coordinates
   rec_y = rlocs$north, # N-S receiver coordinates
