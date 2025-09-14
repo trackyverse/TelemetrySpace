@@ -127,7 +127,7 @@ expected_lengths <- function(rec_x = NULL, rec_y = NULL, ntest_len = NULL) {
 #' @name vaidate_standata
 
 validate_standata <- function(standata, lengths) {
-  array_vars <- intersect(c("det", "test", "test_x",                             "test_y"), names(standata))
+  array_vars <- intersect(c("det", "test", "test_x", "test_y"), names(standata))
 
   for (var in array_vars) {
     # check station locations
@@ -140,16 +140,16 @@ validate_standata <- function(standata, lengths) {
   }
 
   # check vectors
-  mapply(FUN = function(len, name) {
-
-    if (!(name %in% array_vars) && !is.null(len) && !is.null(standata[[name]])) {
-
-      check_num_vec_len(standata[[name]],
-                        vec_length = len,
-                        arg_name = name)
+  mapply(
+FUN = function(len, name) {
+    if (
+!(name %in% array_vars) && !is.null(len) && !is.null(standata[[name]])
+) {
+      check_num_vec_len(standata[[name]], vec_length = len, arg_name = name)
     }
   },
-  lengths, names(lengths)
+  lengths,
+names(lengths)
   )
 }
 
