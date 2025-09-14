@@ -10,13 +10,14 @@
 
 
 check_num_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
-
   if (is.null(arg_name)) {
     arg_name <- rlang::as_label(rlang::enexpr(x))
   }
 
   if (!is.numeric(x) || !is.vector(x) || length(x) != vec_length) {
-    cli::cli_abort("`{arg_name}` must be a numeric vector that has a length of {vec_length}.")
+    cli::cli_abort(
+"`{arg_name}` must be a numeric vector that has a length of {vec_length}."
+)
   }
 }
 
