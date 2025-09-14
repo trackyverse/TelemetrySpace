@@ -4,14 +4,14 @@
 \alias{generated_quantities}
 \title{Generate Quantities}
 \usage{
-generated_quantities(model, standata, ndraws = NULL)
+generated_quantities(model, standata, n_draws = NULL)
 }
 \arguments{
 \item{model}{Stan model object}
 
 \item{standata}{Data fed to Stan model}
 
-\item{ndraws}{is the number of draws to take. Default to 10.}
+\item{n_draws}{is the number of draws to take. Default to 10.}
 }
 \value{
 generated quantities from the model
