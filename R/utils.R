@@ -195,9 +195,7 @@ transform_gq <- function(input) {
     colnames(rep_mat) <- apply(grid, 1, function(idx) {
       paste0("tag_", idx[1], "_rec_", idx[2], "_time_", idx[3])
     })
-    return(rep_mat)
-
-  })
+      })
   names(output) <- post_type
   output
 }
