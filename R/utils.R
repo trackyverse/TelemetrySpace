@@ -15,8 +15,8 @@ check_num_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
 
   if (!is.numeric(x) || !is.vector(x) || length(x) != vec_length) {
     cli::cli_abort(
-"`{arg_name}` must be a numeric vector that has a length of {vec_length}."
-)
+      "`{arg_name}` must be a numeric vector that has a length of {vec_length}."
+    )
   }
 }
 
@@ -70,13 +70,13 @@ check_stan_object <- function(x, arg_name = NULL) {
 
   # valid classes from rstan and cmdstanr
   valid_classes <- c(
-"stanfit",
-                     "stanmodel",
-                     "CmdStanMCMC",
-                     "CmdStanMLE",
-                     "CmdStanVB",
-                     "CmdStanModel"
-)
+    "stanfit",
+    "stanmodel",
+    "CmdStanMCMC",
+    "CmdStanMLE",
+    "CmdStanVB",
+    "CmdStanModel"
+  )
 
   if (!inherits(x, valid_classes)) {
     cli::cli_abort(
@@ -141,15 +141,15 @@ validate_standata <- function(standata, lengths) {
 
   # check vectors
   mapply(
-FUN = function(len, name) {
-    if (
-!(name %in% array_vars) && !is.null(len) && !is.null(standata[[name]])
-) {
-      check_num_vec_len(standata[[name]], vec_length = len, arg_name = name)
-    }
-  },
-  lengths,
-names(lengths)
+    FUN = function(len, name) {
+      if (
+        !(name %in% array_vars) && !is.null(len) && !is.null(standata[[name]])
+      ) {
+        check_num_vec_len(standata[[name]], vec_length = len, arg_name = name)
+      }
+    },
+    lengths,
+    names(lengths)
   )
 }
 
@@ -186,8 +186,8 @@ transform_gq <- function(input) {
     dim_x <- dim(open_input[[1]])
 
     grid <- expand.grid(
-      tag  = seq_len(dim_x[1]),
-      rec  = seq_len(dim_x[2]),
+      tag = seq_len(dim_x[1]),
+      rec = seq_len(dim_x[2]),
       time = seq_len(dim_x[3])
     )
 
@@ -195,8 +195,7 @@ transform_gq <- function(input) {
     colnames(rep_mat) <- apply(grid, 1, function(idx) {
       paste0("tag_", idx[1], "_rec_", idx[2], "_time_", idx[3])
     })
-      })
+  })
   names(output) <- post_type
   output
 }
-
