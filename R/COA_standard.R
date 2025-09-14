@@ -1,19 +1,17 @@
-# Save this file as `R/COA_standard.R`
-
 #' Fits a Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan
 #'
 
-#' @param nind   Number of tagged individuals
-#' @param nrec   Number of receivers
-#' @param ntime  Number of time steps
-#' @param ntrans Number of expected transmissions per tag per time interval
-#' @param y      Array of detection data, where row = individual, column = time step, and matrix = receiver
-#' @param recX   Receiver coordinates in the east-west direction (should be projected and scaled for computational efficiency)
-#' @param recY   Receiver coordinates in the north-south direction (should be projected and scaled for computational efficiency)
-#' @param xlim   East-west boundaries of spatial extent (receiver array + buffer)
-#' @param ylim   North-south boundaries of spatial extent (receiver array + buffer).
+#' @param n_ind   Number of tagged individuals
+#' @param n_rec   Number of receivers
+#' @param n_time  Number of time steps
+#' @param n_trans Number of expected transmissions per tag per time interval
+#' @param det     Array of detection data, where row = individual, column = time step, and matrix = receiver
+#' @param rec_x   Receiver coordinates in the east-west direction (should be projected and scaled for computational efficiency)
+#' @param rec_y   Receiver coordinates in the north-south direction (should be projected and scaled for computational efficiency)
+#' @param x_lim   East-west boundaries of spatial extent (receiver array + buffer)
+#' @param y_lim   North-south boundaries of spatial extent (receiver array + buffer).
 #' @param decay  desired decay function. Currently one of "gaussian" or "logistic". Default is "gaussian".
-#' @param ndraws to be passed to `generated_quantities`. Changes the number of draws. Default is 10.
+#' @param n_draws to be passed to `generated_quantities`. Changes the number of draws. Default is 10.
 #' @param ... Additional arguments passed to `sampling` from `rstan`.
 #' This can include setting `chains`, `iter`, `warmup`, and `control`. Please see
 #' `rstan::sampling()` for more info.
@@ -25,33 +23,33 @@
 #'
 #' @export
 COA_Standard <- function(
-  nind,
-  nrec,
-  ntime,
-  ntrans,
-  y,
-  recX,
-  recY,
-  xlim,
-  ylim,
+  n_ind,
+  n_rec,
+  n_time,
+  n_trans,
+  det,
+  rec_x,
+  rec_y,
+  x_lim,
+  y_lim,
   decay = "gaussian",
-  ndraws = NULL,
+  n_draws = NULL,
   ...
 ) {
   # First move everything into a list
   standata <- list(
-    nind = nind,
-    nrec = nrec,
-    ntime = ntime,
-    ntrans = ntrans,
-    y = y,
-    recX = recX,
-    recY = recY,
-    xlim = xlim,
-    ylim = ylim
+    n_ind = n_ind,
+    n_rec = n_rec,
+    n_time = n_time,
+    n_trans = n_trans,
+    det = det,
+    rec_x = rec_x,
+    rec_y = rec_y,
+    x_lim = x_lim,
+    y_lim = y_lim
   )
   # validate this list prior to sending it to the model
-  exp_len <- expected_lengths(recX = recX, recY = recY)
+  exp_len <- expected_lengths(rec_x = rec_x, rec_y = rec_y)
 
   validate_standata(standata, exp_len)
 
@@ -95,33 +93,33 @@ COA_Standard <- function(
   fit_generated_quantities <- generated_quantities(
     model = fit_model,
     standata = standata,
-    ndraws = ndraws
+    n_draws = n_draws
   )
   # transform gq into matrix
   tran_fit_gq <- transform_gq(fit_generated_quantities)
   # Extract COA estimates
-  coas <- array(NA, dim = c(ntime, 7, nind))
+  coas <- array(NA, dim = c(n_time, 7, n_ind))
   dimnames(coas)[[2]] <- c(
-    'time',
-    'x',
-    'y',
-    'x_lower',
-    'x_upper',
-    'y_lower',
-    'y_upper'
+    "time",
+    "x",
+    "y",
+    "x_lower",
+    "x_upper",
+    "y_lower",
+    "y_upper"
   )
   ew <- NULL
   ns <- NULL
 
-  for (i in 1:nind) {
-    coas[, 1, i] <- seq(1, ntime, 1)
+  for (i in 1:n_ind) {
+    coas[, 1, i] <- seq(1, n_time, 1)
     ew <- dplyr::select(
       fit_estimates,
-      dplyr::starts_with(paste("sx[", i, ",", sep = ''))
+      dplyr::starts_with(paste("x[", i, ",", sep = ""))
     )
     ns <- dplyr::select(
       fit_estimates,
-      dplyr::starts_with(paste("sy[", i, ",", sep = ''))
+      dplyr::starts_with(paste("y[", i, ",", sep = ""))
     )
     coas[, 2, i] <- apply(ew, 2, stats::median)
     coas[, 3, i] <- apply(ns, 2, stats::median)
@@ -142,12 +140,12 @@ COA_Standard <- function(
     tran_fit_gq
   )
   names(model_results) <- c(
-    'model',
-    'summary',
-    'time',
-    'coas',
-    'all_estimates',
-    'generated_quantities'
+    "model",
+    "summary",
+    "time",
+    "coas",
+    "all_estimates",
+    "generated_quantities"
   )
   return(model_results)
 }
