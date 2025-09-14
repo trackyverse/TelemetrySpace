@@ -96,24 +96,21 @@ check_stan_object <- function(x, arg_name = NULL) {
 #' @keywords internal
 #' @name expected_lengths
 
-expected_lengths <- function(recX = NULL,
-                             recY = NULL,
-                             ntest_len = NULL) {
-
+expected_lengths <- function(rec_x = NULL,                              rec_y = NULL,                              ntest_len = NULL) {
   if (!is.null(ntest_len)) {
     check_num_vec_len(ntest_len, vec_length = 1, arg_name = "ntest")
   }
 
   lengths <- list(
-    nind = 1,
-    nrec = 1,
-    ntime = 1,
-    ntrans = 1,
+    n_ind = 1,
+    n_rec = 1,
+    n_time = 1,
+    n_trans = 1,
     ntest = 1,
-    recX = length(recX),
-    recY = length(recY),
-    xlim = 2,
-    ylim = 2,
+    rec_x = length(rec_x),
+    rec_y = length(rec_y),
+    x_lim = 2,
+    y_lim = 2,
     testX = ntest_len,
     testY = ntest_len
   )
