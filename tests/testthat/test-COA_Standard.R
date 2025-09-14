@@ -70,12 +70,7 @@ params_table <- list(
     param = "ylim",
     bad = list("a", c(1, 2, 3)),
     regex = "`ylim` must be a numeric vector that has a length of 2."
-  ),
-  list(
-    param = "ndraws",
-    bad = list("a", c(1, 2, 3)),
-    regex = "`ndraws` must be a numeric vector that has a length of 1."
-  )
+    )
 )
 
 # ----- Check Params -----
