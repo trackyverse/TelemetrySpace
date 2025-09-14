@@ -87,8 +87,8 @@ check_stan_object <- function(x, arg_name = NULL) {
 
 #' Expected lengths of variables in `standata`
 #'
-#' @param recX is the receiver or station x coordinates (e.g, lon).
-#' @param recY is the receiver or station y coordinates (e.g., lat).
+#' @param rec_x is the receiver or station x coordinates (e.g, lon).
+#' @param rec_y is the receiver or station y coordinates (e.g., lat).
 #' @param ntest_len is the number of reference tags which is used as length
 #' by `testX` and `testY`.
 #'
@@ -96,7 +96,7 @@ check_stan_object <- function(x, arg_name = NULL) {
 #' @keywords internal
 #' @name expected_lengths
 
-expected_lengths <- function(recX = NULL, recY = NULL, ntest_len = NULL) {
+expected_lengths <- function(rec_x = NULL, rec_y = NULL, ntest_len = NULL) {
   if (!is.null(ntest_len)) {
     check_num_vec_len(ntest_len, vec_length = 1, arg_name = "ntest")
   }
