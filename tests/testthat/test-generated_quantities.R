@@ -13,7 +13,7 @@ all_data <- rep(
   times = c(4, 2)
 )
 # set the number of draws to test
-ndraws_test <- 5
+n_draws_test <- 5
 
 
 # ----- create function to loop over for errors -----
@@ -24,7 +24,7 @@ call_generated_quantities <- function(overrides) {
 gq_args <- list(
   model = standard_gaussian$model,
   standata = standata,
-  ndraws = ndraws_test
+  n_draws = n_draws_test
 )
 
 # ----- check if params error properly ------
@@ -35,9 +35,9 @@ params_table <- list(
     regex = "`model` must be a Stan object \\(from rstan or cmdstanr\\)\\."
   ),
   list(
-    param = "ndraws",
+    param = "n_draws",
     bad = list("a", NA, c(1, 2)),
-    regex = "`ndraws` must be a numeric vector that has a length of 1."
+    regex = "`n_draws` must be a numeric vector that has a length of 1."
   )
 )
 
@@ -72,14 +72,14 @@ test_that("parameter validation works", {
 
 # create empty list to dump all gc to check
 
-yreps <- list()
+y_reps <- list()
 # ----- loop over generated quantities -----
 for (i in seq_along(all_models)) {
   # Call your function
-  yreps[[i]] <- generated_quantities(
+  y_reps[[i]] <- generated_quantities(
     model = all_models[[i]]$model,
     standata = all_data[[i]],
-    ndraws = ndraws_test
+    n_draws = n_draws_test
   )
 }
 
@@ -87,12 +87,12 @@ for (i in seq_along(all_models)) {
 bs_returned <- rep(c(1, 2), times = c(4, 2))
 
 # length of yrep give the 5 draws
-length_yrep <- ndraws_test
+length_yrep <- n_draws_test
 
 # -----  checks the structure of the structure of generated_quantites -------
 test_that("generated_quantities returns correct structure", {
-  for (s in seq_along(yreps)) {
-    bs <- yreps[[s]]
+  for (s in seq_along(y_reps)) {
+    bs <- y_reps[[s]]
 
     expect_type(bs, "list")
     expect_length(bs, bs_returned[s])
@@ -122,8 +122,8 @@ test_that("generated_quantities returns correct structure", {
 
 # do not test actual values as these will change
 test_that("generated_quantities returns correct integer ", {
-  for (s in seq_along(yreps)) {
-    bs <- yreps[[s]]
+  for (s in seq_along(y_reps)) {
+    bs <- y_reps[[s]]
 
     for (n in seq_along(bs)) {
       post_draws <- bs[[n]]
