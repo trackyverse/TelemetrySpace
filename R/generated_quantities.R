@@ -4,24 +4,24 @@
 #'
 #' @param model Stan model object
 #' @param standata Data fed to Stan model
-#' @param ndraws  is the number of draws to take. Default to 10.
+#' @param n_draws  is the number of draws to take. Default to 10.
 #'
 #' @return generated quantities from the model
 #' @keywords internal
 #' @name generated_quantities
 
-generated_quantities <- function(model, standata, ndraws = NULL) {
+generated_quantities <- function(model, standata, n_draws = NULL) {
   # check stan object
   check_stan_object(model)
-  # check to see if ntest is in standata this will allow for gq's to be made
+  # check to see if n_test is in standata this will allow for gq's to be made
   # for test tag
-  check_test_tag <- "ntest" %in% names(standata)
+  check_test_tag <- "n_test" %in% names(standata)
   # Set default number of draws
-  if (is.null(ndraws)) {
-    ndraws <- 10
+  if (is.null(n_draws)) {
+    n_draws <- 10
   }
 
-  check_num_vec_len(ndraws, vec_length = 1)
+  check_num_vec_len(n_draws, vec_length = 1)
   # extract posteriors
   post <- rstan::extract(model)
 
@@ -32,57 +32,57 @@ generated_quantities <- function(model, standata, ndraws = NULL) {
   list2env(standata, envir = environment())
 
   # create vector to loop over
-  ndraw <- seq_len(ndraws)
+  n_draw <- seq_len(n_draws)
   # list to dump stuf into
-  yrep_list <- vector("list", length = ndraws)
+  y_rep_list <- vector("list", length = n_draws)
 
   if (check_test_tag) {
-    yrep_test_list <- vector("list", length = ndraws)
+    y_rep_test_list <- vector("list", length = n_draws)
   }
 
-  for (k in seq_along(ndraw)) {
+  for (k in seq_along(n_draw)) {
     # grab extracted values for ndarws
-    draw <- ndraw[k]
+    draw <- n_draw[k]
     a1 <- alpha1[k]
 
     if (length(dim(alpha0)) %in% 3) {
-      # p0 has shape [ndraws, ntime, nrec]
+      # p0 has shape [n_draws, n_time, n_rec]
       p0 <- stats::plogis(alpha0[draw, , ])
     } else {
       p0 <- stats::plogis(alpha0[draw])
     }
     # create blank array with the name of eveyrhting
 
-    yrep <- array(
+    y_rep <- array(
       NA,
-      c(nind, nrec, ntime),
+      c(n_ind, n_rec, n_time),
       dimnames = list(
-        tag = seq_len(nind),
-        rec = seq_len(nrec),
-        time = seq_len(ntime)
+        tag = seq_len(n_ind),
+        rec = seq_len(n_rec),
+        time = seq_len(n_time)
       )
     )
 
     if (check_test_tag) {
-      yrep_test <- array(
+      y_rep_test <- array(
         NA,
-        c(ntest, nrec, ntime),
+        c(n_test, n_rec, n_time),
         dimnames = list(
-          tag = seq_len(ntest),
-          rec = seq_len(nrec),
-          time = seq_len(ntime)
+          tag = seq_len(n_test),
+          rec = seq_len(n_rec),
+          time = seq_len(n_time)
         )
       )
     }
     # ----- generate quantities ------
     # First for number of detections for each tagged individual
-    for (t in 1:ntime) {
-      for (i in 1:nind) {
-        for (j in 1:nrec) {
+    for (t in 1:n_time) {
+      for (i in 1:n_ind) {
+        for (j in 1:n_rec) {
           # create distances
-          d <- sqrt(
-            (sx[draw, i, t] - recX[j])^2 +
-              (sy[draw, i, t] - recY[j])^2
+          dist <- sqrt(
+            (x[draw, i, t] - rec_x[j])^2 +
+              (y[draw, i, t] - rec_y[j])^2
           )
           # make this work for when p0 is dimensions
           if (is.matrix(p0)) {
@@ -90,38 +90,38 @@ generated_quantities <- function(model, standata, ndraws = NULL) {
           } else {
             base <- p0
           }
-          p <- base * exp(-a1 * d^2)
+          p <- base * exp(-a1 * dist^2)
           # make sure the pobablity is above 0
           p <- min(max(p, 1e-9), 1 - 1e-9)
           # then run int using a the iteration of transmission by probability
           # to get the number of detections
-          yrep[i, j, t] <- stats::rbinom(1, ntrans, p)
+          y_rep[i, j, t] <- stats::rbinom(1, n_trans, p)
         }
       }
     }
-    yrep_list[[k]] <- yrep
+    y_rep_list[[k]] <- y_rep
 
-    # ----- run generated quantities for ntest ------
+    # ----- run generated quantities for n_test ------
     if (check_test_tag) {
-      for (l in 1:ntime) {
-        for (m in 1:nrec) {
-          for (s in 1:ntest) {
+      for (l in 1:n_time) {
+        for (m in 1:n_rec) {
+          for (s in 1:n_test) {
             # Euclidean distance between test tag s and receiver m
-            td <- sqrt((testX[s] - recX[m])^2 + (testY[s] - recY[m])^2)
+            test_dist <- sqrt((testX[s] - rec_x[m])^2 + (testY[s] - rec_y[m])^2)
             # Probability
-            ptest <- p0[l, m] * exp(-a1 * td^2)
-            ptest <- min(max(ptest, 1e-9), 1 - 1e-9)
+            p_test <- p0[l, m] * exp(-a1 * test_dist^2)
+            p_test <- min(max(p_test, 1e-9), 1 - 1e-9)
             # Simulate detection
-            yrep_test[s, m, l] <- stats::rbinom(1, ntrans, ptest)
+            y_rep_test[s, m, l] <- stats::rbinom(1, n_trans, p_test)
           }
         }
       }
-      yrep_test_list[[k]] <- yrep_test
+      y_rep_test_list[[k]] <- y_rep_test
     }
   }
   if (check_test_tag) {
-    return(list(yrep = yrep_list, testrep = yrep_test_list))
+    return(list(y_rep = y_rep_list, test_rep = y_rep_test_list))
   } else {
-    return(list(yrep = yrep_list))
+    return(list(y_rep = y_rep_list))
   }
 }
