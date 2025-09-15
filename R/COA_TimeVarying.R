@@ -80,15 +80,15 @@ model = fit_model,
   # transform gq into matrix
   tran_fit_gq <- transform_gq(fit_generated_quantities)
   # Extract COA estimates
-  coas <- array(NA, dim = c(ntime, 7, nind))
+  coas <- array(NA, dim = c(n_time, 7, n_ind))
   dimnames(coas)[[2]] <- c(
-    'time',
-    'x',
-    'y',
-    'x_lower',
-    'x_upper',
-    'y_lower',
-    'y_upper'
+    "time",
+    "x",
+    "y",
+    "x_lower",
+    "x_upper",
+    "y_lower",
+    "y_upper"
   )
   ew <- NULL
   ns <- NULL
@@ -136,13 +136,13 @@ model = fit_model,
     tran_fit_gq
   )
   names(model_results) <- c(
-    'model',
-    'summary',
-    'time',
-    'coas',
-    'detection_probs',
-    'all_estimates',
-    'generated_quantities'
+    "model",
+    "summary",
+    "time",
+    "coas",
+    "detection_probs",
+    "all_estimates",
+    "generated_quantities"
   )
   return(model_results)
 }
