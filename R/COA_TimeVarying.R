@@ -25,7 +25,7 @@ COA_TimeVarying <- function(
   n_rec,
   n_time,
   n_trans,
-  y,
+  det,
   rec_x,
   rec_y,
   x_lim,
