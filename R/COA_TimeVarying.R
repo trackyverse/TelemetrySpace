@@ -1,28 +1,25 @@
-# Save this file as `R/COA_TimeVarying.R`
-
 #' Fits a time-varying Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan
 #'
-
-#' @param nind   Number of tagged individuals
-#' @param nrec   Number of receivers
-#' @param ntime  Number of time steps
-#' @param ntrans Number of expected transmissions per tag per time interval
-#' @param y      Array of detection data, where row = individual, column = time step, and matrix = receiver
-#' @param recX   Receiver coordinates in the east-west direction (should be projected and scaled for computational efficiency)
-#' @param recY   Receiver coordinates in the north-south direction (should be projected and scaled for computational efficiency)
-#' @param xlim   East-west boundaries of spatial extent (receiver array + buffer)
-#' @param ylim   North-south boundaries of spatial extent (receiver array + buffer)
+#' @param n_ind   Number of tagged individuals
+#' @param n_rec   Number of receivers
+#' @param n_time  Number of time steps
+#' @param n_trans Number of expected transmissions per tag per time interval
+#' @param det      Array of detection data, where row = individual, column = time step, and matrix = receiver
+#' @param rec_x   Receiver coordinates in the east-west direction (should be projected and scaled for computational efficiency)
+#' @param rec_y   Receiver coordinates in the north-south direction (should be projected and scaled for computational efficiency)
+#' @param x_lim   East-west boundaries of spatial extent (receiver array + buffer)
+#' @param y_lim   North-south boundaries of spatial extent (receiver array + buffer)
 #' @param decay  desired decay function. Currently one of "gaussian" or "logistic". Default is "gaussian".
-#' @param ndraws to be passed to `generated_quantities`. Changes the number of draws. Default is 10.
+#' @param n_draws to be passed to `generated_quantities`. Changes the number of draws. Default is 10.
 #' @param ... Additional arguments passed to `sampling` from `rstan`.
 #' This can include setting `chains`, `iter`, `warmup`, and `control`. Please see
 #' `rstan::sampling()` for more info.
 #'
-#' @return COA_TimeVarying returns an object of class `stanfit` returned by `rstan::sampling`. See the 'rstan' package documentation for details.
+#' @return COA_TimeVarying returns an object of class `stanfit` returned by `rstan::sampling`. See the "rstan" package documentation for details.
 #' @return This function returns a list containing the following components: 1) a summary of the detection function parameters; 2) the time required for model fitting; 3) time-varying detection probabilites for each receiver; 4) the estimated COAs for each individual in each time step and 95 percent credible interval; and 5) a dataframe containing values for each parameter and latent parameter from chain iterations. These can be used to plot posterior distributions and the credible interval around each estimated COA.
 #'
 #' @export
-#'
+
 COA_TimeVarying <- function(
   nind,
   nrec,
