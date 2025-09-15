@@ -1,19 +1,19 @@
 # ----- Model checked from setup-test-env is object time_vary_gaussian -----
 
 # ---- test each argument if it errors appropriately -----
-# ---- Check if nind errors -----
+# ---- Check if n_ind errors -----
 
 # Base arguments for COA_Standard
 coa_args <- list(
-  nind = model_param_ex$nind,
-  nrec = model_param_ex$nrec,
-  ntime = model_param_ex$tsteps,
-  ntrans = model_param_ex$ntrans,
-  y = Y,
-  recX = rlocs$east,
-  recY = rlocs$north,
-  xlim = example_extent$xlim,
-  ylim = example_extent$ylim,
+  n_ind = model_param_ex$n_ind,
+  n_rec = model_param_ex$n_rec,
+  n_time = model_param_ex$tsteps,
+  n_trans = model_param_ex$n_trans,
+  det = Y,
+  rec_x = rlocs$east,
+  rec_y = rlocs$north,
+  x_lim = example_extent$x_lim,
+  y_lim = example_extent$y_lim,
   chains = 2,
   warmup = 1000,
   iter = 2000,
@@ -28,49 +28,49 @@ call_coa_timevarying <- function(overrides) {
 
 params_table <- list(
   list(
-    param = "nind",
+    param = "n_ind",
     bad = list("a", NA, c(1, 2)),
-    regex = "`nind` must be a numeric vector that has a length of 1."
+    regex = "`n_ind` must be a numeric vector that has a length of 1."
   ),
   list(
-    param = "nrec",
+    param = "n_rec",
     bad = list("a", NA, c(1, 2)),
-    regex = "`nrec` must be a numeric vector that has a length of 1."
+    regex = "`n_rec` must be a numeric vector that has a length of 1."
   ),
   list(
-    param = "ntime",
+    param = "n_time",
     bad = list("a", NA, c(1, 2)),
-    regex = "`ntime` must be a numeric vector that has a length of 1."
+    regex = "`n_time` must be a numeric vector that has a length of 1."
   ),
   list(
-    param = "ntrans",
-    bad = list(c(model_param_ex$ntrans, model_param_ex$ntrans), "1"),
-    regex = "`ntrans` must be a numeric vector that has a length of 1."
+    param = "n_trans",
+    bad = list(c(model_param_ex$n_trans, model_param_ex$n_trans), "1"),
+    regex = "`n_trans` must be a numeric vector that has a length of 1."
   ),
   list(
-    param = "y",
+    param = "det",
     bad = list(c(1, 2, 3), "a"),
-    regex = "`y` must be a 3-dimensional numeric array."
+    regex = "`det` must be a 3-dimensional numeric array."
   ),
   list(
-    param = "recX",
+    param = "rec_x",
     bad = list("a", NA),
-    regex = "`recX` must be a numeric vector that has a length of 1."
+    regex = "`rec_x` must be a numeric vector that has a length of 1."
   ),
   list(
-    param = "recY",
+    param = "rec_y",
     bad = list("a", NA),
-    regex = "`recY` must be a numeric vector that has a length of 1."
+    regex = "`rec_y` must be a numeric vector that has a length of 1."
   ),
   list(
-    param = "xlim",
+    param = "x_lim",
     bad = list("a", c(1, 2, 3)),
-    regex = "`xlim` must be a numeric vector that has a length of 2."
+    regex = "`x_lim` must be a numeric vector that has a length of 2."
   ),
   list(
-    param = "ylim",
+    param = "y_lim",
     bad = list("a", c(1, 2, 3)),
-    regex = "`ylim` must be a numeric vector that has a length of 2."
+    regex = "`y_lim` must be a numeric vector that has a length of 2."
   )
 )
 
