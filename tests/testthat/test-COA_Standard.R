@@ -123,7 +123,7 @@ test_that("check to see if model_coa_standard classes", {
   expect_s3_class(model_coa_standard$all_estimates, "data.frame")
   expect_type(model_coa_standard$summary, "double")
   expect_true(is.matrix(model_coa_standard$summary))
-  expect_true(is.matrix(model_coa_standard$generated_quantities$yrep))
+  expect_true(is.matrix(model_coa_standard$generated_quantities$y_rep))
   expect_type(model_coa_standard$generated_quantities, "list")
   expect_true(is.numeric(model_coa_standard$time))
 })
