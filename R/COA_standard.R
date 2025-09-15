@@ -67,8 +67,7 @@ COA_Standard <- function(
 
   # Summary statistics and convergence diagnostics
   fit_summary <- rstan::summary(fit_model, pars = c("p0", "sigma"))$summary
-  #fit_summary <- fit_sum$summary
-
+  
   # How much time did fitting take?
   fit_time <- sum(print(rstan::get_elapsed_time(fit_model))) / 60
 
