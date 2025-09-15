@@ -126,7 +126,7 @@ test_that("check time_vary_gaussian classes", {
   expect_s3_class(time_vary_gaussian$all_estimates, "data.frame")
   expect_type(time_vary_gaussian$summary, "double")
   expect_true(is.matrix(time_vary_gaussian$summary))
-  expect_true(is.matrix(time_vary_gaussian$generated_quantities$yrep))
+  expect_true(is.matrix(time_vary_gaussian$generated_quantities$y_rep))
   expect_type(time_vary_gaussian$generated_quantities, "list")
   expect_true(is.numeric(time_vary_gaussian$time))
 })
