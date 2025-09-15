@@ -106,7 +106,7 @@ test_that("parameter validation works", {
 
 # standard_gaussian$generated_quantities
 
-# bayesplot::ppc_dens_overlay(y = as.vector(Y), yrep = standard_gaussian$generated_quantities)
+# bayesplot::ppc_dens_overlay(y = as.vector(Y), y_rep = standard_gaussian$generated_quantities)
 
 # rstan::traceplot(fit$model, pars = c("alpha0", "alpha1",
 #                                      "sigma", "lp__"))
@@ -123,7 +123,7 @@ test_that("check standard_gaussian classes", {
   expect_s3_class(standard_gaussian$all_estimates, "data.frame")
   expect_type(standard_gaussian$summary, "double")
   expect_true(is.matrix(standard_gaussian$summary))
-  expect_true(is.matrix(standard_gaussian$generated_quantities$yrep))
+  expect_true(is.matrix(standard_gaussian$generated_quantities$y_rep))
   expect_type(standard_gaussian$generated_quantities, "list")
   expect_true(is.numeric(standard_gaussian$time))
 })
@@ -161,7 +161,7 @@ test_that("check to see model converged and has a good rhat", {
 
 test_that("check to see if gq is the correct length", {
   expected <- 11
-  expect_true(nrow(standard_gaussian$generated_quantities$yrep) %in% expected)
+  expect_true(nrow(standard_gaussian$generated_quantities$y_rep) %in% expected)
 })
 
 
@@ -179,7 +179,7 @@ test_that("check standard_logistic classes", {
   expect_s3_class(standard_logistic$all_estimates, "data.frame")
   expect_type(standard_logistic$summary, "double")
   expect_true(is.matrix(standard_logistic$summary))
-  expect_true(is.matrix(standard_logistic$generated_quantities$yrep))
+  expect_true(is.matrix(standard_logistic$generated_quantities$y_rep))
   expect_type(standard_logistic$generated_quantities, "list")
   expect_true(is.numeric(standard_logistic$time))
 })
@@ -216,5 +216,5 @@ test_that("check to see model converged and has a good rhat", {
 
 test_that("check to see if gq is the correct length", {
   expected <- 11
-  expect_true(nrow(standard_logistic$generated_quantities$yrep) %in% expected)
+  expect_true(nrow(standard_logistic$generated_quantities$y_rep) %in% expected)
 })
