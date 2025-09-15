@@ -21,33 +21,33 @@
 #' @export
 
 COA_TimeVarying <- function(
-  nind,
-  nrec,
-  ntime,
-  ntrans,
+  n_ind,
+  n_rec,
+  n_time,
+  n_trans,
   y,
-  recX,
-  recY,
-  xlim,
-  ylim,
+  rec_x,
+  rec_y,
+  x_lim,
+  y_lim,
   decay = "gaussian",
-  ndraws = NULL,
+  n_draws = NULL,
   ...
 ) {
   # First move everything into a list
   standata <- list(
-    nind = nind,
-    nrec = nrec,
-    ntime = ntime,
-    ntrans = ntrans,
-    y = y,
-    recX = recX,
-    recY = recY,
-    xlim = xlim,
-    ylim = ylim
+    n_ind = n_ind,
+    n_rec = n_rec,
+    n_time = n_time,
+    n_trans = n_trans,
+    det = det,
+    rec_x = rec_x,
+    rec_y = rec_y,
+    x_lim = x_lim,
+    y_lim = y_lim
   )
   # validate this list prior to sending it to the model
-  exp_len <- expected_lengths(recX = recX, recY = recY)
+  exp_len <- expected_lengths(rec_x = rec_x, rec_y = rec_y)
 
   validate_standata(standata, exp_len)
 
@@ -74,7 +74,8 @@ COA_TimeVarying <- function(
   }
 
   # Save chains after discarding warmup
-  fit_estimates <- as.data.frame(fit_model) # Note this returns parameters and latent states/derived values
+  fit_estimates <- as.data.frame(fit_model)
+  # Note this returns parameters and latent states/derived values
 
   # Summary statistics and convergence diagnostics
   if (decay == "gaussian") {
@@ -90,7 +91,7 @@ COA_TimeVarying <- function(
   fit_generated_quantities <- generated_quantities(
     model = fit_model,
     standata = standata,
-    ndraws = ndraws
+    n_draws = n_draws
   )
   # transform gq into matrix
   tran_fit_gq <- transform_gq(fit_generated_quantities)
@@ -108,15 +109,15 @@ COA_TimeVarying <- function(
   ew <- NULL
   ns <- NULL
 
-  for (i in 1:nind) {
-    coas[, 1, i] <- seq(1, ntime, 1)
+  for (i in 1:n_ind) {
+    coas[, 1, i] <- seq(1, n_time, 1)
     ew <- dplyr::select(
       fit_estimates,
-      dplyr::starts_with(paste("sx[", i, ",", sep = ''))
+      dplyr::starts_with(paste("x[", i, ",", sep = ""))
     )
     ns <- dplyr::select(
       fit_estimates,
-      dplyr::starts_with(paste("sy[", i, ",", sep = ''))
+      dplyr::starts_with(paste("y[", i, ",", sep = ""))
     )
     coas[, 2, i] <- apply(ew, 2, stats::median)
     coas[, 3, i] <- apply(ns, 2, stats::median)
@@ -127,15 +128,15 @@ COA_TimeVarying <- function(
   }
   coas <- as.data.frame(coas[,, 1])
   # Extract time-varying detection probability estimates
-  d_probs <- array(NA, dim = c(nrec, ntime))
+  d_probs <- array(NA, dim = c(n_rec, n_time))
   p0est <- NULL
 
-  for (i in 1:ntime) {
+  for (i in 1:n_time) {
     p0est <- dplyr::select(
       fit_estimates,
-      dplyr::starts_with(paste("p0[", i, ",", sep = ''))
+      dplyr::starts_with(paste("p0[", i, ",", sep = ""))
     )
-    for (j in 1:nrec) {
+    for (j in 1:n_rec) {
       d_probs[j, i] <- stats::median(p0est[, j])
     }
   }
