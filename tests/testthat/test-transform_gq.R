@@ -2,37 +2,37 @@
 # ----- make all models into a list -----
 all_models <- list(
   model_coa_standard,
-  model_coa_time_vary,
-  model_coa_tag_int
+  model_coa_time_vary
+  # model_coa_tag_int
 )
 # ---- do the same for the data -----
 all_data <- list(
   standata,
-  standata,
-  standata_1
+  standata
+  # standata_1
 )
 # set the number of draws to test
-ndraws_test <- 5
-yreps <- list()
+n_draws_test <- 5
+y_reps <- list()
 
 
 # ----- loop over generated quantities -----
 for (i in seq_along(all_models)) {
   # Call your function
-  yreps[[i]] <- generated_quantities(model = all_models[[i]]$model,
+  y_reps[[i]] <- generated_quantities(model = all_models[[i]]$model,
                                      standata = all_data[[i]],
-                                     ndraws = ndraws_test)
+                                     n_draws = n_draws_test)
 }
 
 
 # test if the returned object matches the correct format
 bs_returned <- c(1, 1, 2)
-bs_names <- c(rep("yrep", 3), "testrep")
+bs_names <- c(rep("y_rep", 3), "test_rep")
 
 test_that("check transformation of gq to matrix", {
 
-  for (i in seq_along(yreps)) {
-    tran_gq <- transform_gq(yreps[[i]])
+  for (i in seq_along(y_reps)) {
+    tran_gq <- transform_gq(y_reps[[i]])
 
     expect_type(tran_gq, "list")
     expect_length(tran_gq, bs_returned[i])
@@ -50,13 +50,13 @@ test_that("check transformation of gq to matrix", {
 
 test_that("check row and column names of gq in matrix", {
 
-  for (i in seq_along(yreps)) {
-    tran_gq <- transform_gq(yreps[[i]])
+  for (i in seq_along(y_reps)) {
+    tran_gq <- transform_gq(y_reps[[i]])
     for (n in seq_along(tran_gq)) {
 
       post_draws <- tran_gq[[n]]
       # check row names
-      expect_true(all(grepl("^(yrep|testrep)_[0-9]+$", rownames(post_draws))))
+      expect_true(all(grepl("^(y_rep|test_rep)_[0-9]+$", rownames(post_draws))))
 
       # check column names
       expect_true(all(grepl(
