@@ -43,7 +43,7 @@ params_table <- list(
   ),
   list(
     param = "n_trans",
-    bad = list(c(model_param_ex$n_trans, model_param_ex$n_trans), "1"),
+    bad = list(c(model_param_ex$ntrans, model_param_ex$ntrans), "1"),
     regex = "`n_trans` must be a numeric vector that has a length of 1."
   ),
   list(
