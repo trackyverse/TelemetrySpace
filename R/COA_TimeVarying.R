@@ -52,7 +52,7 @@ COA_TimeVarying <- function(
 
   validate_standata(standata, exp_len)
 
-    # set rstan options
+  # set rstan options
   rstan::rstan_options(auto_write = TRUE)
   # set coores - this probably should be an argument
   options(mc.cores = parallel::detectCores())
@@ -62,21 +62,20 @@ COA_TimeVarying <- function(
 
   # Save chains after discarding warmup
   fit_estimates <- as.data.frame(fit_model)
-# Note this returns parameters and latent states/derived values
+  # Note this returns parameters and latent states/derived values
 
   # Summary statistics and convergence diagnostics
   fit_summary <- rstan::summary(fit_model, pars = c("p0", "sigma"))$summary
-  #fit_summary <- fit_sum$summary
 
   # How much time did fitting take (in minutes)?
   fit_time <- sum(print(rstan::get_elapsed_time(fit_model))) / 60
 
   # calculate generated quantities
   fit_generated_quantities <- generated_quantities(
-model = fit_model,
-                                                   standata = standata,
-                                                   n_draws = n_draws
-)
+    model = fit_model,
+    standata = standata,
+    n_draws = n_draws
+  )
   # transform gq into matrix
   tran_fit_gq <- transform_gq(fit_generated_quantities)
   # Extract COA estimates
