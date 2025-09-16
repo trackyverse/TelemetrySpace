@@ -22,7 +22,7 @@ standata_test_tag <- list(
   x_lim = example_extent$x_lim, # E-W boundary of spatial extent (receiver array + buffer)
   y_lim = example_extent$y_lim,
   n_test = n_sentinel,
-  test = testY,
+  dettest = testY,
   test_x = array(testloc$east, dim = c(n_sentinel)),
   test_y = array(testloc$north, dim = c(n_sentinel)) # N-S b
 )
