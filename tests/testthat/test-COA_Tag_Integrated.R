@@ -144,8 +144,8 @@ test_that("check tag_int_gaussian classes", {
   expect_type(tag_int_gaussian$summary, "double")
   expect_true(is.matrix(tag_int_gaussian$summary))
   expect_type(tag_int_gaussian$generated_quantities, "list")
-  expect_true(is.matrix(tag_int_gaussian$generated_quantities$yrep))
-  expect_true(is.matrix(tag_int_gaussian$generated_quantities$testrep))
+  expect_true(is.matrix(tag_int_gaussian$generated_quantities$y_rep))
+  expect_true(is.matrix(tag_int_gaussian$generated_quantities$test_rep))
   expect_true(is.numeric(tag_int_gaussian$time))
 })
 
@@ -181,9 +181,9 @@ test_that("check to see model converged and has a good rhat", {
 
 test_that("check to see if gq is the correct length", {
   expected <- 11
-  expect_true(nrow(tag_int_gaussian$generated_quantities$yrep) %in% expected)
+  expect_true(nrow(tag_int_gaussian$generated_quantities$y_rep) %in% expected)
   expect_true(
-    nrow(tag_int_gaussian$generated_quantities$testrep) %in% expected
+    nrow(tag_int_gaussian$generated_quantities$test_rep) %in% expected
   )
 })
 
@@ -202,7 +202,7 @@ test_that("check tag_int_logistic classes", {
   expect_s3_class(tag_int_logistic$all_estimates, "data.frame")
   expect_type(tag_int_logistic$summary, "double")
   expect_true(is.matrix(tag_int_logistic$summary))
-  expect_true(is.matrix(tag_int_logistic$generated_quantities$yrep))
+  expect_true(is.matrix(tag_int_logistic$generated_quantities$y_rep))
   expect_type(tag_int_logistic$generated_quantities, "list")
   expect_true(is.numeric(tag_int_logistic$time))
 })
