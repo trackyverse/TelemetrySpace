@@ -34,8 +34,8 @@ bs_returned <- rep(c(1, 2), times = c(4, 2))
 bs_names <- c(rep("y_rep", 6), "test_rep")
 
 test_that("check transformation of gq to matrix", {
-  for (i in seq_along(yreps)) {
-    tran_gq <- transform_gq(yreps[[i]])
+  for (i in seq_along(y_reps)) {
+    tran_gq <- transform_gq(y_reps[[i]])
 
     expect_type(tran_gq, "list")
     expect_length(tran_gq, bs_returned[i])
@@ -69,13 +69,3 @@ test_that("check row and column names of gq in matrix", {
     }
   }
 })
-
-#   for (i in 1:n_draws) {
-#     y_rep_mat[i, ] <- as.vector(draws$yrep[i, , , ])
-#   }
-#   # make sure there's no NA and make sure obs vfallls within a range
-#   for (i in 1:n_draws) {
-#     expect_false(unique(is.na( y_rep_mat[i, ])))
-#     expect_true(all(y_rep_mat[i, ] >= 0 &  y_rep_mat[i, ] <= 25))
-#   }
-# }
