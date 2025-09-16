@@ -4,14 +4,14 @@
 \alias{expected_lengths}
 \title{Expected lengths of variables in \code{standata}}
 \usage{
-expected_lengths(rec_x = NULL, rec_y = NULL, ntest_len = NULL)
+expected_lengths(rec_x = NULL, rec_y = NULL, n_test_len = NULL)
 }
 \arguments{
 \item{rec_x}{is the receiver or station x coordinates (e.g, lon).}
 
 \item{rec_y}{is the receiver or station y coordinates (e.g., lat).}
 
-\item{ntest_len}{is the number of reference tags which is used as length
+\item{n_test_len}{is the number of reference tags which is used as length
 by \code{testX} and \code{testY}.}
 }
 \description{
