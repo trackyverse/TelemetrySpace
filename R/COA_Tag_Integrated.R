@@ -35,7 +35,7 @@ COA_TagInt <- function(
   n_test,
   n_trans,
   det,
-  test,
+  det_test,
   rec_x,
   rec_y,
   x_lim,
