@@ -2,20 +2,20 @@
 
 #' Fits a test-tag integrated Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan
 #'
-#' @param nind   Number of tagged individuals
-#' @param nrec   Number of receivers
-#' @param ntime  Number of time steps
-#' @param ntest  Number of test tags
-#' @param ntrans Number of expected transmissions per tag per time interval
-#' @param y      Array of detection data, where row = individual, column = receiver, and matrix = time step
-#' @param test   Array of test tag detection data, where row = individual tag, column = receiver, and matrix = time step
-#' @param recX   Receiver coordinates in the east-west direction (should be projected and scaled for computational efficiency)
-#' @param recY   Receiver coordinates in the north-south direction (should be projected and scaled for computational efficiency)
-#' @param xlim   East-west boundaries of spatial extent (receiver array + buffer)
-#' @param ylim   North-south boundaries of spatial extent (receiver array + buffer)
-#' @param testX  Test tag coordinates in the east-west direction (should be projected and scaled for computational efficiency)
-#' @param testY  Test tag coordinates in the north-south direction (should be projected and scaled for computational efficiency)
-#' @param ndraws to be passed to `generated_quantities`. Changes the number of draws. Default is 10.
+#' @param n_ind   Number of tagged individuals
+#' @param n_rec   Number of receivers
+#' @param n_time  Number of time steps
+#' @param n_test  Number of test tags
+#' @param n_trans Number of expected transmissions per tag per time interval
+#' @param det      Array of detection data, where row = individual, column = receiver, and matrix = time step
+#' @param det_test   Array of test tag detection data, where row = individual tag, column = receiver, and matrix = time step
+#' @param rec_x   Receiver coordinates in the east-west direction (should be projected and scaled for computational efficiency)
+#' @param rec_y   Receiver coordinates in the north-south direction (should be projected and scaled for computational efficiency)
+#' @param x_lim   East-west boundaries of spatial extent (receiver array + buffer)
+#' @param y_lim   North-south boundaries of spatial extent (receiver array + buffer)
+#' @param test_x  Test tag coordinates in the east-west direction (should be projected and scaled for computational efficiency)
+#' @param test_y  Test tag coordinates in the north-south direction (should be projected and scaled for computational efficiency)
+#' @param n_draws to be passed to `generated_quantities`. Changes the number of draws. Default is 10.
 #' @param ... Additional arguments passed to `sampling` from `rstan`.
 #' This can include setting `chains`, `iter`, `warmup`, and `control`. Please see
 #' `rstan::sampling()` for more info.

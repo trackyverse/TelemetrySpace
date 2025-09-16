@@ -5,51 +5,51 @@
 \title{Fits a test-tag integrated Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan}
 \usage{
 COA_TagInt(
-  nind,
-  nrec,
-  ntime,
-  ntest,
-  ntrans,
-  y,
-  test,
-  recX,
-  recY,
-  xlim,
-  ylim,
-  testX,
-  testY,
-  ndraws = NULL,
+  n_ind,
+  n_rec,
+  n_time,
+  n_test,
+  n_trans,
+  det,
+  det_test,
+  rec_x,
+  rec_y,
+  x_lim,
+  y_lim,
+  test_x,
+  test_y,
+  n_draws = NULL,
   ...
 )
 }
 \arguments{
-\item{nind}{Number of tagged individuals}
+\item{n_ind}{Number of tagged individuals}
 
-\item{nrec}{Number of receivers}
+\item{n_rec}{Number of receivers}
 
-\item{ntime}{Number of time steps}
+\item{n_time}{Number of time steps}
 
-\item{ntest}{Number of test tags}
+\item{n_test}{Number of test tags}
 
-\item{ntrans}{Number of expected transmissions per tag per time interval}
+\item{n_trans}{Number of expected transmissions per tag per time interval}
 
-\item{y}{Array of detection data, where row = individual, column = receiver, and matrix = time step}
+\item{det}{Array of detection data, where row = individual, column = receiver, and matrix = time step}
 
-\item{test}{Array of test tag detection data, where row = individual tag, column = receiver, and matrix = time step}
+\item{det_test}{Array of test tag detection data, where row = individual tag, column = receiver, and matrix = time step}
 
-\item{recX}{Receiver coordinates in the east-west direction (should be projected and scaled for computational efficiency)}
+\item{rec_x}{Receiver coordinates in the east-west direction (should be projected and scaled for computational efficiency)}
 
-\item{recY}{Receiver coordinates in the north-south direction (should be projected and scaled for computational efficiency)}
+\item{rec_y}{Receiver coordinates in the north-south direction (should be projected and scaled for computational efficiency)}
 
-\item{xlim}{East-west boundaries of spatial extent (receiver array + buffer)}
+\item{x_lim}{East-west boundaries of spatial extent (receiver array + buffer)}
 
-\item{ylim}{North-south boundaries of spatial extent (receiver array + buffer)}
+\item{y_lim}{North-south boundaries of spatial extent (receiver array + buffer)}
 
-\item{testX}{Test tag coordinates in the east-west direction (should be projected and scaled for computational efficiency)}
+\item{test_x}{Test tag coordinates in the east-west direction (should be projected and scaled for computational efficiency)}
 
-\item{testY}{Test tag coordinates in the north-south direction (should be projected and scaled for computational efficiency)}
+\item{test_y}{Test tag coordinates in the north-south direction (should be projected and scaled for computational efficiency)}
 
-\item{ndraws}{to be passed to \code{generated_quantities}. Changes the number of draws. Default is 10.}
+\item{n_draws}{to be passed to \code{generated_quantities}. Changes the number of draws. Default is 10.}
 
 \item{...}{Additional arguments passed to \code{sampling} from \code{rstan}.
 This can include setting \code{chains}, \code{iter}, \code{warmup}, and \code{control}. Please see
