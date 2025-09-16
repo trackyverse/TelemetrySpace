@@ -89,16 +89,16 @@ check_stan_object <- function(x, arg_name = NULL) {
 #'
 #' @param rec_x is the receiver or station x coordinates (e.g, lon).
 #' @param rec_y is the receiver or station y coordinates (e.g., lat).
-#' @param ntest_len is the number of reference tags which is used as length
+#' @param n_test_len is the number of reference tags which is used as length
 #' by `testX` and `testY`.
 #'
 #'
 #' @keywords internal
 #' @name expected_lengths
 
-expected_lengths <- function(rec_x = NULL, rec_y = NULL, ntest_len = NULL) {
-  if (!is.null(ntest_len)) {
-    check_num_vec_len(ntest_len, vec_length = 1, arg_name = "ntest")
+expected_lengths <- function(rec_x = NULL, rec_y = NULL, n_test_len = NULL) {
+  if (!is.null(n_test_len)) {
+    check_num_vec_len(n_test_len, vec_length = 1, arg_name = "n_test")
   }
 
   lengths <- list(
