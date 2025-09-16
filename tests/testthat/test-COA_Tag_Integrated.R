@@ -29,7 +29,7 @@ params_table <- list(
   list(
     param = "n_ind",
     bad = list("bc", NA, c(1, 2)),
-    regex = "`nind` must be a numeric vector that has a length of 1."
+    regex = "`n_ind` must be a numeric vector that has a length of 1."
   ),
   list(
     param = "n_rec",
