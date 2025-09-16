@@ -2,19 +2,19 @@
 
 # ---- test each argument if it errors appropriately -----
 coa_args <- list(
-  nind = model_param_ex$nind,
-  nrec = model_param_ex$nrec,
-  ntime = model_param_ex$tsteps,
-  ntrans = model_param_ex$ntrans,
-  ntest = nsentinel,
-  y = Y,
-  test = testY,
-  recX = rlocs$east,
-  recY = rlocs$north,
-  xlim = example_extent$xlim,
-  ylim = example_extent$ylim,
-  testX = array(testloc$east, dim = c(nsentinel)),
-  testY = array(testloc$north, dim = c(nsentinel)),
+  n_ind = model_param_ex$nind,
+  n_rec = model_param_ex$nrec,
+  n_time = model_param_ex$tsteps,
+  n_trans = model_param_ex$ntrans,
+  n_test = n_sentinel,
+  det = Y,
+  det_test = testY,
+  rec_x = rlocs$east,
+  rec_y = rlocs$north,
+  x_lim = example_extent$xlim,
+  y_lim = example_extent$ylim,
+  test_x = array(testloc$east, dim = c(n_sentinel)),
+  test_y = array(testloc$north, dim = c(n_sentinel)),
   chains = 2,
   warmup = 1000,
   iter = 2000,
@@ -27,69 +27,69 @@ call_coa_tagint <- function(overrides) {
 # ----- create param tables
 params_table <- list(
   list(
-    param = "nind",
+    param = "n_ind",
     bad = list("bc", NA, c(1, 2)),
     regex = "`nind` must be a numeric vector that has a length of 1."
   ),
   list(
-    param = "nrec",
+    param = "n_rec",
     bad = list("bc", NA, c(1, 2)),
-    regex = "`nrec` must be a numeric vector that has a length of 1."
+    regex = "`n_rec` must be a numeric vector that has a length of 1."
   ),
   list(
-    param = "ntime",
+    param = "n_time",
     bad = list("bc", NA, c(1, 2)),
-    regex = "`ntime` must be a numeric vector that has a length of 1."
+    regex = "`n_time` must be a numeric vector that has a length of 1."
   ),
   list(
-    param = "ntrans",
+    param = "n_trans",
     bad = list(c(model_param_ex$ntrans, model_param_ex$ntrans), "1"),
-    regex = "`ntrans` must be a numeric vector that has a length of 1."
+    regex = "`n_trans` must be a numeric vector that has a length of 1."
   ),
   list(
-    param = "ntest",
+    param = "n_test",
     bad = list(c(3, 6, 3), "1"),
-    regex = "`ntest` must be a numeric vector that has a length of 1."
+    regex = "`n_test` must be a numeric vector that has a length of 1."
   ),
   list(
-    param = "y",
+    param = "det",
     bad = list(c(1, 2, 3), "bc"),
-    regex = "`y` must be a 3-dimensional numeric array."
+    regex = "`det` must be a 3-dimensional numeric array."
   ),
   list(
-    param = "test",
+    param = "det_test",
     bad = list(c(1, 2, 3), "bc"),
-    regex = "`test` must be a 3-dimensional numeric array."
+    regex = "`det_test` must be a 3-dimensional numeric array."
   ),
   list(
-    param = "recX",
+    param = "rec_x",
     bad = list("bc", NA),
-    regex = "`recX` must be a numeric vector that has a length of 1."
+    regex = "`rec_x` must be a numeric vector that has a length of 1."
   ),
   list(
-    param = "recY",
+    param = "rec_y",
     bad = list("bc", NA),
-    regex = "`recY` must be a numeric vector that has a length of 1."
+    regex = "`rec_y` must be a numeric vector that has a length of 1."
   ),
   list(
-    param = "xlim",
+    param = "x_lim",
     bad = list("bc", c(1, 2, 3)),
-    regex = "`xlim` must be a numeric vector that has a length of 2."
+    regex = "`x_lim` must be a numeric vector that has a length of 2."
   ),
   list(
-    param = "ylim",
+    param = "y_lim",
     bad = list("bc", c(1, 2, 3)),
-    regex = "`ylim` must be a numeric vector that has a length of 2."
+    regex = "`y_lim` must be a numeric vector that has a length of 2."
   ),
   list(
-    param = "testX",
+    param = "test_x",
     bad = list("bc", NA),
-    regex = "`testX` must be a numeric array with length equal to 1 \\(the number of test tags\\)\\."
+    regex = "`test_x` must be a numeric array with length equal to 1 \\(the number of test tags\\)\\."
   ),
   list(
-    param = "testY",
+    param = "test_y",
     bad = list("bc", NA),
-    regex = "`testY` must be a numeric array with length equal to 1 \\(the number of test tags\\)\\."
+    regex = "`test_y` must be a numeric array with length equal to 1 \\(the number of test tags\\)\\."
   )
 )
 
