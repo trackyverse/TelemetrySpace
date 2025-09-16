@@ -28,21 +28,21 @@
 #' @export
 
 COA_TagInt <- function(
-    n_ind,
-    n_rec,
-    n_time,
-    n_test,
-    n_trans,
-    det,
+  n_ind,
+  n_rec,
+  n_time,
+  n_test,
+  n_trans,
+  det,
   det_test,
-    rec_x,
-    rec_y,
-    x_lim,
-    y_lim,
-    test_x,
-    test_y,
-    n_draws = NULL,
-    ...
+  rec_x,
+  rec_y,
+  x_lim,
+  y_lim,
+  test_x,
+  test_y,
+  n_draws = NULL,
+  ...
 ) {
   # First move everything into a list
   standata <- list(
@@ -79,43 +79,46 @@ COA_TagInt <- function(
 
   # Save chains after discarding warmup
   fit_estimates <- as.data.frame(fit_model)
-# Note this returns parameters and latent states/derived values
+  # Note this returns parameters and latent states/derived values
 
   # Summary statistics and convergence diagnostics
   fit_summary <- rstan::summary(fit_model, pars = c("p0", "sigma"))$summary
 
   # How much time did fitting take (in minutes)?
   fit_time <- sum(print(rstan::get_elapsed_time(fit_model))) / 60
-  # # calculate generated quantities
-  fit_generated_quantities <- generated_quantities(model = fit_model,
-                                                   standata = standata,
-                                                   ndraws = ndraws)
+
+  # calculate generated quantities
+  fit_generated_quantities <- generated_quantities(
+    model = fit_model,
+    standata = standata,
+    n_draws = n_draws
+  )
   # transform gq into matrix
   tran_fit_gq <- transform_gq(fit_generated_quantities)
 
   # Extract COA estimates
-  coas <- array(NA, dim = c(ntime, 7, nind))
+  coas <- array(NA, dim = c(n_time, 7, n_ind))
   dimnames(coas)[[2]] <- c(
-    'time',
-    'x',
-    'y',
-    'x_lower',
-    'x_upper',
-    'y_lower',
-    'y_upper'
+    "time",
+    "x",
+    "y",
+    "x_lower",
+    "x_upper",
+    "y_lower",
+    "y_upper"
   )
   ew <- NULL
   ns <- NULL
 
-  for (i in 1:nind) {
-    coas[, 1, i] <- seq(1, ntime, 1)
+  for (i in 1:n_ind) {
+    coas[, 1, i] <- seq(1, n_time, 1)
     ew <- dplyr::select(
       fit_estimates,
-      dplyr::starts_with(paste("sx[", i, ",", sep = ''))
+      dplyr::starts_with(paste("x[", i, ",", sep = ""))
     )
     ns <- dplyr::select(
       fit_estimates,
-      dplyr::starts_with(paste("sy[", i, ",", sep = ''))
+      dplyr::starts_with(paste("y[", i, ",", sep = ""))
     )
     coas[, 2, i] <- apply(ew, 2, stats::median)
     coas[, 3, i] <- apply(ns, 2, stats::median)
@@ -127,15 +130,15 @@ COA_TagInt <- function(
 
   coas <- as.data.frame(coas[,, 1])
   # Extract time-varying detection probability estimates
-  d_probs <- array(NA, dim = c(nrec, ntime))
+  d_probs <- array(NA, dim = c(n_rec, n_time))
   p0_est <- NULL
 
-  for (i in 1:ntime) {
+  for (i in 1:n_time) {
     p0_est <- dplyr::select(
       fit_estimates,
-      dplyr::starts_with(paste("p0[", i, ",", sep = ''))
+      dplyr::starts_with(paste("p0[", i, ",", sep = ""))
     )
-    for (j in 1:nrec) {
+    for (j in 1:n_rec) {
       d_probs[j, i] <- stats::median(p0_est[, j])
     }
   }
@@ -151,13 +154,13 @@ COA_TagInt <- function(
     tran_fit_gq
   )
   names(model_results) <- c(
-    'model',
-    'summary',
-    'time',
-    'coas',
-    'detection_probs',
-    'all_estimates',
-    'generated_quantities'
+    "model",
+    "summary",
+    "time",
+    "coas",
+    "detection_probs",
+    "all_estimates",
+    "generated_quantities"
   )
   return(model_results)
 }
