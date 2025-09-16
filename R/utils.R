@@ -127,7 +127,10 @@ expected_lengths <- function(rec_x = NULL, rec_y = NULL, n_test_len = NULL) {
 #' @name vaidate_standata
 
 validate_standata <- function(standata, lengths) {
-  array_vars <- intersect(c("det", "test", "test_x", "test_y"), names(standata))
+  array_vars <- intersect(
+    c("det", "det_test", "test_x", "test_y"),
+    names(standata)
+  )
 
   for (var in array_vars) {
     # check station locations
