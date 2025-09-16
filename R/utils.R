@@ -106,13 +106,13 @@ expected_lengths <- function(rec_x = NULL, rec_y = NULL, n_test_len = NULL) {
     n_rec = 1,
     n_time = 1,
     n_trans = 1,
-    ntest = 1,
+    n_test = 1,
     rec_x = length(rec_x),
     rec_y = length(rec_y),
     x_lim = 2,
     y_lim = 2,
-    testX = ntest_len,
-    testY = ntest_len
+    test_x = n_test_len,
+    test_y = n_test_len
   )
   return(lengths)
 }
