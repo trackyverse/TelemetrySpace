@@ -100,24 +100,24 @@ test_that("parameter validation works", {
   for (pt in params_table) {
     for (bad_val in pt$bad) {
       tryCatch(
-{
-        expect_error(
-          call_coa_tagint(setNames(list(bad_val), pt$param)),
-          regexp = pt$regex,
-          label = sprintf("param=%s, bad_val=%s", pt$param, deparse(bad_val))
-        )
-      },
-      error = function(e) {
-        cat(
-"\n Error for param:",
-pt$param,
+        {
+          expect_error(
+            call_coa_tagint(setNames(list(bad_val), pt$param)),
+            regexp = pt$regex,
+            label = sprintf("param=%s, bad_val=%s", pt$param, deparse(bad_val))
+          )
+        },
+        error = function(e) {
+          cat(
+            "\n Error for param:",
+            pt$param,
             " bad_val:",
-deparse(bad_val),
-"\n"
-)
-        stop(e)
-      }
-)
+            deparse(bad_val),
+            "\n"
+          )
+          stop(e)
+        }
+      )
     }
   }
 })
@@ -137,7 +137,6 @@ test_that("test COA_TagInt model results to make sure its consisitent", {
 
 
 test_that("check to see if model_coa_tag_int classes", {
-
   expect_type(model_coa_tag_int, "list")
   expect_s4_class(model_coa_tag_int$model, "stanfit")
   expect_s3_class(model_coa_tag_int$coas, "data.frame")
@@ -145,42 +144,45 @@ test_that("check to see if model_coa_tag_int classes", {
   expect_type(model_coa_tag_int$summary, "double")
   expect_true(is.matrix(model_coa_tag_int$summary))
   expect_type(model_coa_tag_int$generated_quantities, "list")
-  expect_true(is.matrix(model_coa_tag_int$generated_quantities$yrep))
-  expect_true(is.matrix(model_coa_tag_int$generated_quantities$testrep))
+  expect_true(is.matrix(model_coa_tag_int$generated_quantities$y_rep))
+  expect_true(is.matrix(model_coa_tag_int$generated_quantities$test_rep))
   expect_true(is.numeric(model_coa_tag_int$time))
-
 })
 
 
-
 test_that("check to see if coa returns proper info", {
-
   expect_true("coas" %in% names(model_coa_tag_int))
   expect_equal(nrow(model_coa_tag_int$coas), model_param_ex$tsteps)
-  expect_equal(colnames(model_coa_tag_int$coas), c(
-    "time", "x", "y", "x_lower",
-    "x_upper", "y_lower", "y_upper"
-  ))
+  expect_equal(
+    colnames(model_coa_tag_int$coas),
+    c(
+      "time",
+      "x",
+      "y",
+      "x_lower",
+      "x_upper",
+      "y_lower",
+      "y_upper"
+    )
+  )
 
   for (col in colnames(model_coa_tag_int$coas)) {
     expect_type(model_coa_tag_int$coas[[col]], "double")
     expect_true(all(is.finite(model_coa_tag_int$coas[[col]])))
   }
-}
-)
+})
 
 test_that("check to see model converged and has a good rhat", {
-
   rhat <- model_coa_tag_int$summary[, "Rhat"]
   expect_true(all(rhat > 0.95 & rhat < 1.05))
-}
-)
+})
 
 # ----- check if gq retruns the correct length ------
 
 test_that("check to see if gq is the correct length", {
   expected <- 11
-  expect_true(nrow(model_coa_tag_int$generated_quantities$yrep) %in% expected)
-  expect_true(nrow(model_coa_tag_int$generated_quantities$testrep) %in% expected)
-}
-)
+  expect_true(nrow(model_coa_tag_int$generated_quantities$y_rep) %in% expected)
+  expect_true(
+    nrow(model_coa_tag_int$generated_quantities$test_rep) %in% expected
+  )
+})
