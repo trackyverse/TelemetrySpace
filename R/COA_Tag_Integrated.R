@@ -27,43 +27,44 @@
 #'
 #' @seealso [rstan::sampling()]
 #' @export
+
 COA_TagInt <- function(
-  nind,
-  nrec,
-  ntime,
-  ntest,
-  ntrans,
-  y,
+  n_ind,
+  n_rec,
+  n_time,
+  n_test,
+  n_trans,
+  det,
   test,
-  recX,
-  recY,
-  xlim,
-  ylim,
-  testX,
-  testY,
+  rec_x,
+  rec_y,
+  x_lim,
+  y_lim,
+  test_x,
+  test_y,
   decay = "gaussian",
-  ndraws = NULL,
+  n_draws = NULL,
   ...
 ) {
   # First move everything into a list
   standata <- list(
-    nind = nind,
-    nrec = nrec,
-    ntime = ntime,
-    ntest = ntest,
-    ntrans = ntrans,
-    y = y,
-    test = test,
-    recX = recX,
-    recY = recY,
-    xlim = xlim,
-    ylim = ylim,
-    testX = testX,
-    testY = testY
+    n_ind = n_ind,
+    n_rec = n_rec,
+    n_time = n_time,
+    n_test = n_test,
+    n_trans = n_trans,
+    det = det,
+    det_test = det_test,
+    rec_x = rec_x,
+    rec_y = rec_y,
+    x_lim = x_lim,
+    y_lim = y_lim,
+    test_x = test_x,
+    test_y = test_y
   )
 
   # validate this list prior to sending it to the model
-  exp_len <- expected_lengths(recX = recX, recY = recY, ntest_len = ntest)
+  exp_len <- expected_lengths(rec_x = rec_x, rec_y = rec_y, n_test_len = n_test)
 
   validate_standata(standata, exp_len)
   # set rstan options
@@ -89,7 +90,8 @@ COA_TagInt <- function(
   }
 
   # Save chains after discarding warmup
-  fit_estimates <- as.data.frame(fit_model) # Note this returns parameters and latent states/derived values
+  fit_estimates <- as.data.frame(fit_model)
+  # Note this returns parameters and latent states/derived values
 
   # Summary statistics and convergence diagnostics
   if (decay == "gaussian") {
