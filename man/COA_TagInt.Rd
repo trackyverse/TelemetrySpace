@@ -5,50 +5,50 @@
 \title{Fits a test-tag integrated Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan}
 \usage{
 COA_TagInt(
-  nind,
-  nrec,
-  ntime,
-  ntest,
-  ntrans,
-  y,
-  test,
-  recX,
-  recY,
-  xlim,
-  ylim,
-  testX,
-  testY,
-  decay = "gaussian",
-  ndraws = NULL,
+  n_ind,
+  n_rec,
+  n_time,
+  n_test,
+  n_trans,
+  det,
+  det_test,
+  rec_x,
+  rec_y,
+  x_lim,
+  y_lim,
+  test_x,
+  test_y,
+    decay = "gaussian",
+  n_draws = NULL,
   ...
 )
 }
 \arguments{
-\item{nind}{Number of tagged individuals}
+\item{n_ind}{Number of tagged individuals}
 
-\item{nrec}{Number of receivers}
+\item{n_rec}{Number of receivers}
 
-\item{ntime}{Number of time steps}
+\item{n_time}{Number of time steps}
 
-\item{ntest}{Number of test tags}
+\item{n_test}{Number of test tags}
 
-\item{ntrans}{Number of expected transmissions per tag per time interval}
+\item{n_trans}{Number of expected transmissions per tag per time interval}
 
 \item{y}{Array of detection data, where row = individual, column = time step, and matrix = receiver}
 
 \item{test}{Array of test tag detection data, where row = individual tag, column = time step, and matrix = receiver}
 
-\item{recX}{Receiver coordinates in the east-west direction (should be projected and scaled for computational efficiency)}
+\item{rec_x}{Receiver coordinates in the east-west direction (should be projected and scaled for computational efficiency)}
 
-\item{recY}{Receiver coordinates in the north-south direction (should be projected and scaled for computational efficiency)}
+\item{rec_y}{Receiver coordinates in the north-south direction (should be projected and scaled for computational efficiency)}
 
-\item{xlim}{East-west boundaries of spatial extent (receiver array + buffer)}
+\item{x_lim}{East-west boundaries of spatial extent (receiver array + buffer)}
 
-\item{ylim}{North-south boundaries of spatial extent (receiver array + buffer)}
+\item{y_lim}{North-south boundaries of spatial extent (receiver array + buffer)}
 
-\item{testX}{Test tag coordinates in the east-west direction (should be projected and scaled for computational efficiency)}
+\item{test_x}{Test tag coordinates in the east-west direction (should be projected and scaled for computational efficiency)}
 
-\item{testY}{Test tag coordinates in the north-south direction (should be projected and scaled for computational efficiency)}
+\item{test_y}{Test tag coordinates in the north-south direction (should be projected and scaled for computational efficiency)}
 
 \item{decay}{desired decay function. Currently one of "gaussian" or "logistic". Default is "gaussian".}
 
