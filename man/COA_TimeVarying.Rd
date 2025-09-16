@@ -28,7 +28,9 @@ COA_TimeVarying(
 
 \item{n_trans}{Number of expected transmissions per tag per time interval}
 
-\item{y}{Array of detection data, where row = individual, column = time step, and matrix = receiver}
+\item{det}{Array of detection data, where row = individual, column = receiver, and matrix = time step}
+
+\item{rec_x}{Receiver coordinates in the east-west direction (should be projected and scaled for computational efficiency)}
 
 \item{rec_y}{Receiver coordinates in the north-south direction (should be projected and scaled for computational efficiency)}
 
@@ -45,8 +47,6 @@ COA_TimeVarying(
 \item{...}{Additional arguments passed to \code{sampling} from \code{rstan}.
 This can include setting \code{chains}, \code{iter}, \code{warmup}, and \code{control}. Please see
 \code{rstan::sampling()} for more info.}
-
-\item{det}{Array of detection data, where row = individual, column = receiver, and matrix = time step}
 }
 \value{
 COA_TimeVarying returns an object of class \code{stanfit} returned by \code{rstan::sampling}. See the "rstan" package documentation for details.
