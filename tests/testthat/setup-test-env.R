@@ -22,7 +22,7 @@ standata_1 <- list(
   x_lim = example_extent$xlim, # E-W boundary of spatial extent (receiver array + buffer)
   y_lim = example_extent$ylim,
   n_test = n_sentinal,
-  test = testY,
+  det_test = testY,
   test_x = array(testloc$east, dim = c(n_sentinal)),
   test_y = array(testloc$north, dim = c(n_sentinal)) # N-S b
 )
