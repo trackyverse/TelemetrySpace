@@ -107,7 +107,9 @@ generated_quantities <- function(model, standata, n_draws = NULL) {
         for (m in 1:n_rec) {
           for (s in 1:n_test) {
             # Euclidean distance between test tag s and receiver m
-            test_dist <- sqrt((testX[s] - rec_x[m])^2 + (testY[s] - rec_y[m])^2)
+            test_dist <- sqrt(
+              (test_x[s] - rec_x[m])^2 + (test_y[s] - rec_y[m])^2
+            )
             # Probability
             p_test <- p0[l, m] * exp(-a1 * test_dist^2)
             p_test <- min(max(p_test, 1e-9), 1 - 1e-9)
