@@ -114,7 +114,7 @@ generated_quantities <- function(model, standata, n_draws = NULL) {
             p_test <- p0[l, m] * exp(-a1 * test_dist^2)
             p_test <- min(max(p_test, 1e-9), 1 - 1e-9)
             # Simulate detection
-            y_rep_test[s, m, l] <- stats::rbinom(1, n_trans, p_test)
+            y_rep_test[s, m, l] <- stats::rbinom(1, n_trans_test, p_test)
           }
         }
       }
