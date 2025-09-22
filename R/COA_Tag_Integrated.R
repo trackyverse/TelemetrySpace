@@ -7,7 +7,8 @@
 #' @param n_time  Number of time steps
 #' @param n_test  Number of test tags
 #' @param n_trans Number of expected transmissions per tag per time interval
-#' @param det      Array of detection data, where row = individual, column = time step, and matrix = receiver
+#' @param n_trans_test Number of expected transmissions per sentinel tag per time interval
+#' @param det      Array of detection data, where row = individual, column = receiver, and matrix = time step
 #' @param det_test   Array of test tag detection data, where row = individual tag, column = receiver, and matrix = time step
 #' @param rec_x   Receiver coordinates in the east-west direction (should be projected and scaled for computational efficiency)
 #' @param rec_y   Receiver coordinates in the north-south direction (should be projected and scaled for computational efficiency)

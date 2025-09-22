@@ -10,6 +10,7 @@ COA_TagInt(
   n_time,
   n_test,
   n_trans,
+  n_trans_test,
   det,
   det_test,
   rec_x,
@@ -34,7 +35,9 @@ COA_TagInt(
 
 \item{n_trans}{Number of expected transmissions per tag per time interval}
 
-\item{y}{Array of detection data, where row = individual, column = time step, and matrix = receiver}
+\item{n_trans_test}{Number of expected transmissions per sentinel tag per time interval}
+
+\item{det}{Array of detection data, where row = individual, column = receiver, and matrix = time step}
 
 \item{test}{Array of test tag detection data, where row = individual tag, column = time step, and matrix = receiver}
 
