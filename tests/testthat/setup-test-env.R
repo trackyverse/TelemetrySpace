@@ -16,6 +16,7 @@ standata_test_tag <- list(
   n_rec = model_param_ex$n_rec, # number of receivers
   n_time = model_param_ex$tsteps, # number of time steps
   n_trans = model_param_ex$ntrans, # number of expected transmissions per tag per time interval
+  n_trans_test = model_param_ex$ntrans, # number of expected transmissions per tag per time interval
   det = Y, # array of detections
   rec_x = rlocs$east, # E-W receiver coordinates
   rec_y = rlocs$north, # N-S receiver coordinates
