@@ -6,6 +6,7 @@ coa_args <- list(
   n_rec = model_param_ex$nrec,
   n_time = model_param_ex$tsteps,
   n_trans = model_param_ex$ntrans,
+  n_trans_test = model_param_ex$ntrans,
   n_test = n_sentinel,
   det = Y,
   det_test = testY,
@@ -45,6 +46,11 @@ params_table <- list(
     param = "n_trans",
     bad = list(c(model_param_ex$ntrans, model_param_ex$ntrans), "1"),
     regex = "`n_trans` must be a numeric vector that has a length of 1."
+  ),
+  list(
+    param = "n_trans_test",
+    bad = list(c(model_param_ex$ntrans, model_param_ex$ntrans), "1"),
+    regex = "`n_trans_test` must be a numeric vector that has a length of 1."
   ),
   list(
     param = "n_test",
