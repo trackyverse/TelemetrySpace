@@ -1,6 +1,6 @@
 # Save this file as `R/COA_TimeVarying.R`
 
-#' Fits a test-tag integrated Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan
+#' Fits a time-varying Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan
 #'
 
 #' @param nind   Number of tagged individuals
