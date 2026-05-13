@@ -64,5 +64,5 @@ This function returns a list containing the following components: 1) a summary o
 Fits a test-tag integrated Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan
 }
 \seealso{
-\code{\link[rstan:stanmodel-method-sampling]{rstan::sampling()}}
+\code{\link[rstan:sampling]{rstan::sampling()}}
 }
