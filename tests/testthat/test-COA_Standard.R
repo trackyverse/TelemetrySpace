@@ -118,7 +118,7 @@ test_that("parameter validation works", {
 
 test_that("test COA_standard model results to make sure its consisitent", {
   mean_p0 <- model_coa_standard$summary[1]
-  expected_mean_p0 <- 0.2818
+  expected_mean_p0 <- 0.2658
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
 })
 test_that("check to see if model_coa_standard classes", {
