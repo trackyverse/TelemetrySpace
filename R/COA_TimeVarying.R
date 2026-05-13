@@ -7,7 +7,7 @@
 #' @param nrec   Number of receivers
 #' @param ntime  Number of time steps
 #' @param ntrans Number of expected transmissions per tag per time interval
-#' @param y      Array of detection data, where row = individual, column = receiver, and matrix = time step
+#' @param y      Array of detection data, where row = individual, column = time step, and matrix = receiver
 #' @param recX   Receiver coordinates in the east-west direction (should be projected and scaled for computational efficiency)
 #' @param recY   Receiver coordinates in the north-south direction (should be projected and scaled for computational efficiency)
 #' @param xlim   East-west boundaries of spatial extent (receiver array + buffer)
