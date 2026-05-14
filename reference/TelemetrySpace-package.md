@@ -8,6 +8,16 @@ data
 Stan Development Team (2017). RStan: the R interface to Stan. R package
 version 2.16.2. http://mc-stan.org
 
+## See also
+
+Useful links:
+
+- <https://telemetryspace.trackyverse.org>
+
+- <https://github.com/trackyverse/TelemetrySpace>
+
+- Report bugs at <https://github.com/trackyverse/TelemetrySpace/issues>
+
 ## Author
 
 **Maintainer**: Michael O'Brien <mike@obrien.page>
@@ -15,10 +25,11 @@ version 2.16.2. http://mc-stan.org
 
 Authors:
 
+- Michael O'Brien <mike@obrien.page>
+  ([ORCID](https://orcid.org/0000-0003-1420-6395))
+
 - Megan Winton <megan.winton@gmail.com>
   ([ORCID](https://orcid.org/0000-0003-2628-7022))
 
-Other contributors:
-
 - Benjamin L. Hlina <benjamin.hlina@gmail.com>
-  ([ORCID](https://orcid.org/0000-0002-4178-4900)) \[contributor\]
+  ([ORCID](https://orcid.org/0000-0002-4178-4900))

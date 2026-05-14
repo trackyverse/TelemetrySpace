@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">TelemetrySpace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Estimate_COA_vignette.html">Estimate activity centers from acoustic telemetry data</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/trackyverse/TelemetrySpace/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -35,9 +36,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="models">Models<a class="anchor" aria-label="anchor" href="#models"></a></h2>
 
-
+      <div class="section-desc"><p>These are the core models of the package.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -53,45 +54,49 @@
 
         <dt>
 
+          <code><a href="COA_TimeVarying.html">COA_TimeVarying()</a></code>
+
+        </dt>
+        <dd>Fits a time-varying Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan</dd>
+
+        <dt>
+
           <code><a href="COA_TagInt.html">COA_TagInt()</a></code>
 
         </dt>
         <dd>Fits a test-tag integrated Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan</dd>
+      </dl></div><div class="section level2">
+      <h2 id="helper-functions">Helper functions<a class="anchor" aria-label="anchor" href="#helper-functions"></a></h2>
 
-        <dt>
 
-          <code><a href="COA_TimeVarying.html">COA_TimeVarying()</a></code>
 
-        </dt>
-        <dd>Fits a test-tag integrated Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan</dd>
+      <dl></dl></div><div class="section level2">
 
-        <dt>
 
-          <code><a href="TelemetrySpace-package.html">TelemetrySpace-package</a></code> <code><a href="TelemetrySpace-package.html">TelemetrySpace</a></code>
 
-        </dt>
-        <dd>The 'TelemetrySpace' package.</dd>
 
-        <dt>
-
-          <code><a href="Y.html">Y</a></code>
-
-        </dt>
-        <dd>Counts of detection per time steps</dd>
-
-        <dt>
+      <dl><dt>
 
           <code><a href="distf.html">distf()</a></code>
 
         </dt>
         <dd>Calculate Euclidean distance between receivers and activity centers</dd>
+      </dl></div><div class="section level2">
+      <h2 id="datasets">Datasets<a class="anchor" aria-label="anchor" href="#datasets"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>These are the test datasets shipped with the package.</p></div>
 
-          <code><a href="example_extent.html">example_extent</a></code>
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="Y.html">Y</a></code>
 
         </dt>
-        <dd>Example array extent</dd>
+        <dd>Counts of detection per time steps</dd>
 
         <dt>
 
@@ -102,17 +107,17 @@
 
         <dt>
 
-          <code><a href="model_param_ex.html">model_param_ex</a></code>
-
-        </dt>
-        <dd>Example model parameters</dd>
-
-        <dt>
-
           <code><a href="rlocs.html">rlocs</a></code>
 
         </dt>
         <dd>Receiver locations from a black sea bass array</dd>
+
+        <dt>
+
+          <code><a href="example_extent.html">example_extent</a></code>
+
+        </dt>
+        <dd>Example array extent</dd>
 
         <dt>
 
@@ -134,12 +139,36 @@
 
         </dt>
         <dd>Location of a stationary test transmitter placed in the black sea bass array</dd>
+
+        <dt>
+
+          <code><a href="model_param_ex.html">model_param_ex</a></code>
+
+        </dt>
+        <dd>Example model parameters</dd>
+      </dl></div><div class="section level2">
+      <h2 id="misc">Misc<a class="anchor" aria-label="anchor" href="#misc"></a></h2>
+
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="TelemetrySpace-package.html">TelemetrySpace-package</a></code> <code><a href="TelemetrySpace-package.html">TelemetrySpace</a></code>
+
+        </dt>
+        <dd>The 'TelemetrySpace' package.</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Megan Winton, Michael O’Brien, Benjamin L. Hlina.</p>
+  <p>Developed by Megan Winton, <a href="https://www.obrien.page" class="external-link">Michael O’Brien</a>, <a href="https://benjaminhlina.com" class="external-link">Benjamin L. Hlina</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

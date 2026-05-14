@@ -50,13 +50,13 @@ COA_TagInt(
 
 - y:
 
-  Array of detection data, where row = individual, column = receiver,
-  and matrix = time step
+  Array of detection data, where row = individual, column = time step,
+  and matrix = receiver
 
 - test:
 
   Array of test tag detection data, where row = individual tag, column =
-  receiver, and matrix = time step
+  time step, and matrix = receiver
 
 - recX:
 

@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">TelemetrySpace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,6 +36,7 @@
 <li><a class="dropdown-item" href="../articles/Estimate_COA_vignette.html">Estimate activity centers from acoustic telemetry data</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -60,7 +61,7 @@
 Winton</h4>
             
             <h4 data-toc-skip class="date">2018-06-06, updated
-2025-08-26</h4>
+2026-05-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/trackyverse/TelemetrySpace/blob/main/vignettes/Estimate_COA_vignette.Rmd" class="external-link"><code>vignettes/Estimate_COA_vignette.Rmd</code></a></small>
       <div class="d-none name"><code>Estimate_COA_vignette.Rmd</code></div>
@@ -160,15 +161,15 @@ here.</em>
 <span><span class="co">## 1 -0.329 0.713</span></span></code></pre>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">testdat</span><span class="op">)</span> <span class="co"># Hourly detection data from the test tag</span></span></code></pre></div>
-<pre><code><span><span class="co">## # A tibble: 6 × 5</span></span>
-<span><span class="co">##   Station Transmitter   east north  hour</span></span>
-<span><span class="co">##   &lt;chr&gt;         &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span><span class="co">## 1 SB12           3447 -0.326 0.513     1</span></span>
-<span><span class="co">## 2 SB13           3447  0.125 0.575     1</span></span>
-<span><span class="co">## 3 SB7            3447 -0.231 1.20      1</span></span>
-<span><span class="co">## 4 SB6            3447 -0.879 0.950     1</span></span>
-<span><span class="co">## 5 SB13           3447  0.125 0.575     1</span></span>
-<span><span class="co">## 6 SB6            3447 -0.879 0.950     1</span></span></code></pre>
+<pre><code><span><span class="co">## # A tibble: 6 × 6</span></span>
+<span><span class="co">##   Station Transmitter   east north  hour     D</span></span>
+<span><span class="co">##   &lt;chr&gt;         &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span><span class="co">## 1 SB12           3447 -0.326 0.513     1 0.200</span></span>
+<span><span class="co">## 2 SB13           3447  0.125 0.575     1 0.474</span></span>
+<span><span class="co">## 3 SB7            3447 -0.231 1.20      1 0.499</span></span>
+<span><span class="co">## 4 SB6            3447 -0.879 0.950     1 0.599</span></span>
+<span><span class="co">## 5 SB13           3447  0.125 0.575     1 0.474</span></span>
+<span><span class="co">## 6 SB6            3447 -0.879 0.950     1 0.599</span></span></code></pre>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fishdat</span><span class="op">)</span> <span class="co"># Hourly detection data from a black sea bass</span></span></code></pre></div>
 <pre><code><span><span class="co">## # A tibble: 6 × 5</span></span>
@@ -212,15 +213,15 @@ done using the included ‘distf’ function.</p>
 <code class="sourceCode R"><span><span class="co"># Set up a blank vector for storage</span></span>
 <span><span class="va">D</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span><span class="co"># Loop over each hour</span></span>
-<span><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">testdat</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">testdat</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">D</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/distf.html">distf</a></span><span class="op">(</span><span class="va">testloc</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'east'</span>, <span class="st">'north'</span><span class="op">)</span><span class="op">]</span>, <span class="va">testdat</span><span class="op">[</span><span class="va">i</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'east'</span>, <span class="st">'north'</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">testdat</span><span class="op">$</span><span class="va">D</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">D</span><span class="op">)</span> <span class="co"># Assign to testdat data frame</span></span>
 <span></span>
 <span><span class="co"># Plot to examine variation in detection rate over time</span></span>
-<span><span class="va">testdat</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">Station</span>, <span class="va">hour</span>, <span class="va">D</span>, <span class="va">east</span>, <span class="va">north</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span><span class="va">testdat</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">Station</span>, <span class="va">hour</span>, <span class="va">D</span>, <span class="va">east</span>, <span class="va">north</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    dist <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">D</span> <span class="op">*</span> <span class="fl">1000</span><span class="op">)</span>, <span class="co">#Round distance for plotting</span></span>
 <span>    label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">dist</span>, <span class="st">"m"</span>, <span class="st">"("</span>, <span class="va">Station</span>, <span class="st">")"</span><span class="op">)</span> <span class="co">#Create label by merging station name and distance</span></span>
@@ -228,22 +229,20 @@ done using the included ‘distf’ function.</p>
 <span></span>
 <span>  <span class="co">#Plot using ggplot</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hour</span>, y <span class="op">=</span> <span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span>, fill <span class="op">=</span> <span class="st">'#008080'</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">label</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">30</span>,<span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Hours since deployment"</span>,y <span class="op">=</span> <span class="st">"Number of detections"</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="figure/unnamed-chunk-3-1.png" alt="plot of chunk unnamed-chunk-3"><div class="figcaption">plot of chunk unnamed-chunk-3</div>
-</div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span>, fill <span class="op">=</span> <span class="st">'#008080'</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">label</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">30</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Hours since deployment"</span>, y <span class="op">=</span> <span class="st">"Number of detections"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="figure/unnamed-chunk-3-1.png"></p>
 <p>Tally how many time intervals each receiver was operational for -
 this allows for individual receivers deployed for different periods
 and/or receivers that were lost.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># The full analysis takes several hours to run, so we'll subset out 10 hours to illustrate</span></span>
-<span><span class="va">fishdat</span> <span class="op">&lt;-</span> <span class="va">fishdat</span> <span class="op">|&gt;</span> </span>
+<span><span class="va">fishdat</span> <span class="op">&lt;-</span> <span class="va">fishdat</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">hour</span> <span class="op">&lt;</span> <span class="fl">11</span><span class="op">)</span></span>
-<span><span class="va">testdat</span> <span class="op">&lt;-</span> <span class="va">testdat</span> <span class="op">|&gt;</span> </span>
+<span><span class="va">testdat</span> <span class="op">&lt;-</span> <span class="va">testdat</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">hour</span> <span class="op">&lt;</span> <span class="fl">11</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create a copy of the receiver locations for tallying</span></span>
@@ -252,30 +251,30 @@ and/or receivers that were lost.</p>
 <span><span class="co"># Add column for each time interval to indicate whether receiver was operational or not</span></span>
 <span><span class="va">rs</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">fishdat</span><span class="op">$</span><span class="va">hour</span><span class="op">)</span> <span class="op">+</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
 <span></span>
-<span><span class="co"># Create vector of the number of sampling occasions for each receiver </span></span>
+<span><span class="co"># Create vector of the number of sampling occasions for each receiver</span></span>
 <span><span class="va">tsteps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">rs</span><span class="op">[</span>, <span class="fl">4</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">rs</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">tsteps</span> <span class="co"># Will all be the same here because all operational over the entire time span</span></span></code></pre></div>
-<pre><code><span><span class="co">##  [1] 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10</span></span>
-<span><span class="co">## [26] 10 10 10 10 10</span></span></code></pre>
+<pre><code><span><span class="co">##  [1] 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10</span></span>
+<span><span class="co">## [29] 10 10</span></span></code></pre>
 <p>Since detection records only include non-zero events (here assuming
 we’d like to keep time steps with zeros), we’ll need to convert the
 number of detections to include zeros for all receivers that did not
 detect the tag during that time period.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Starting with the test tag data</span></span>
-<span><span class="va">test_agg</span> <span class="op">&lt;-</span> <span class="va">testdat</span> <span class="op">|&gt;</span> </span>
+<span><span class="va">test_agg</span> <span class="op">&lt;-</span> <span class="va">testdat</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    rec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substr</a></span><span class="op">(</span><span class="va">Station</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    <span class="co"># Add a column that indicates each record corresponds to 1 detection</span></span>
 <span>    count <span class="op">=</span> <span class="fl">1</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span></span>
 <span>  <span class="co"># Aggregate the number of detections for each individual at each receiver</span></span>
 <span>  <span class="co"># in each time step</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">Transmitter</span>, <span class="va">rec</span>, <span class="va">east</span>, <span class="va">north</span>, <span class="va">hour</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">Transmitter</span>, <span class="va">rec</span>, <span class="va">east</span>, <span class="va">north</span>, <span class="va">hour</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span></span>
 <span>  <span class="co"># Create a numeric identifier for each transmitter</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>tag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">Transmitter</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>tag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">Transmitter</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span></span>
 <span>  <span class="co"># Rename hour to time for consistency when plotting below</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>time <span class="op">=</span> <span class="st">"hour"</span><span class="op">)</span></span>
@@ -290,44 +289,43 @@ detect the tag during that time period.</p>
 <span><span class="co">#   number of time steps</span></span>
 <span><span class="va">tsteps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">test_agg</span><span class="op">$</span><span class="va">time</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># This chunk saves the total number of encounters of each individual (rows) in </span></span>
-<span><span class="co">#each trap (cols) at each sampling occasion (array elements)</span></span>
-<span><span class="va">testY</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">array</a></span><span class="op">(</span><span class="cn">NA</span>, dim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">ntest</span>, <span class="va">nrec</span>, <span class="va">tsteps</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># This chunk saves the total number of encounters of each individual (rows) in</span></span>
+<span><span class="co"># each trap (cols) at each sampling occasion (array elements)</span></span>
+<span><span class="va">testY</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">array</a></span><span class="op">(</span><span class="cn">NA</span>, dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">ntest</span>, <span class="va">tsteps</span>, <span class="va">nrec</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="kw">for</span><span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">tsteps</span><span class="op">)</span><span class="op">{</span></span>
-<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">ntest</span><span class="op">)</span><span class="op">{</span></span>
-<span>    <span class="va">h1</span> <span class="op">&lt;-</span> <span class="va">test_agg</span><span class="op">[</span><span class="va">test_agg</span><span class="op">$</span><span class="va">tag</span> <span class="op">==</span> <span class="va">i</span>,<span class="op">]</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">tsteps</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">ntest</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">h1</span> <span class="op">&lt;-</span> <span class="va">test_agg</span><span class="op">[</span><span class="va">test_agg</span><span class="op">$</span><span class="va">tag</span> <span class="op">==</span> <span class="va">i</span>, <span class="op">]</span></span>
 <span></span>
-<span>    <span class="kw">for</span><span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">nrec</span><span class="op">)</span><span class="op">{</span></span>
-<span>      <span class="va">testY</span><span class="op">[</span><span class="va">i</span>, <span class="va">j</span>, <span class="va">t</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span></span>
-<span></span>
+<span>    <span class="kw">for</span> <span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">nrec</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="va">testY</span><span class="op">[</span><span class="va">i</span>, <span class="va">t</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span></span>
 <span>        <span class="co"># If there are no detections at that receiver in that time period, set to 0</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">h1</span><span class="op">[</span><span class="va">h1</span><span class="op">$</span><span class="va">time</span> <span class="op">==</span> <span class="va">t</span> <span class="op">&amp;</span> <span class="va">h1</span><span class="op">$</span><span class="va">rec</span> <span class="op">==</span> <span class="va">j</span>,<span class="op">]</span><span class="op">)</span> <span class="op">==</span> <span class="fl">0</span>,</span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">h1</span><span class="op">[</span><span class="va">h1</span><span class="op">$</span><span class="va">time</span> <span class="op">==</span> <span class="va">t</span> <span class="op">&amp;</span> <span class="va">h1</span><span class="op">$</span><span class="va">rec</span> <span class="op">==</span> <span class="va">j</span>, <span class="op">]</span><span class="op">)</span> <span class="op">==</span> <span class="fl">0</span>,</span>
 <span>        <span class="fl">0</span>,</span>
 <span></span>
 <span>        <span class="co"># otherwise set to the number of detections</span></span>
-<span>        <span class="va">h1</span><span class="op">[</span><span class="va">h1</span><span class="op">$</span><span class="va">time</span> <span class="op">==</span> <span class="va">t</span> <span class="op">&amp;</span> <span class="va">h1</span><span class="op">$</span><span class="va">rec</span> <span class="op">==</span> <span class="va">j</span>,<span class="op">]</span><span class="op">$</span><span class="va">n</span></span>
+<span>        <span class="va">h1</span><span class="op">[</span><span class="va">h1</span><span class="op">$</span><span class="va">time</span> <span class="op">==</span> <span class="va">t</span> <span class="op">&amp;</span> <span class="va">h1</span><span class="op">$</span><span class="va">rec</span> <span class="op">==</span> <span class="va">j</span>, <span class="op">]</span><span class="op">$</span><span class="va">n</span></span>
 <span>      <span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
-<span>  <span class="op">}</span>  </span>
+<span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Now we’ll do the same thing for the black sea bass detection
 data.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Now do the same for each tagged fish</span></span>
-<span><span class="va">fish_agg</span> <span class="op">&lt;-</span> <span class="va">fishdat</span> <span class="op">|&gt;</span> </span>
+<span><span class="va">fish_agg</span> <span class="op">&lt;-</span> <span class="va">fishdat</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    rec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substr</a></span><span class="op">(</span><span class="va">Station</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    <span class="co"># Add a column that indicates each record corresponds to 1 detection</span></span>
 <span>    count <span class="op">=</span> <span class="fl">1</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span></span>
 <span>  <span class="co"># Aggregate the number of detections for each individual at each receiver</span></span>
 <span>  <span class="co"># in each time step</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">Transmitter</span>, <span class="va">rec</span>, <span class="va">east</span>, <span class="va">north</span>, <span class="va">hour</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">Transmitter</span>, <span class="va">rec</span>, <span class="va">east</span>, <span class="va">north</span>, <span class="va">hour</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span></span>
 <span>  <span class="co"># Create a numeric identifier for each transmitter</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>tag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">Transmitter</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>tag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">Transmitter</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span></span>
 <span>  <span class="co"># Rename hour to time for consistency when plotting below</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>time <span class="op">=</span> <span class="st">"hour"</span><span class="op">)</span></span>
@@ -337,26 +335,33 @@ data.</p>
 <span><span class="va">nind</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">fish_agg</span><span class="op">$</span><span class="va">Transmitter</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># This chunk saves the total number of encounters of each individual (rows) in each trap (cols) at each sampling occasion (array elements)</span></span>
-<span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">array</a></span><span class="op">(</span><span class="cn">NA</span>, dim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">nind</span>, <span class="va">nrec</span>, <span class="va">tsteps</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">array</a></span><span class="op">(</span><span class="cn">NA</span>, dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">nind</span>, <span class="va">tsteps</span>, <span class="va">nrec</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="kw">for</span><span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">tsteps</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">tsteps</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">h1</span> <span class="op">&lt;-</span> <span class="va">fish_agg</span><span class="op">[</span><span class="va">fish_agg</span><span class="op">$</span><span class="va">tag</span> <span class="op">==</span> <span class="va">i</span>, <span class="op">]</span></span>
 <span></span>
-<span>    <span class="va">h1</span> <span class="op">&lt;-</span> <span class="va">fish_agg</span><span class="op">[</span><span class="va">fish_agg</span><span class="op">$</span><span class="va">tag</span> <span class="op">==</span> <span class="va">i</span>,<span class="op">]</span></span>
-<span></span>
-<span>    <span class="kw">for</span><span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">rlocs</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>    <span class="kw">for</span> <span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">rlocs</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>      <span class="co"># If there are no detections at that receiver in that time period, set to 0; otherwise set to the number of detections</span></span>
-<span>      <span class="va">Y</span><span class="op">[</span><span class="va">i</span>, <span class="va">j</span>, <span class="va">t</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span></span>
-<span></span>
+<span>      <span class="va">Y</span><span class="op">[</span><span class="va">i</span>, <span class="va">t</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span></span>
 <span>        <span class="co"># If there are no detections at that receiver in that time period, set to 0</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">h1</span><span class="op">[</span><span class="va">h1</span><span class="op">$</span><span class="va">time</span> <span class="op">==</span> <span class="va">t</span> <span class="op">&amp;</span> <span class="va">h1</span><span class="op">$</span><span class="va">rec</span> <span class="op">==</span> <span class="va">j</span>,<span class="op">]</span><span class="op">)</span> <span class="op">==</span> <span class="fl">0</span>,</span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">h1</span><span class="op">[</span><span class="va">h1</span><span class="op">$</span><span class="va">time</span> <span class="op">==</span> <span class="va">t</span> <span class="op">&amp;</span> <span class="va">h1</span><span class="op">$</span><span class="va">rec</span> <span class="op">==</span> <span class="va">j</span>, <span class="op">]</span><span class="op">)</span> <span class="op">==</span> <span class="fl">0</span>,</span>
 <span>        <span class="fl">0</span>,</span>
 <span></span>
 <span>        <span class="co"># otherwise set to the number of detections</span></span>
-<span>        <span class="va">h1</span><span class="op">[</span><span class="va">h1</span><span class="op">$</span><span class="va">time</span> <span class="op">==</span> <span class="va">t</span> <span class="op">&amp;</span> <span class="va">h1</span><span class="op">$</span><span class="va">rec</span> <span class="op">==</span> <span class="va">j</span>,<span class="op">]</span><span class="op">$</span><span class="va">n</span></span>
+<span>        <span class="va">h1</span><span class="op">[</span><span class="va">h1</span><span class="op">$</span><span class="va">time</span> <span class="op">==</span> <span class="va">t</span> <span class="op">&amp;</span> <span class="va">h1</span><span class="op">$</span><span class="va">rec</span> <span class="op">==</span> <span class="va">j</span>, <span class="op">]</span><span class="op">$</span><span class="va">n</span></span>
 <span>      <span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span>  <span class="op">}</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>We also want to make sure that our intial values of the COAs are
+realistic (somewhere within the array).</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">init_fun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    sx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">rlocs</span><span class="op">$</span><span class="va">east</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="va">nind</span>, ncol <span class="op">=</span> <span class="va">tsteps</span><span class="op">)</span>,</span>
+<span>    sy <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">rlocs</span><span class="op">$</span><span class="va">north</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="va">nind</span>, ncol <span class="op">=</span> <span class="va">tsteps</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -372,79 +377,81 @@ probabilities but would like to be able to estimate COAs along the
 periphery of the array. The only other information you’ll need to
 provide is the expected number of transmissions per tag per time
 interval (<code>ntrans</code> below).</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">### Format data for model fitting</span></span>
 <span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/COA_Standard.html">COA_Standard</a></span><span class="op">(</span></span>
-<span>  nind <span class="op">=</span> <span class="va">nind</span>,    <span class="co"># number of individuals</span></span>
-<span>  nrec <span class="op">=</span> <span class="va">nrec</span>,    <span class="co"># number of receivers</span></span>
+<span>  nind <span class="op">=</span> <span class="va">nind</span>, <span class="co"># number of individuals</span></span>
+<span>  nrec <span class="op">=</span> <span class="va">nrec</span>, <span class="co"># number of receivers</span></span>
 <span>  ntime <span class="op">=</span> <span class="va">tsteps</span>, <span class="co"># number of time steps</span></span>
-<span>  ntrans <span class="op">=</span> <span class="fl">30</span>,    <span class="co"># number of expected transmissions per tag per time interval</span></span>
-<span>  y <span class="op">=</span> <span class="va">Y</span>,          <span class="co"># array of detections</span></span>
-<span>  recX <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">rlocs</span><span class="op">$</span><span class="va">east</span><span class="op">)</span>,  <span class="co"># E-W receiver coordinates</span></span>
+<span>  ntrans <span class="op">=</span> <span class="fl">30</span>, <span class="co"># number of expected transmissions per tag per time interval</span></span>
+<span>  y <span class="op">=</span> <span class="va">Y</span>, <span class="co"># array of detections</span></span>
+<span>  recX <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">rlocs</span><span class="op">$</span><span class="va">east</span><span class="op">)</span>, <span class="co"># E-W receiver coordinates</span></span>
 <span>  recY <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">rlocs</span><span class="op">$</span><span class="va">north</span><span class="op">)</span>, <span class="co"># N-S receiver coordinates</span></span>
 <span>  xlim <span class="op">=</span> <span class="va">xlim</span>, <span class="co"># E-W boundary of spatial extent (receiver array + buffer)</span></span>
-<span>  ylim <span class="op">=</span> <span class="va">ylim</span>  <span class="co"># N-S boundary of spatial extent (receiver array + buffer)</span></span>
+<span>  ylim <span class="op">=</span> <span class="va">ylim</span>, <span class="co"># N-S boundary of spatial extent (receiver array + buffer)</span></span>
+<span>  init <span class="op">=</span> <span class="va">init_fun</span> <span class="co"># initial values (optional)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         warmup sample</span></span>
-<span><span class="co">## chain:1  2.298  1.985</span></span>
-<span><span class="co">## chain:2  1.830  2.315</span></span>
-<span><span class="co">## chain:3  1.749  1.337</span></span>
-<span><span class="co">## chain:4  1.759  2.078</span></span></code></pre>
+<span><span class="co">## chain:1  0.668  0.561</span></span>
+<span><span class="co">## chain:2  0.685  0.588</span></span>
+<span><span class="co">## chain:3  0.963  0.428</span></span>
+<span><span class="co">## chain:4  0.898  0.732</span></span></code></pre>
 <p>The function will automatically spit out the run-time associated with
 each of the 4 chains used for fitting and returns a list with four
 objects:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##               Length Class      Mode   </span></span>
-<span><span class="co">## model           1    stanfit    S4     </span></span>
-<span><span class="co">## summary        20    -none-     numeric</span></span>
-<span><span class="co">## time            1    -none-     numeric</span></span>
-<span><span class="co">## coas            7    data.frame list   </span></span>
-<span><span class="co">## all_estimates 325    data.frame list</span></span></code></pre>
+<pre><code><span><span class="co">##                      Length Class      Mode   </span></span>
+<span><span class="co">## model                 1     stanfit    S4     </span></span>
+<span><span class="co">## summary              20     -none-     numeric</span></span>
+<span><span class="co">## time                  1     -none-     numeric</span></span>
+<span><span class="co">## coas                  7     data.frame list   </span></span>
+<span><span class="co">## all_estimates        25     data.frame list   </span></span>
+<span><span class="co">## generated_quantities  1     -none-     list</span></span></code></pre>
 <p>The first contains the Stan model object (accessible via
-<code>fit$Model</code>, which will allow you to use <code>rstan</code>
+<code>fit$model</code>, which will allow you to use <code>rstan</code>
 plotting tools and diagnostic plots - see rstan documentation for
 details).</p>
 <p>The second element is a table of parameter estimates and associated
 quantiles from the posterior distribution. The table also includes the
 effective sample size and the Rhat statistic (which should be ~1).</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span><span class="op">$</span><span class="va">summary</span></span></code></pre></div>
 <pre><code><span><span class="co">##            mean      se_mean         sd      2.5%       25%       50%       75%</span></span>
-<span><span class="co">## p0    0.2822800 0.0004478783 0.02520083 0.2361652 0.2644027 0.2813702 0.2994305</span></span>
-<span><span class="co">## sigma 0.2845763 0.0002817552 0.01493595 0.2554774 0.2742519 0.2845919 0.2947178</span></span>
-<span><span class="co">##           97.5%    n_eff     Rhat</span></span>
-<span><span class="co">## p0    0.3329404 3165.990 1.000794</span></span>
-<span><span class="co">## sigma 0.3141591 2810.101 1.001010</span></span></code></pre>
+<span><span class="co">## p0    0.2653663 0.0003836625 0.02151175 0.2244410 0.2502844 0.2650390 0.2794905</span></span>
+<span><span class="co">## sigma 0.2735774 0.0002632050 0.01425707 0.2460348 0.2637138 0.2736323 0.2832254</span></span>
+<span><span class="co">##           97.5%    n_eff      Rhat</span></span>
+<span><span class="co">## p0    0.3098193 3143.785 0.9998846</span></span>
+<span><span class="co">## sigma 0.3016935 2934.084 1.0006339</span></span></code></pre>
 <p>The third returns the time required to run the model (in minutes).
 Note that Stan will automatically detect and use multiple cores. If the
 computer used to run this has multiple cores, the time returned will be
 longer than the actual run time (because it will sum the time for each
-core). To return the realized run time, divide <code>fit$Time</code> by
+core). To return the realized run time, divide <code>fit$time</code> by
 the number of cores.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span><span class="op">$</span><span class="va">time</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.25585</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 0.09205</span></span></code></pre>
 <p>The fourth returns an array of COA estimates, where each matrix
 corresponds to one individual, the rows correspond to each time step,
 and the columns include the median posterior estimate of the east-west
 (x) and north-south (y) coordinates. The 95% credible interval (Bayesian
 version of a confidence interval) for each coordinate is also
 provided.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span><span class="op">$</span><span class="va">coas</span></span></code></pre></div>
 <pre><code><span><span class="co">##    time           x         y    x_lower     x_upper    y_lower   y_upper</span></span>
-<span><span class="co">## 1     1 -0.04419208 0.2936790 -0.1462210  0.05951826 0.18845035 0.4023171</span></span>
-<span><span class="co">## 2     2 -0.02330482 0.3578317 -0.1420680  0.09773196 0.21932718 0.5005321</span></span>
-<span><span class="co">## 3     3 -0.09875625 0.3839595 -0.2569494  0.04730306 0.19878372 0.5686053</span></span>
-<span><span class="co">## 4     4 -0.12329253 0.2816735 -0.2786449  0.02481079 0.10911757 0.4669253</span></span>
-<span><span class="co">## 5     5 -0.16831392 0.3242430 -0.3259290 -0.02445424 0.15206068 0.5067735</span></span>
-<span><span class="co">## 6     6 -0.13019674 0.7062093 -0.4725975  0.17890991 0.17035957 0.8814318</span></span>
-<span><span class="co">## 7     7 -0.05163113 0.3667484 -0.1700821  0.07165783 0.23090152 0.4937734</span></span>
-<span><span class="co">## 8     8 -0.15522780 0.4049252 -0.2793242 -0.03514842 0.27458678 0.5346351</span></span>
-<span><span class="co">## 9     9 -0.05002765 0.3329523 -0.2220192  0.11698386 0.12850061 0.5501859</span></span>
-<span><span class="co">## 10   10 -0.09807742 0.3133353 -0.2885934  0.07443582 0.08394051 0.5651978</span></span></code></pre>
-<p>The last element (<code>fit$All_estimates</code>) contains the
+<span><span class="co">## 1     1 -0.04153637 0.2894650 -0.1503439  0.06103958 0.17903205 0.4023969</span></span>
+<span><span class="co">## 2     2 -0.01940989 0.3614381 -0.1438251  0.10416364 0.21263179 0.5041687</span></span>
+<span><span class="co">## 3     3 -0.10362107 0.3848106 -0.2628695  0.05585784 0.18412860 0.5712033</span></span>
+<span><span class="co">## 4     4 -0.12777798 0.2801433 -0.2851997  0.03924429 0.10481459 0.4818203</span></span>
+<span><span class="co">## 5     5 -0.17607878 0.3228328 -0.3305666 -0.01145660 0.14161107 0.5172187</span></span>
+<span><span class="co">## 6     6 -0.12754601 0.6822740 -0.4732532  0.19355376 0.09818972 0.8820182</span></span>
+<span><span class="co">## 7     7 -0.05072936 0.3678673 -0.1773722  0.06774636 0.23555857 0.5036782</span></span>
+<span><span class="co">## 8     8 -0.15875749 0.4043190 -0.2831046 -0.03383307 0.26894216 0.5391097</span></span>
+<span><span class="co">## 9     9 -0.04836227 0.3325102 -0.2209074  0.11464142 0.13166984 0.5534017</span></span>
+<span><span class="co">## 10   10 -0.10660046 0.3077697 -0.3119451  0.08710100 0.08645227 0.5707302</span></span></code></pre>
+<p>The last element (<code>fit$all_estimates</code>) contains the
 estimates from each non-warm-up iteration for all 4 chains. (If you’re
 not familiar with Bayesian lingo and this just seems like statistical
 jargon, all you need to know is that this is what you’ll use to plot the
@@ -453,48 +460,64 @@ parameter estimates as presented in the paper.) This includes estimates
 of all latent parameters for each individual in each time step (aka this
 element contains tons of parameter estimates), so we will need to subset
 out parameters for plotting.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Extract east-west and north-south coordinates of COAs from each iteration of each chain</span></span>
 <span><span class="co"># Note that 'sx' and 'sy' are the variable names used to store the coordinates for each individual (rows) in each time step (columns).</span></span>
 <span><span class="co"># We'll store them as a list, where each element corresponds to an individual</span></span>
 <span><span class="va">EN_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="cn">NA</span><span class="op">)</span></span>
 <span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">nind</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">nind</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">EN_fit</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span></span>
 <span>    <span class="co"># East-West</span></span>
-<span>    <span class="va">fit</span><span class="op">$</span><span class="va">all_estimates</span> <span class="op">|&gt;</span> </span>
-<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"sx["</span>, <span class="va">i</span>, <span class="st">","</span>, sep<span class="op">=</span><span class="st">''</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="va">fit</span><span class="op">$</span><span class="va">all_estimates</span> <span class="op">|&gt;</span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"sx["</span>, <span class="va">i</span>, <span class="st">","</span>, sep <span class="op">=</span> <span class="st">''</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>, values_to <span class="op">=</span> <span class="st">"X"</span><span class="op">)</span>,</span>
 <span>    <span class="co"># North-South</span></span>
-<span>    <span class="va">fit</span><span class="op">$</span><span class="va">all_estimates</span> <span class="op">|&gt;</span> </span>
-<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"sy["</span>, <span class="va">i</span>, <span class="st">","</span>, sep<span class="op">=</span><span class="st">''</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>      <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>, values_to <span class="op">=</span> <span class="st">"Y"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="va">fit</span><span class="op">$</span><span class="va">all_estimates</span> <span class="op">|&gt;</span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"sy["</span>, <span class="va">i</span>, <span class="st">","</span>, sep <span class="op">=</span> <span class="st">''</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>      <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>, values_to <span class="op">=</span> <span class="st">"Y"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="co"># The ID field corresponds to the time step.</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">".*,|\\]"</span>, <span class="st">""</span>, <span class="va">name</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="co"># The ID field corresponds to the time step.</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">".*,|\\]"</span>, <span class="st">""</span>, <span class="va">name</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co">## Plot posterior estimates</span></span>
 <span><span class="co"># Select individual for plotting</span></span>
 <span><span class="va">post_fit</span> <span class="op">&lt;-</span> <span class="va">EN_fit</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="va">coa_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">coas</span><span class="op">[</span>, , <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">coa_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">coas</span><span class="op">[</span>,, <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Plot in ggplot</span></span>
 <span><span class="va">plotCOAs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">X</span>, y <span class="op">=</span> <span class="va">Y</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">post_fit</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_hex.html" class="external-link">geom_hex</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">1</span>, bins <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>  <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">coa_fit</span>, pch <span class="op">=</span> <span class="fl">25</span>, cex <span class="op">=</span> <span class="fl">1.5</span>, alpha <span class="op">=</span> <span class="fl">.8</span>, fill <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">time</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradientn</a></span><span class="op">(</span>colours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"blue"</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Frequency"</span>, na.value <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_hex.html" class="external-link">geom_hex</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">1</span>, bins <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">coa_fit</span>,</span>
+<span>    pch <span class="op">=</span> <span class="fl">25</span>,</span>
+<span>    cex <span class="op">=</span> <span class="fl">1.5</span>,</span>
+<span>    alpha <span class="op">=</span> <span class="fl">.8</span>,</span>
+<span>    fill <span class="op">=</span> <span class="cn">NA</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">time</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradientn</a></span><span class="op">(</span></span>
+<span>    colours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"blue"</span><span class="op">)</span>,</span>
+<span>    name <span class="op">=</span> <span class="st">"Frequency"</span>,</span>
+<span>    na.value <span class="op">=</span> <span class="cn">NA</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">east</span>, y <span class="op">=</span> <span class="va">north</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">rlocs</span>, cex <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">east</span>, y <span class="op">=</span> <span class="va">north</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">fish_agg</span>, pch <span class="op">=</span> <span class="fl">21</span>, cex <span class="op">=</span> <span class="fl">1.5</span>, fill <span class="op">=</span> <span class="st">'#00BFC4'</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">east</span>, y <span class="op">=</span> <span class="va">north</span><span class="op">)</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">fish_agg</span>,</span>
+<span>    pch <span class="op">=</span> <span class="fl">21</span>,</span>
+<span>    cex <span class="op">=</span> <span class="fl">1.5</span>,</span>
+<span>    fill <span class="op">=</span> <span class="st">'#00BFC4'</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span></span>
 <span>  <span class="co"># Unhash line below to include test tag location</span></span>
 <span>  <span class="co">#geom_point(aes(x = east, y = north), data = testloc, cex = 1.5, pch = 21, fill = '#F8766D') +</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="co">#scale_y_continuous(breaks = c(-1, 0, 1)) +</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'East-West (km)'</span>, y <span class="op">=</span> <span class="st">'North-South (km)'</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -508,82 +531,98 @@ it just allows the detection probability to vary between time steps and
 receivers. The only other information you’ll need to provide is the
 expected number of transmissions per tag per time interval
 (<code>ntrans</code>).</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">### Format data for model fitting</span></span>
 <span><span class="va">fit_vary</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/COA_TimeVarying.html">COA_TimeVarying</a></span><span class="op">(</span></span>
-<span>  nind <span class="op">=</span> <span class="va">nind</span>,    <span class="co"># number of individuals</span></span>
-<span>  nrec <span class="op">=</span> <span class="va">nrec</span>,    <span class="co"># number of receivers</span></span>
+<span>  nind <span class="op">=</span> <span class="va">nind</span>, <span class="co"># number of individuals</span></span>
+<span>  nrec <span class="op">=</span> <span class="va">nrec</span>, <span class="co"># number of receivers</span></span>
 <span>  ntime <span class="op">=</span> <span class="va">tsteps</span>, <span class="co"># number of time steps</span></span>
-<span>  ntrans <span class="op">=</span> <span class="fl">30</span>,    <span class="co"># number of expected transmissions per tag per time interval</span></span>
-<span>  y <span class="op">=</span> <span class="va">Y</span>,          <span class="co"># array of detections from tagged fish</span></span>
-<span>  recX <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">rlocs</span><span class="op">$</span><span class="va">east</span><span class="op">)</span>,  <span class="co"># E-W receiver coordinates</span></span>
+<span>  ntrans <span class="op">=</span> <span class="fl">30</span>, <span class="co"># number of expected transmissions per tag per time interval</span></span>
+<span>  y <span class="op">=</span> <span class="va">Y</span>, <span class="co"># array of detections from tagged fish</span></span>
+<span>  recX <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">rlocs</span><span class="op">$</span><span class="va">east</span><span class="op">)</span>, <span class="co"># E-W receiver coordinates</span></span>
 <span>  recY <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">rlocs</span><span class="op">$</span><span class="va">north</span><span class="op">)</span>, <span class="co"># N-S receiver coordinates</span></span>
 <span>  xlim <span class="op">=</span> <span class="va">xlim</span>, <span class="co"># E-W boundary of spatial extent (receiver array + buffer)</span></span>
-<span>  ylim <span class="op">=</span> <span class="va">ylim</span>  <span class="co"># N-S boundary of spatial extent (receiver array + buffer)</span></span>
+<span>  ylim <span class="op">=</span> <span class="va">ylim</span>, <span class="co"># N-S boundary of spatial extent (receiver array + buffer)</span></span>
+<span>  init <span class="op">=</span> <span class="va">init_fun</span> <span class="co"># initial values (optional)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         warmup sample</span></span>
-<span><span class="co">## chain:1 24.266 14.747</span></span>
-<span><span class="co">## chain:2 22.624 17.264</span></span>
-<span><span class="co">## chain:3 23.072 14.642</span></span>
-<span><span class="co">## chain:4 22.762 14.569</span></span></code></pre>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<span><span class="co">## chain:1 10.646  5.846</span></span>
+<span><span class="co">## chain:2  9.478  6.078</span></span>
+<span><span class="co">## chain:3 10.373  5.773</span></span>
+<span><span class="co">## chain:4  9.842  5.958</span></span></code></pre>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit_vary</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##                 Length Class      Mode   </span></span>
-<span><span class="co">## model              1   stanfit    S4     </span></span>
-<span><span class="co">## summary         3010   -none-     numeric</span></span>
-<span><span class="co">## time               1   -none-     numeric</span></span>
-<span><span class="co">## coas               7   data.frame list   </span></span>
-<span><span class="co">## detection_probs  300   -none-     numeric</span></span>
-<span><span class="co">## all_estimates    923   data.frame list</span></span></code></pre>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">##                      Length Class      Mode   </span></span>
+<span><span class="co">## model                   1   stanfit    S4     </span></span>
+<span><span class="co">## summary              3010   -none-     numeric</span></span>
+<span><span class="co">## time                    1   -none-     numeric</span></span>
+<span><span class="co">## coas                    7   data.frame list   </span></span>
+<span><span class="co">## detection_probs       300   -none-     numeric</span></span>
+<span><span class="co">## all_estimates         623   data.frame list   </span></span>
+<span><span class="co">## generated_quantities    1   -none-     list</span></span></code></pre>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit_vary</span><span class="op">$</span><span class="va">time</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 2.565767</span></span></code></pre>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">## [1] 1.066567</span></span></code></pre>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># As before, extract east-west and north-south coordinates of COAs from each iteration of each chain</span></span>
 <span><span class="co"># Note that 'sx' and 'sy' are the variable names used to store the coordinates for each individual (rows) in each time step (columns).</span></span>
 <span><span class="co"># We'll store them as a list, where each element corresponds to an individual</span></span>
 <span><span class="va">EN_vary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="cn">NA</span><span class="op">)</span></span>
 <span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">nind</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">nind</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">EN_vary</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span></span>
 <span>    <span class="co"># East-West</span></span>
-<span>    <span class="va">fit_vary</span><span class="op">$</span><span class="va">all_estimates</span> <span class="op">|&gt;</span> </span>
-<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"sx["</span>, <span class="va">i</span>, <span class="st">","</span>, sep<span class="op">=</span><span class="st">''</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="va">fit_vary</span><span class="op">$</span><span class="va">all_estimates</span> <span class="op">|&gt;</span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"sx["</span>, <span class="va">i</span>, <span class="st">","</span>, sep <span class="op">=</span> <span class="st">''</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>, values_to <span class="op">=</span> <span class="st">"X"</span><span class="op">)</span>,</span>
 <span>    <span class="co"># North-South</span></span>
-<span>    <span class="va">fit_vary</span><span class="op">$</span><span class="va">all_estimates</span> <span class="op">|&gt;</span> </span>
-<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"sy["</span>, <span class="va">i</span>, <span class="st">","</span>, sep<span class="op">=</span><span class="st">''</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>      <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>, values_to <span class="op">=</span> <span class="st">"Y"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="va">fit_vary</span><span class="op">$</span><span class="va">all_estimates</span> <span class="op">|&gt;</span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"sy["</span>, <span class="va">i</span>, <span class="st">","</span>, sep <span class="op">=</span> <span class="st">''</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>      <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>, values_to <span class="op">=</span> <span class="st">"Y"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="co"># The ID field corresponds to the time step.</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">".*,|\\]"</span>, <span class="st">""</span>, <span class="va">name</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="co"># The ID field corresponds to the time step.</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">".*,|\\]"</span>, <span class="st">""</span>, <span class="va">name</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co">## Plot posterior estimates</span></span>
 <span><span class="co"># Select individual for plotting</span></span>
 <span><span class="va">post_vary</span> <span class="op">&lt;-</span> <span class="va">EN_vary</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="va">coa_vary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">fit_vary</span><span class="op">$</span><span class="va">coas</span><span class="op">[</span>, , <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">coa_vary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">fit_vary</span><span class="op">$</span><span class="va">coas</span><span class="op">[</span>,, <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Plot in ggplot</span></span>
 <span><span class="va">plotTVary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">X</span>, y <span class="op">=</span> <span class="va">Y</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">post_vary</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_hex.html" class="external-link">geom_hex</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">1</span>, bins <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>  <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">coa_vary</span>,</span>
-<span>      pch <span class="op">=</span> <span class="fl">25</span>, cex <span class="op">=</span> <span class="fl">1.5</span>, alpha <span class="op">=</span> <span class="fl">.8</span>, fill <span class="op">=</span> <span class="cn">NA</span></span>
-<span>    <span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">time</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradientn</a></span><span class="op">(</span>colours<span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"blue"</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Frequency"</span>, na.value<span class="op">=</span><span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">east</span>, y <span class="op">=</span> <span class="va">north</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">rlocs</span>, cex <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">east</span>,y <span class="op">=</span> <span class="va">north</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">fish_agg</span>, pch <span class="op">=</span> <span class="fl">21</span>, cex <span class="op">=</span> <span class="fl">1.5</span>, fill <span class="op">=</span> <span class="st">'#00BFC4'</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    </span>
-<span>    <span class="co"># Unhash line below to include test tag location  </span></span>
-<span>    <span class="co">#geom_point(aes(x=east,y=north),data=testloc,cex=1.5,pch=21,fill='#F8766D') +</span></span>
-<span>    </span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="co">#scale_y_continuous(breaks = c(-1, 0, 1)) +</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'East-West (km)'</span>, y <span class="op">=</span> <span class="st">'North-South (km)'</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_hex.html" class="external-link">geom_hex</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">1</span>, bins <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">coa_vary</span>,</span>
+<span>    pch <span class="op">=</span> <span class="fl">25</span>,</span>
+<span>    cex <span class="op">=</span> <span class="fl">1.5</span>,</span>
+<span>    alpha <span class="op">=</span> <span class="fl">.8</span>,</span>
+<span>    fill <span class="op">=</span> <span class="cn">NA</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">time</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradientn</a></span><span class="op">(</span></span>
+<span>    colours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"blue"</span><span class="op">)</span>,</span>
+<span>    name <span class="op">=</span> <span class="st">"Frequency"</span>,</span>
+<span>    na.value <span class="op">=</span> <span class="cn">NA</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">east</span>, y <span class="op">=</span> <span class="va">north</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">rlocs</span>, cex <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">east</span>, y <span class="op">=</span> <span class="va">north</span><span class="op">)</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">fish_agg</span>,</span>
+<span>    pch <span class="op">=</span> <span class="fl">21</span>,</span>
+<span>    cex <span class="op">=</span> <span class="fl">1.5</span>,</span>
+<span>    fill <span class="op">=</span> <span class="st">'#00BFC4'</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span></span>
+<span>  <span class="co"># Unhash line below to include test tag location</span></span>
+<span>  <span class="co">#geom_point(aes(x=east,y=north),data=testloc,cex=1.5,pch=21,fill='#F8766D') +</span></span>
+<span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'East-West (km)'</span>, y <span class="op">=</span> <span class="st">'North-South (km)'</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="fit-a-model-that-uses-detections-from-a-moored-test-tag-to-inform-detection-probabilities">Fit a model that uses detections from a moored test tag to inform
@@ -599,80 +638,97 @@ time step. In other words, it treats test tags as tagged individuals but
 with known COAs. The only other information you’ll need to provide is
 the expected number of transmissions per tag per time interval
 (<code>ntrans</code>).</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">### Format data for model fitting</span></span>
 <span><span class="co">## Specify the number of sentinel tags (this step is necessary because of issues that arise with Stan indexing if you have only 1 test tag)</span></span>
 <span><span class="va">nsentinel</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
 <span></span>
 <span><span class="va">fit_tag</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/COA_TagInt.html">COA_TagInt</a></span><span class="op">(</span></span>
-<span>  nind <span class="op">=</span> <span class="va">nind</span>,       <span class="co"># number of individuals</span></span>
-<span>  nrec <span class="op">=</span> <span class="va">nrec</span>,       <span class="co"># number of receivers</span></span>
-<span>  ntime <span class="op">=</span> <span class="va">tsteps</span>,    <span class="co"># number of time steps</span></span>
+<span>  nind <span class="op">=</span> <span class="va">nind</span>, <span class="co"># number of individuals</span></span>
+<span>  nrec <span class="op">=</span> <span class="va">nrec</span>, <span class="co"># number of receivers</span></span>
+<span>  ntime <span class="op">=</span> <span class="va">tsteps</span>, <span class="co"># number of time steps</span></span>
 <span>  ntest <span class="op">=</span> <span class="va">nsentinel</span>, <span class="co"># number of test tags</span></span>
-<span>  ntrans <span class="op">=</span> <span class="fl">30</span>,       <span class="co"># number of expected transmissions per tag per time interval</span></span>
-<span>  y <span class="op">=</span> <span class="va">Y</span>,             <span class="co"># array of detections from tagged fish</span></span>
-<span>  test <span class="op">=</span> <span class="va">testY</span>,      <span class="co"># array of detections from test tags</span></span>
-<span>  recX <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">rlocs</span><span class="op">$</span><span class="va">east</span><span class="op">)</span>,  <span class="co"># E-W receiver coordinates</span></span>
-<span>  recY <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">rlocs</span><span class="op">$</span><span class="va">north</span><span class="op">)</span>, <span class="co"># N-S receiver coordinates </span></span>
+<span>  ntrans <span class="op">=</span> <span class="fl">30</span>, <span class="co"># number of expected transmissions per tag per time interval</span></span>
+<span>  y <span class="op">=</span> <span class="va">Y</span>, <span class="co"># array of detections from tagged fish</span></span>
+<span>  test <span class="op">=</span> <span class="va">testY</span>, <span class="co"># array of detections from test tags</span></span>
+<span>  recX <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">rlocs</span><span class="op">$</span><span class="va">east</span><span class="op">)</span>, <span class="co"># E-W receiver coordinates</span></span>
+<span>  recY <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">rlocs</span><span class="op">$</span><span class="va">north</span><span class="op">)</span>, <span class="co"># N-S receiver coordinates</span></span>
 <span>  xlim <span class="op">=</span> <span class="va">xlim</span>, <span class="co"># E-W boundary of spatial extent (receiver array + buffer)</span></span>
 <span>  ylim <span class="op">=</span> <span class="va">ylim</span>, <span class="co"># N-S boundary of spatial extent (receiver array + buffer)</span></span>
 <span>  testX <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">array</a></span><span class="op">(</span><span class="va">testloc</span><span class="op">$</span><span class="va">east</span>, dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">nsentinel</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  testY <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">array</a></span><span class="op">(</span><span class="va">testloc</span><span class="op">$</span><span class="va">north</span>, dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">nsentinel</span><span class="op">)</span><span class="op">)</span></span>
+<span>  testY <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">array</a></span><span class="op">(</span><span class="va">testloc</span><span class="op">$</span><span class="va">north</span>, dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">nsentinel</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  init <span class="op">=</span> <span class="va">init_fun</span> <span class="co"># initial values (optional)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         warmup sample</span></span>
-<span><span class="co">## chain:1 19.695 10.553</span></span>
-<span><span class="co">## chain:2 18.609 10.535</span></span>
-<span><span class="co">## chain:3 19.143 10.438</span></span>
-<span><span class="co">## chain:4 20.521  9.958</span></span></code></pre>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<span><span class="co">## chain:1  8.993  5.305</span></span>
+<span><span class="co">## chain:2  9.274  5.418</span></span>
+<span><span class="co">## chain:3 10.113  6.034</span></span>
+<span><span class="co">## chain:4  9.539  6.011</span></span></code></pre>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit_tag</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##                 Length Class      Mode   </span></span>
-<span><span class="co">## model              1   stanfit    S4     </span></span>
-<span><span class="co">## summary         3010   -none-     numeric</span></span>
-<span><span class="co">## time               1   -none-     numeric</span></span>
-<span><span class="co">## coas               7   data.frame list   </span></span>
-<span><span class="co">## detection_probs  300   -none-     numeric</span></span>
-<span><span class="co">## all_estimates    953   data.frame list</span></span></code></pre>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">##                      Length Class      Mode   </span></span>
+<span><span class="co">## model                   1   stanfit    S4     </span></span>
+<span><span class="co">## summary              3010   -none-     numeric</span></span>
+<span><span class="co">## time                    1   -none-     numeric</span></span>
+<span><span class="co">## coas                    7   data.frame list   </span></span>
+<span><span class="co">## detection_probs       300   -none-     numeric</span></span>
+<span><span class="co">## all_estimates         623   data.frame list   </span></span>
+<span><span class="co">## generated_quantities    2   -none-     list</span></span></code></pre>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit_tag</span><span class="op">$</span><span class="va">time</span> <span class="co"># See the comment about run time when your computer has multiple cores above.</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 1.990867</span></span></code></pre>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">## [1] 1.01145</span></span></code></pre>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># As before, extract east-west and north-south coordinates of COAs from each iteration of each chain</span></span>
 <span><span class="co"># Note that 'sx' and 'sy' are the variable names used to store the coordinates for each individual (rows) in each time step (columns).</span></span>
 <span><span class="co"># We'll store them as a list, where each element corresponds to an individual</span></span>
 <span><span class="va">EN_tag</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="cn">NA</span><span class="op">)</span></span>
 <span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">nind</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">nind</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">EN_tag</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span></span>
 <span>    <span class="co"># East-West</span></span>
-<span>    <span class="va">fit_tag</span><span class="op">$</span><span class="va">all_estimates</span> <span class="op">|&gt;</span> </span>
-<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"sx["</span>, <span class="va">i</span>, <span class="st">","</span>, sep<span class="op">=</span><span class="st">''</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="va">fit_tag</span><span class="op">$</span><span class="va">all_estimates</span> <span class="op">|&gt;</span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"sx["</span>, <span class="va">i</span>, <span class="st">","</span>, sep <span class="op">=</span> <span class="st">''</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>, values_to <span class="op">=</span> <span class="st">"X"</span><span class="op">)</span>,</span>
 <span>    <span class="co"># North-South</span></span>
-<span>    <span class="va">fit_tag</span><span class="op">$</span><span class="va">all_estimates</span> <span class="op">|&gt;</span> </span>
-<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"sy["</span>, <span class="va">i</span>, <span class="st">","</span>, sep<span class="op">=</span><span class="st">''</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>      <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>, values_to <span class="op">=</span> <span class="st">"Y"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="va">fit_tag</span><span class="op">$</span><span class="va">all_estimates</span> <span class="op">|&gt;</span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"sy["</span>, <span class="va">i</span>, <span class="st">","</span>, sep <span class="op">=</span> <span class="st">''</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>      <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>, values_to <span class="op">=</span> <span class="st">"Y"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="co"># The ID field corresponds to the time step.</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">".*,|\\]"</span>, <span class="st">""</span>, <span class="va">name</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="co"># The ID field corresponds to the time step.</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">".*,|\\]"</span>, <span class="st">""</span>, <span class="va">name</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co">## Plot posterior estimates</span></span>
 <span><span class="co"># Select individual for plotting</span></span>
 <span><span class="va">post_tag</span> <span class="op">&lt;-</span> <span class="va">EN_tag</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="va">coa_tag</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">fit_tag</span><span class="op">$</span><span class="va">coas</span><span class="op">[</span>, , <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">coa_tag</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">fit_tag</span><span class="op">$</span><span class="va">coas</span><span class="op">[</span>,, <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Plot in ggplot</span></span>
 <span><span class="va">plotTagInt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">X</span>, y <span class="op">=</span> <span class="va">Y</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">post_tag</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_hex.html" class="external-link">geom_hex</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">1</span>, bins <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>  <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span>,</span>
-<span>    data <span class="op">=</span> <span class="va">coa_tag</span>, pch <span class="op">=</span> <span class="fl">25</span>, cex <span class="op">=</span> <span class="fl">1.5</span>, alpha <span class="op">=</span> <span class="fl">0.8</span>, fill <span class="op">=</span> <span class="cn">NA</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_hex.html" class="external-link">geom_hex</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">1</span>, bins <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">coa_tag</span>,</span>
+<span>    pch <span class="op">=</span> <span class="fl">25</span>,</span>
+<span>    cex <span class="op">=</span> <span class="fl">1.5</span>,</span>
+<span>    alpha <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span>    fill <span class="op">=</span> <span class="cn">NA</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">time</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradientn</a></span><span class="op">(</span>colours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"blue"</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Frequency"</span>, na.value <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradientn</a></span><span class="op">(</span></span>
+<span>    colours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"blue"</span><span class="op">)</span>,</span>
+<span>    name <span class="op">=</span> <span class="st">"Frequency"</span>,</span>
+<span>    na.value <span class="op">=</span> <span class="cn">NA</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">east</span>, y <span class="op">=</span> <span class="va">north</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">rlocs</span>, cex <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">east</span>, y <span class="op">=</span> <span class="va">north</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">fish_agg</span>, pch <span class="op">=</span> <span class="fl">21</span>, cex <span class="op">=</span> <span class="fl">1.5</span>, fill <span class="op">=</span> <span class="st">'#00BFC4'</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">east</span>, y <span class="op">=</span> <span class="va">north</span><span class="op">)</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">fish_agg</span>,</span>
+<span>    pch <span class="op">=</span> <span class="fl">21</span>,</span>
+<span>    cex <span class="op">=</span> <span class="fl">1.5</span>,</span>
+<span>    fill <span class="op">=</span> <span class="st">'#00BFC4'</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
 <span></span>
 <span>  <span class="co"># Unhash line below to plot test tag location</span></span>
 <span>  <span class="co">#geom_point(aes(x=east,y=north),data=testloc,cex=1.5,pch=21,fill='#F8766D') +</span></span>
@@ -686,16 +742,19 @@ the expected number of transmissions per tag per time interval
 <h2 id="comparison">Comparison<a class="anchor" aria-label="anchor" href="#comparison"></a>
 </h2>
 <p>Now plot them all up together to see how they compare!</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggarrange.html" class="external-link">ggarrange</a></span><span class="op">(</span><span class="va">plotCOAs</span>, <span class="va">plotTVary</span>, <span class="va">plotTagInt</span>,</span>
-<span>          labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Standard"</span>, <span class="st">"Time-varying"</span>, <span class="st">"Tag-integrated"</span><span class="op">)</span>,</span>
-<span>          ncol <span class="op">=</span> <span class="fl">3</span>, nrow <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>          align <span class="op">=</span> <span class="st">"hv"</span>,</span>
-<span>          <span class="co">#widths = c(8,8,8), heights = c(2,2,2),</span></span>
-<span>          common.legend <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="figure/unnamed-chunk-15-1.png" alt="plot of chunk unnamed-chunk-15"><div class="figcaption">plot of chunk unnamed-chunk-15</div>
-</div>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggarrange.html" class="external-link">ggarrange</a></span><span class="op">(</span></span>
+<span>  <span class="va">plotCOAs</span>,</span>
+<span>  <span class="va">plotTVary</span>,</span>
+<span>  <span class="va">plotTagInt</span>,</span>
+<span>  labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Standard"</span>, <span class="st">"Time-varying"</span>, <span class="st">"Tag-integrated"</span><span class="op">)</span>,</span>
+<span>  ncol <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  nrow <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  align <span class="op">=</span> <span class="st">"hv"</span>,</span>
+<span>  <span class="co">#widths = c(8,8,8), heights = c(2,2,2),</span></span>
+<span>  common.legend <span class="op">=</span> <span class="cn">F</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="figure/unnamed-chunk-16-1.png"></p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -717,7 +776,7 @@ from passive acoustic telemetry data. Methods in Ecology and Evolution,
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Megan Winton, Michael O’Brien, Benjamin L. Hlina.</p>
+  <p>Developed by Megan Winton, <a href="https://www.obrien.page" class="external-link">Michael O’Brien</a>, <a href="https://benjaminhlina.com" class="external-link">Benjamin L. Hlina</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
