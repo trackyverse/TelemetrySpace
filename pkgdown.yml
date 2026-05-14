@@ -3,7 +3,7 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   Estimate_COA_vignette: Estimate_COA_vignette.html
-last_built: 2026-05-14T12:44Z
+last_built: 2026-05-14T12:50Z
 urls:
   reference: https://trackyverse.github.io/TelemetrySpace/reference
   article: https://trackyverse.github.io/TelemetrySpace/articles

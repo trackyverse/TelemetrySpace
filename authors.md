@@ -13,7 +13,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/trackyverse/TelemetrySpace/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/trackyverse/TelemetrySpace/blob/v1.3.0/DESCRIPTION)
 
 Winton M, O'Brien M, Hlina B (2026). *TelemetrySpace: Spatial point
 process and random field models for electronic tagging data*. R package
