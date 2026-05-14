@@ -27,7 +27,7 @@ COA_Standard(
 
 \item{ntrans}{Number of expected transmissions per tag per time interval}
 
-\item{y}{Array of detection data, where row = individual, column = receiver, and matrix = time step}
+\item{y}{Array of detection data, where row = individual, column = time step, and matrix = receiver}
 
 \item{recX}{Receiver coordinates in the east-west direction (should be projected and scaled for computational efficiency)}
 
@@ -52,5 +52,5 @@ This function returns a list containing the following components: 1) a summary o
 Fits a Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan
 }
 \seealso{
-\code{\link[rstan:stanmodel-method-sampling]{rstan::sampling()}}
+\code{\link[rstan:sampling]{rstan::sampling()}}
 }

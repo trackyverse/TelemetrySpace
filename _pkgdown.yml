@@ -2,3 +2,34 @@ url: https://trackyverse.github.io/TelemetrySpace/
 template:
   bootstrap: 5
 
+authors:
+  Michael O'Brien:
+    href: https://www.obrien.page
+  Benjamin L. Hlina:
+    href: https://benjaminhlina.com
+  Megan Winton:
+
+reference:
+  - title: Models
+    desc: These are the core models of the package.
+    contents:
+      - COA_Standard
+      - COA_TimeVarying
+      - COA_TagInt
+  - title: Helper functions
+    contents:
+      -  distf
+  - title: Datasets
+    desc: These are the test datasets shipped with the package.
+    contents:
+      - "Y"
+      - fishdat
+      - rlocs
+      - example_extent
+      - testY
+      - testdat
+      - testloc
+      - model_param_ex
+  - title: Misc
+    contents:
+      - TelemetrySpace-package

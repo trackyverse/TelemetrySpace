@@ -6,15 +6,15 @@ coa_args <- list(
   nrec = model_param_ex$nrec,
   ntime = model_param_ex$tsteps,
   ntrans = model_param_ex$ntrans,
-  ntest = nsentinal,
+  ntest = nsentinel,
   y = Y,
   test = testY,
   recX = rlocs$east,
   recY = rlocs$north,
   xlim = example_extent$xlim,
   ylim = example_extent$ylim,
-  testX = array(testloc$east, dim = c(nsentinal)),
-  testY = array(testloc$north, dim = c(nsentinal)),
+  testX = array(testloc$east, dim = c(nsentinel)),
+  testY = array(testloc$north, dim = c(nsentinel)),
   chains = 2,
   warmup = 1000,
   iter = 2000,
@@ -93,7 +93,7 @@ params_table <- list(
   )
 )
 
-params_table
+# params_table
 # ----- Check Params -----
 
 test_that("parameter validation works", {
@@ -131,7 +131,7 @@ test_that("parameter validation works", {
 test_that("test COA_TagInt model results to make sure its consisitent", {
   mean_p0 <- model_coa_tag_int$summary[1]
 
-  expected_mean_p0 <- 0.486
+  expected_mean_p0 <- 0.5008
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
 })
 

@@ -1,4 +1,4 @@
-nsentinal <- 1
+nsentinel <- 1
 # ----- standata 1 ------
 standata <- list(
   nind = model_param_ex$nind, # number of individuals
@@ -21,14 +21,30 @@ standata_1 <- list(
   recY = rlocs$north, # N-S receiver coordinates
   xlim = example_extent$xlim, # E-W boundary of spatial extent (receiver array + buffer)
   ylim = example_extent$ylim,
-  ntest = nsentinal,
+  ntest = nsentinel,
   test = testY,
-  testX = array(testloc$east, dim = c(nsentinal)),
-  testY = array(testloc$north, dim = c(nsentinal)) # N-S b
+  testX = array(testloc$east, dim = c(nsentinel)),
+  testY = array(testloc$north, dim = c(nsentinel)) # N-S b
 )
+
+init_fun <- function() {
+  list(
+    sx = matrix(
+      mean(rlocs$east),
+      nrow = model_param_ex$nind,
+      ncol = model_param_ex$tsteps
+    ),
+    sy = matrix(
+      mean(rlocs$north),
+      nrow = model_param_ex$nind,
+      ncol = model_param_ex$tsteps
+    )
+  )
+}
 
 # ----- run each model ------
 # ----- standard coa ------
+set.seed(8675309)
 model_coa_standard <- do.call(
   COA_Standard,
   c(
@@ -39,7 +55,8 @@ model_coa_standard <- do.call(
       iter = 2000,
       control = list(adapt_delta = 0.95),
       seed = 4,
-      ndraws = 11
+      ndraws = 11,
+      init = init_fun
     )
   )
 )
@@ -54,7 +71,8 @@ model_coa_time_vary <- do.call(
       iter = 7000,
       control = list(adapt_delta = 0.95),
       seed = 4,
-      ndraws = 11
+      ndraws = 11,
+      init = init_fun
     )
   )
 )
@@ -70,7 +88,8 @@ model_coa_tag_int <- do.call(
       iter = 8000,
       control = list(adapt_delta = 0.95),
       seed = 4,
-      ndraws = 11
+      ndraws = 11,
+      init = init_fun
     )
   )
 )

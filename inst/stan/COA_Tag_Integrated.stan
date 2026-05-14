@@ -4,94 +4,74 @@ data {
   int<lower = 0> nrec;               // number of receivers
   int<lower = 0> ntime;              // number of time steps
   int<lower = 0> ntest;              // number of test tags
-  int<lower = 0> ntrans;
+
   // number of trials/expected number of transmissions per time step
-  array[nind, nrec, ntime] int<lower = 0> y;
+  int<lower = 0> ntrans;
   // number of detections for each individual at each receiver in each time step
-  array[ntest, nrec, ntime] int<lower = 0> test;
+  array[nind, ntime, nrec] int<lower = 0> y;
   // number of detections from each test tag at each receiver in each time step
-  array[nrec] real recX; // trap locations in east-west direction
-  array[nrec] real recY; // trap locations in north-south direction
-  array[2] real xlim;  // area bounds east-west
-  array[2] real ylim;                    // area boundes north-south
-  array[ntest] real testX;               // test tag locations east-west
-  array[ntest] real testY;               // test tag locations north-south
+  array[ntest, ntime, nrec] int<lower = 0> test;
+
+  vector[nrec] recX; // trap locations in east-west direction
+  vector[nrec] recY; // trap locations in north-south direction
+  vector[2] xlim;  // area bounds east-west
+  vector[2] ylim;                    // area boundes north-south
+  vector[ntest] testX;               // test tag locations east-west
+  vector[ntest] testY;               // test tag locations north-south
+}
+
+transformed data {
+  // Pre-calculate squared distances from receiver for fixed test tags
+  matrix[ntest, nrec] td2;
+  for (s in 1:ntest) {
+    td2[s, ] = to_row_vector(square(recX - testX[s]) + square(recY - testY[s]));
+  }
 }
 
 // Declare parameters
 parameters {
   // fixed effects
-  //real<lower = -5, upper = 5> alpha0;
   // detection probability intercept - max of ~1
-
-  array[ntime, nrec] real<lower = -5, upper = 5> alpha0; // time effect
+  matrix<lower = -5, upper = 5>[ntime, nrec] alpha0; // time effect
   real<lower = 0> alpha1;  // coef. for decline in detection probability with distance
 
   // latent variables
-  array[nind, ntime] real<lower = xlim[1], upper = xlim[2]> sx;
   // E-W center of activity coordinate - bounds reflect spatial extent
-  array[nind, ntime] real<lower = ylim[1], upper = ylim[2]> sy;
+  matrix<lower = xlim[1], upper = xlim[2]>[nind, ntime] sx;
   // N-S center of activity coordinate - bounds reflect spatial extent
-}
-
-// Declare derived/transformed parameters
-transformed parameters  {
-  // Declare them
-   array[ntime, nrec] real p0;
-   // Detection probability at a distance of 0 - time-varying
-   real sigma;
-   // Standard deviation of the distance-decay function - assume constant
-   array[nind, nrec, ntime] real d;
-   // Array to store distances
-   array[ntest, nrec] real td;
-   // Matrix of test tag distances
-
-  // Specify them
-   sigma = sqrt(1 / (2 * alpha1));
-   // Derived from coefficient specifying distance-related decay in detection prob.
-  // Test tag distance
-  for(s in 1:ntest){ // For each test tag
-    for(j in 1:nrec){ // And each receiver
-      // Calculate Euclidean distance from east test tag to each receiver
-      td[s, j] = sqrt(square(testX[s] - recX[j]) + square(testY[s] - recY[j]));
-      //Calc for euclidean distance
-    }
-  }
-
-  // COA distance
-   for(t in 1:ntime){ // For each time step
-    for(j in 1:nrec){ // And each receiver
-      for(i in 1:nind) { // And each individual
-        // Calculate the Euclidean distance from each COA to each receiver in each time step
-          d[i, j, t] = sqrt(square(sx[i, t] - recX[j]) + square(sy[i, t] - recY[j]));
-       // Detection probability
-          //p0[t,j] = exp( alpha0 + alpha2[t,j] )/( 1+exp( alpha0 + alpha2[t,j] ) );
-          p0[t, j] = inv_logit(alpha0[t, j]);
-     }
-   }
- }
-
+  matrix<lower = ylim[1], upper = ylim[2]>[nind, ntime] sy;
 }
 
 // Model specification
 model {
   // priors
-  alpha0[ntime, nrec] ~ cauchy(0, 2.5);
+  to_vector(alpha0) ~ cauchy(0, 2.5);
   alpha1 ~ cauchy(0, 2.5);
 
-  // likelihood
-  for (t in 1:ntime){ // For each time step
-   for (j in 1:nrec){ // And each receiver
-    for (s in 1:ntest){ // And each test tag
-      // Data from test tag - distance for each known
-      test[s, j, t] ~ binomial(ntrans, p0[t, j] * exp(-alpha1 * square(td[s, j])));
+  // Likelihood for test tags (fixed locations)
+  for (s in 1:ntest) { // For each test tag
+    // decay over distance portion of the binomial model
+    vector[nrec] dist_decay = alpha1 * to_vector(td2[s, ]);
+
+    for (t in 1:ntime) { // Run binomial on logit scale
+      // row(p0, t) pulls the alpha0 vector for all receivers at time t
+      test[s, t] ~ binomial_logit(ntrans, row(alpha0, t)' - dist_decay);
     }
-     for (i in 1:nind){ // And each individual
-     // Note observations (y) must be specified as an integer - otherwise will result in an error
-        y[i, j, t] ~ binomial(ntrans, p0[t, j] * exp(-alpha1 * square(d[i, j, t])));
-    }
-   }
   }
-}  //end of model
 
+  // Likelihood for individual COAs (estimated locations)
+  for (i in 1:nind) {
+    for (t in 1:ntime) {
+      // Distance squared from each COA to each receiver at each time
+      vector[nrec] d2 = square(recX - sx[i, t]) + square(recY - sy[i, t]);
+      
+      // Run binomial on logit scale
+      y[i, t] ~ binomial_logit(ntrans, row(alpha0, t)' - (alpha1 * d2));
+    }
+  }
+}  
 
+generated quantities {
+   matrix[ntime, nrec] p0 = inv_logit(alpha0);
+   real sigma = sqrt(1.0 / (2.0 * alpha1));
+}

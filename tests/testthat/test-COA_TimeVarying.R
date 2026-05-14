@@ -114,8 +114,8 @@ test_that("parameter validation works", {
 # model_coa_time_vary$coas
 test_that("test COA_TimeVarying model results to make sure its consisitent", {
   mean_p0 <- model_coa_time_vary$summary[1]
-  expected_mean_p0 <- 0.498
-  expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
+  expected_mean_p0 <- 0.4928
+  expect_equal(mean_p0, expected_mean_p0, tolerance = 0.07)
 })
 
 

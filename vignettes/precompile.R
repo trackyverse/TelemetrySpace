@@ -20,7 +20,7 @@
 
 library(knitr)
 
-# Need to change workind directory to get the figure paths correct.
+# Need to change working directory to get the figure paths correct.
 #   see Note section in ?knitr::knit
 orig_wd <- getwd()
 setwd(file.path(orig_wd, "vignettes"))
