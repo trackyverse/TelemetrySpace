@@ -62,13 +62,13 @@ COA_TimeVarying <- function(
   # fit model
   if (decay == "gaussian") {
     fit_model <- rstan::sampling(
-      stanmodels$COA_Tag_Integrated_gaussian,
+      stanmodels$COA_TimeVarying_gaussian,
       data = standata,
       ...
     )
   } else if (decay == "logistic") {
     fit_model <- rstan::sampling(
-      stanmodels$COA_Tag_Integrated_logistic,
+      stanmodels$COA_TimeVarying_logistic,
       data = standata,
       ...
     )
