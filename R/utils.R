@@ -84,6 +84,28 @@ check_stan_object <- function(x, arg_name = NULL) {
     )
   }
 }
+#' @param x is a `sf` object
+#' @param arg_name the name of the argument to check.
+#'
+#' @keywords internal
+#' @name error_functions
+
+check_sf_object <- function(x, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+
+  # valid classes from rstan and cmdstanr
+  valid_classes <- c(
+    "sf"
+  )
+
+  if (!inherits(x, valid_classes)) {
+    cli::cli_abort(
+      "`{arg_name}` must be a sf object (from {.pkg sf})."
+    )
+  }
+}
 
 #' Expected lengths of variables in `standata`
 #'
