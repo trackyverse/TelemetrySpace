@@ -2,22 +2,44 @@
 % Please edit documentation in R/build_functions.R
 \name{build_functions}
 \alias{build_functions}
+\alias{build_aeqd}
 \alias{build_pixel_grid}
-\title{Build Pixel Grid}
+\title{Build Azimuthal Equidistant Projection}
 \usage{
+build_aeqd(array_sf)
+
 build_pixel_grid(bnd_sf, res)
 }
 \arguments{
+\item{array_sf}{the receiver array as an \code{sf} object.}
+
 \item{bnd_sf}{a \code{sf} object that is boundary that is desired to impose}
 
 \item{res}{the resolution desired}
 }
 \value{
+a \code{vector} containing the site specific projection string for
+the array to be able to supply \code{sf} functions with a valid
+crs to transform values into.
+
 a \code{list} contain the the number of pixels \code{n_pixel}, the pixel x coordinates
 (\code{pix_x}) and the pixel y coordinates (\code{pix_y}).
 }
 \description{
+To make computations in Telemetryspace easier
+Azimuthal Equidistant projection is used which relies
+on creating a centroid and creating equal distances from that
+centroid. This function quickly creates the project string
+needed to supply a \code{sf} function the crs.
+
 To make a barrier for the model, we need to convert the boundary into
 pixels that we can use to for the model to recongize where to estimate
 detection probablity.
+}
+\details{
+the boundary that is supplied needs to match the crs of the receivers.
+Often an azimuth eqaul distance projection is used for TelemetrySpace. This
+projection is in kilometer (km). To build this
+project see \code{build_aeqd()} function. When supplying the desired resolution
+remember that this is in km so a value of \verb{1`` would be quite large while a value of }0.1` is 100 m which makes a much more dense grid.
 }
