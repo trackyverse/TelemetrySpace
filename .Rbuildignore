@@ -10,3 +10,5 @@
 ^pkgdown$
 ^CNAME$
 ^air\.toml$
+^RcppExports\.cpp$
+^StanExports_*

@@ -5,3 +5,5 @@ data-raw
 .DS_Store
 docs
 .vscode
+src/RcppExports.cpp
+src/stanExports_*

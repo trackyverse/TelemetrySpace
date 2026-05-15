@@ -56,7 +56,8 @@ model_coa_standard <- do.call(
       control = list(adapt_delta = 0.95),
       seed = 4,
       ndraws = 11,
-      init = init_fun
+      init = init_fun,
+      decay = "logistic"
     )
   )
 )
