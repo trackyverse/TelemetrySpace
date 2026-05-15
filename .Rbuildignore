@@ -12,3 +12,5 @@
 ^air\.toml$
 ^RcppExports\.cpp$
 ^StanExports_*
+^[.]?air[.]toml$
+^\.vscode$
