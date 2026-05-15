@@ -22,9 +22,9 @@ data {
 
 transformed data {
   // Pre-calculate squared distances from receiver for fixed test tags
-  matrix[ntest, nrec] td2;
+  matrix[ntest, nrec] td;
   for (s in 1:ntest) {
-    td2[s, ] = to_row_vector(square(recX - testX[s]) + square(recY - testY[s]));
+    td[s, ] = to_row_vector(sqrt(square(recX - testX[s]) + square(recY - testY[s])));
   }
 }
 
@@ -51,7 +51,7 @@ model {
   // Likelihood for test tags (fixed locations)
   for (s in 1:ntest) { // For each test tag
     // decay over distance portion of the binomial model
-    vector[nrec] dist_decay = alpha1 * to_vector(td2[s, ]);
+    vector[nrec] dist_decay = alpha1 * td[s, ]';
 
     for (t in 1:ntime) { // Run binomial on logit scale
       // row(p0, t) pulls the alpha0 vector for all receivers at time t
@@ -63,15 +63,17 @@ model {
   for (i in 1:nind) {
     for (t in 1:ntime) {
       // Distance squared from each COA to each receiver at each time
-      vector[nrec] d2 = square(recX - sx[i, t]) + square(recY - sy[i, t]);
+      vector[nrec] d = sqrt(square(recX - sx[i, t]) + square(recY - sy[i, t]));
+      
+      // Calculate linear predictor
+      vector[nrec] lp = row(alpha0, t)' - (alpha1 * d);
       
       // Run binomial on logit scale
-      y[i, t] ~ binomial_logit(ntrans, row(alpha0, t)' - (alpha1 * d2));
+      y[i, t] ~ binomial_logit(ntrans, lp);
     }
   }
 }  
 
 generated quantities {
    matrix[ntime, nrec] p0 = inv_logit(alpha0);
-   real sigma = sqrt(1.0 / (2.0 * alpha1));
 }

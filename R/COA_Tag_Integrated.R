@@ -15,6 +15,7 @@
 #' @param ylim   North-south boundaries of spatial extent (receiver array + buffer)
 #' @param testX  Test tag coordinates in the east-west direction (should be projected and scaled for computational efficiency)
 #' @param testY  Test tag coordinates in the north-south direction (should be projected and scaled for computational efficiency)
+#' @param decay  desired decay function. Currently one of "gaussian" or "logistic". Default is "gaussian".
 #' @param ndraws to be passed to `generated_quantities`. Changes the number of draws. Default is 10.
 #' @param ... Additional arguments passed to `sampling` from `rstan`.
 #' This can include setting `chains`, `iter`, `warmup`, and `control`. Please see
@@ -40,6 +41,7 @@ COA_TagInt <- function(
   ylim,
   testX,
   testY,
+  decay = "gaussian",
   ndraws = NULL,
   ...
 ) {
@@ -70,18 +72,31 @@ COA_TagInt <- function(
   options(mc.cores = parallel::detectCores())
 
   # fit model
-  fit_model <- rstan::sampling(
-    stanmodels$COA_Tag_Integrated,
-    data = standata,
-    ...
-  )
+  if (decay == "gaussian") {
+    fit_model <- rstan::sampling(
+      stanmodels$COA_Tag_Integrated_gaussian,
+      data = standata,
+      ...
+    )
+  } else if (decay == "logistic") {
+    fit_model <- rstan::sampling(
+      stanmodels$COA_Tag_Integrated_logistic,
+      data = standata,
+      ...
+    )
+  } else {
+    stop("decay parameter must be one of \"gaussian\" or \"logistic\".")
+  }
 
   # Save chains after discarding warmup
   fit_estimates <- as.data.frame(fit_model) # Note this returns parameters and latent states/derived values
 
   # Summary statistics and convergence diagnostics
-  fit_summary <- rstan::summary(fit_model, pars = c("p0", "sigma"))$summary
-  #fit_summary <- fit_sum$summary
+  if (decay == "gaussian") {
+    fit_summary <- rstan::summary(fit_model, pars = c("p0", "sigma"))$summary
+  } else if (decay == "logistic") {
+    fit_summary <- rstan::summary(fit_model, pars = c("p0"))$summary
+  }
 
   # How much time did fitting take (in minutes)?
   fit_time <- sum(print(rstan::get_elapsed_time(fit_model))) / 60
