@@ -66,7 +66,7 @@ standard_logistic <- do.call(
     standata,
     list(
       chains = 2,
-      warmup = 2500,
+      warmup = 2000,
       iter = 2500,
       control = list(adapt_delta = 0.95),
       seed = 4,
