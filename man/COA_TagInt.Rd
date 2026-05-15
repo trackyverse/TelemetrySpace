@@ -18,6 +18,7 @@ COA_TagInt(
   ylim,
   testX,
   testY,
+  decay = "gaussian",
   ndraws = NULL,
   ...
 )
@@ -49,6 +50,8 @@ COA_TagInt(
 
 \item{testY}{Test tag coordinates in the north-south direction (should be projected and scaled for computational efficiency)}
 
+\item{decay}{desired decay function. Currently one of "gaussian" or "logistic". Default is "gaussian".}
+
 \item{ndraws}{to be passed to \code{generated_quantities}. Changes the number of draws. Default is 10.}
 
 \item{...}{Additional arguments passed to \code{sampling} from \code{rstan}.
@@ -64,5 +67,5 @@ This function returns a list containing the following components: 1) a summary o
 Fits a test-tag integrated Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan
 }
 \seealso{
-\code{\link[rstan:sampling]{rstan::sampling()}}
+\code{\link[rstan:stanmodel-method-sampling]{rstan::sampling()}}
 }
