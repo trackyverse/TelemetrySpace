@@ -1,5 +1,4 @@
-# ---- builds reflected neightbors ----
-
+# ---- Build Pixel Grid ----
 #' Build Pixel Grid
 #'
 #' To make a barrier for the model, we need to convert the boundary into
