@@ -14,8 +14,8 @@ COA_Standard(
   recY,
   xlim,
   ylim,
-  ndraws = NULL,
   decay = "gaussian",
+  ndraws = NULL,
   ...
 )
 }
@@ -38,9 +38,9 @@ COA_Standard(
 
 \item{ylim}{North-south boundaries of spatial extent (receiver array + buffer).}
 
-\item{ndraws}{to be passed to \code{generated_quantities}. Changes the number of draws. Default is 10.}
-
 \item{decay}{desired decay function. Currently one of "gaussian" or "logistic". Default is "gaussian".}
+
+\item{ndraws}{to be passed to \code{generated_quantities}. Changes the number of draws. Default is 10.}
 
 \item{...}{Additional arguments passed to \code{sampling} from \code{rstan}.
 This can include setting \code{chains}, \code{iter}, \code{warmup}, and \code{control}. Please see
