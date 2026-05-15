@@ -16,7 +16,7 @@
 #' @export
 
 build_pixel_grid <- function(bnd_sf, res) {
-  check_sf_object(bnd_sf)
+  check_sf_object(bnd_sf, "bnd_sf")
 
   # get boundary box of boundary
   bbox <- sf::st_bbox(bnd_sf)
