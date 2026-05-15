@@ -19,7 +19,7 @@ COA_TagInt(
   y_lim,
   test_x,
   test_y,
-    decay = "gaussian",
+  decay = "gaussian",
   n_draws = NULL,
   ...
 )
@@ -39,7 +39,7 @@ COA_TagInt(
 
 \item{det}{Array of detection data, where row = individual, column = receiver, and matrix = time step}
 
-\item{test}{Array of test tag detection data, where row = individual tag, column = time step, and matrix = receiver}
+\item{det_test}{Array of test tag detection data, where row = individual tag, column = receiver, and matrix = time step}
 
 \item{rec_x}{Receiver coordinates in the east-west direction (should be projected and scaled for computational efficiency)}
 
@@ -55,7 +55,7 @@ COA_TagInt(
 
 \item{decay}{desired decay function. Currently one of "gaussian" or "logistic". Default is "gaussian".}
 
-\item{ndraws}{to be passed to \code{generated_quantities}. Changes the number of draws. Default is 10.}
+\item{n_draws}{to be passed to \code{generated_quantities}. Changes the number of draws. Default is 10.}
 
 \item{...}{Additional arguments passed to \code{sampling} from \code{rstan}.
 This can include setting \code{chains}, \code{iter}, \code{warmup}, and \code{control}. Please see

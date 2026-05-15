@@ -5,17 +5,17 @@
 \title{Fits a Bayesian Spatial Point Process model to estimate individual centers of activity from acoustic telemetry data using Stan}
 \usage{
 COA_Standard(
-  nind,
-  nrec,
-  ntime,
-  ntrans,
-  y,
-  recX,
-  recY,
-  xlim,
-  ylim,
+  n_ind,
+  n_rec,
+  n_time,
+  n_trans,
+  det,
+  rec_x,
+  rec_y,
+  x_lim,
+  y_lim,
   decay = "gaussian",
-  ndraws = NULL,
+  n_draws = NULL,
   ...
 )
 }
@@ -28,7 +28,7 @@ COA_Standard(
 
 \item{n_trans}{Number of expected transmissions per tag per time interval}
 
-\item{y}{Array of detection data, where row = individual, column = time step, and matrix = receiver}
+\item{det}{Array of detection data, where row = individual, column = time step, and matrix = receiver}
 
 \item{rec_x}{Receiver coordinates in the east-west direction (should be projected and scaled for computational efficiency)}
 
@@ -40,7 +40,7 @@ COA_Standard(
 
 \item{decay}{desired decay function. Currently one of "gaussian" or "logistic". Default is "gaussian".}
 
-\item{ndraws}{to be passed to \code{generated_quantities}. Changes the number of draws. Default is 10.}
+\item{n_draws}{to be passed to \code{generated_quantities}. Changes the number of draws. Default is 10.}
 
 \item{...}{Additional arguments passed to \code{sampling} from \code{rstan}.
 This can include setting \code{chains}, \code{iter}, \code{warmup}, and \code{control}. Please see
