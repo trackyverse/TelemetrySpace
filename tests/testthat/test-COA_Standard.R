@@ -109,36 +109,36 @@ test_that("parameter validation works", {
 
 # ---- run model and check of it works ----
 
-# model_coa_standard$generated_quantities
+# standard_gaussian$generated_quantities
 
-# bayesplot::ppc_dens_overlay(y = as.vector(Y), yrep = model_coa_standard$generated_quantities)
+# bayesplot::ppc_dens_overlay(y = as.vector(Y), yrep = standard_gaussian$generated_quantities)
 
 # rstan::traceplot(fit$model, pars = c("alpha0", "alpha1",
 #                                      "sigma", "lp__"))
 
-test_that("test COA_standard model results to make sure its consisitent", {
-  mean_p0 <- model_coa_standard$summary[1]
+test_that("test COA_standard gaussian model results to make sure its consistent", {
+  mean_p0 <- standard_gaussian$summary[1]
   expected_mean_p0 <- 0.2658
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
 })
-test_that("check to see if model_coa_standard classes", {
-  expect_type(model_coa_standard, "list")
-  expect_s4_class(model_coa_standard$model, "stanfit")
-  expect_s3_class(model_coa_standard$coas, "data.frame")
-  expect_s3_class(model_coa_standard$all_estimates, "data.frame")
-  expect_type(model_coa_standard$summary, "double")
-  expect_true(is.matrix(model_coa_standard$summary))
-  expect_true(is.matrix(model_coa_standard$generated_quantities$yrep))
-  expect_type(model_coa_standard$generated_quantities, "list")
-  expect_true(is.numeric(model_coa_standard$time))
+test_that("check standard_gaussian classes", {
+  expect_type(standard_gaussian, "list")
+  expect_s4_class(standard_gaussian$model, "stanfit")
+  expect_s3_class(standard_gaussian$coas, "data.frame")
+  expect_s3_class(standard_gaussian$all_estimates, "data.frame")
+  expect_type(standard_gaussian$summary, "double")
+  expect_true(is.matrix(standard_gaussian$summary))
+  expect_true(is.matrix(standard_gaussian$generated_quantities$yrep))
+  expect_type(standard_gaussian$generated_quantities, "list")
+  expect_true(is.numeric(standard_gaussian$time))
 })
 
 
 test_that("check to see if coa returns proper info", {
-  expect_true("coas" %in% names(model_coa_standard))
-  expect_equal(nrow(model_coa_standard$coas), model_param_ex$tsteps)
+  expect_true("coas" %in% names(standard_gaussian))
+  expect_equal(nrow(standard_gaussian$coas), model_param_ex$tsteps)
   expect_equal(
-    colnames(model_coa_standard$coas),
+    colnames(standard_gaussian$coas),
     c(
       "time",
       "x",
@@ -150,14 +150,14 @@ test_that("check to see if coa returns proper info", {
     )
   )
 
-  for (col in colnames(model_coa_standard$coas)) {
-    expect_type(model_coa_standard$coas[[col]], "double")
-    expect_true(all(is.finite(model_coa_standard$coas[[col]])))
+  for (col in colnames(standard_gaussian$coas)) {
+    expect_type(standard_gaussian$coas[[col]], "double")
+    expect_true(all(is.finite(standard_gaussian$coas[[col]])))
   }
 })
 
 test_that("check to see model converged and has a good rhat", {
-  rhat <- model_coa_standard$summary[, "Rhat"]
+  rhat <- standard_gaussian$summary[, "Rhat"]
   expect_true(all(rhat > 0.95 & rhat < 1.05))
 })
 
@@ -166,5 +166,60 @@ test_that("check to see model converged and has a good rhat", {
 
 test_that("check to see if gq is the correct length", {
   expected <- 11
-  expect_true(nrow(model_coa_standard$generated_quantities$yrep) %in% expected)
+  expect_true(nrow(standard_gaussian$generated_quantities$yrep) %in% expected)
+})
+
+
+#### LOGISTIC ####
+test_that("test COA_standard logistic model results to make sure its consistent", {
+  mean_p0 <- standard_logistic$summary[1]
+  expected_mean_p0 <- 0.5849
+  expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
+})
+
+test_that("check standard_logistic classes", {
+  expect_type(standard_logistic, "list")
+  expect_s4_class(standard_logistic$model, "stanfit")
+  expect_s3_class(standard_logistic$coas, "data.frame")
+  expect_s3_class(standard_logistic$all_estimates, "data.frame")
+  expect_type(standard_logistic$summary, "double")
+  expect_true(is.matrix(standard_logistic$summary))
+  expect_true(is.matrix(standard_logistic$generated_quantities$yrep))
+  expect_type(standard_logistic$generated_quantities, "list")
+  expect_true(is.numeric(standard_logistic$time))
+})
+
+test_that("check to see if coa returns proper info", {
+  expect_true("coas" %in% names(standard_logistic))
+  expect_equal(nrow(standard_logistic$coas), model_param_ex$tsteps)
+  expect_equal(
+    colnames(standard_logistic$coas),
+    c(
+      "time",
+      "x",
+      "y",
+      "x_lower",
+      "x_upper",
+      "y_lower",
+      "y_upper"
+    )
+  )
+
+  for (col in colnames(standard_logistic$coas)) {
+    expect_type(standard_logistic$coas[[col]], "double")
+    expect_true(all(is.finite(standard_logistic$coas[[col]])))
+  }
+})
+
+test_that("check to see model converged and has a good rhat", {
+  rhat <- standard_logistic$summary[, "Rhat"]
+  expect_true(all(rhat > 0.95 & rhat < 1.05))
+})
+
+
+# ----- check if gq retruns the correct length ------
+
+test_that("check to see if gq is the correct length", {
+  expected <- 11
+  expect_true(nrow(standard_logistic$generated_quantities$yrep) %in% expected)
 })

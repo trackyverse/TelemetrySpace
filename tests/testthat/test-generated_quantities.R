@@ -1,14 +1,16 @@
 # ----- make all models into a list -----
 all_models <- list(
-  model_coa_standard,
-  model_coa_time_vary,
-  model_coa_tag_int
+  standard_gaussian,
+  standard_logistic,
+  time_vary_gaussian,
+  time_vary_logistic,
+  tag_int_gaussian,
+  tag_int_logistic
 )
 # ---- do the same for the data -----
-all_data <- list(
-  standata,
-  standata,
-  standata_1
+all_data <- rep(
+  list(standata, standata_testtag),
+  times = c(4, 2)
 )
 # set the number of draws to test
 ndraws_test <- 5
@@ -20,7 +22,7 @@ call_generated_quantities <- function(overrides) {
 }
 # ----- gq_arguments to check ------
 gq_args <- list(
-  model = model_coa_standard$model,
+  model = standard_gaussian$model,
   standata = standata,
   ndraws = ndraws_test
 )
@@ -81,8 +83,8 @@ for (i in seq_along(all_models)) {
   )
 }
 
-# length of  each object returned bs = basic_structure
-bs_returned <- c(1, 1, 2)
+# length of each object returned bs = basic_structure
+bs_returned <- rep(c(1, 2), times = c(4, 2))
 
 # length of yrep give the 5 draws
 length_yrep <- ndraws_test
