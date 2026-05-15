@@ -6,9 +6,9 @@
 ^\.github$
 ^Dockerfile$
 ^_pkgdown\.yml$
+^\.devcontainer$
 ^docs$
 ^pkgdown$
 ^CNAME$
 ^air\.toml$
-^RcppExports\.cpp$
-^StanExports_*
+^src/StanExports_*
