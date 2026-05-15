@@ -245,5 +245,5 @@ test_that("check to see model converged and has a good rhat", {
 
 test_that("check to see if gq is the correct length", {
   expected <- 11
-  expect_true(nrow(tag_int_logistic$generated_quantities$yrep) %in% expected)
+  expect_true(nrow(tag_int_logistic$generated_quantities$y_rep) %in% expected)
 })

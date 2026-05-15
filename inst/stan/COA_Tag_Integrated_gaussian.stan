@@ -1,30 +1,32 @@
 // Declare data
 data {
-  int<lower = 0> nind;               // number of individuals
-  int<lower = 0> nrec;               // number of receivers
-  int<lower = 0> ntime;              // number of time steps
-  int<lower = 0> ntest;              // number of test tags
+  int<lower = 0> n_ind;               // number of individuals
+  int<lower = 0> n_rec;               // number of receivers
+  int<lower = 0> n_time;              // number of time steps
+  int<lower = 0> n_test;              // number of test tags
 
   // number of trials/expected number of transmissions per time step
-  int<lower = 0> ntrans;
+  int<lower = 0> n_trans;
+  // number of trials/expected number of transmissions per time step for test tag
+  int<lower = 0> n_trans_test;
   // number of detections for each individual at each receiver in each time step
-  array[nind, ntime, nrec] int<lower = 0> y;
+  array[n_ind, n_time, n_rec] int<lower = 0> det;
   // number of detections from each test tag at each receiver in each time step
-  array[ntest, ntime, nrec] int<lower = 0> test;
+  array[n_test, n_time, n_rec] int<lower = 0> det_test;
 
-  vector[nrec] recX; // trap locations in east-west direction
-  vector[nrec] recY; // trap locations in north-south direction
-  vector[2] xlim;  // area bounds east-west
-  vector[2] ylim;                    // area boundes north-south
-  vector[ntest] testX;               // test tag locations east-west
-  vector[ntest] testY;               // test tag locations north-south
+  vector[n_rec] rec_x; // trap locations in east-west direction
+  vector[n_rec] rec_y; // trap locations in north-south direction
+  vector[2] x_lim;  // area bounds east-west
+  vector[2] y_lim;                    // area boundes north-south
+  vector[n_test] test_x;               // test tag locations east-west
+  vector[n_test] test_y;               // test tag locations north-south
 }
 
 transformed data {
   // Pre-calculate squared distances from receiver for fixed test tags
-  matrix[ntest, nrec] td2;
-  for (s in 1:ntest) {
-    td2[s, ] = to_row_vector(square(recX - testX[s]) + square(recY - testY[s]));
+  matrix[n_test, n_rec] td2;
+  for (s in 1:n_test) {
+    td2[s, ] = to_row_vector(square(rec_x - test_x[s]) + square(rec_y - test_y[s]));
   }
 }
 
@@ -32,14 +34,14 @@ transformed data {
 parameters {
   // fixed effects
   // detection probability intercept - max of ~1
-  matrix<lower = -5, upper = 5>[ntime, nrec] alpha0; // time effect
+  matrix<lower = -5, upper = 5>[n_time, n_rec] alpha0; // time effect
   real<lower = 0> alpha1;  // coef. for decline in detection probability with distance
 
   // latent variables
   // E-W center of activity coordinate - bounds reflect spatial extent
-  matrix<lower = xlim[1], upper = xlim[2]>[nind, ntime] sx;
+  matrix<lower = x_lim[1], upper = x_lim[2]>[n_ind, n_time] x;
   // N-S center of activity coordinate - bounds reflect spatial extent
-  matrix<lower = ylim[1], upper = ylim[2]>[nind, ntime] sy;
+  matrix<lower = y_lim[1], upper = y_lim[2]>[n_ind, n_time] y;
 }
 
 // Model specification
@@ -49,32 +51,32 @@ model {
   alpha1 ~ cauchy(0, 2.5);
 
   // Likelihood for test tags (fixed locations)
-  for (s in 1:ntest) { // For each test tag
+  for (s in 1:n_test) { // For each test tag
     // decay over distance portion of the binomial model
-    vector[nrec] dist_decay = alpha1 * td2[s, ]';
+    vector[n_rec] dist_decay = alpha1 * td2[s, ]';
 
-    for (t in 1:ntime) { // Run binomial on logit scale
+    for (t in 1:n_time) { // Run binomial on logit scale
       // row(p0, t) pulls the alpha0 vector for all receivers at time t
-      test[s, t] ~ binomial_logit(ntrans, row(alpha0, t)' - dist_decay);
+      det_test[s, t] ~ binomial_logit(n_trans_test, row(alpha0, t)' - dist_decay);
     }
   }
 
   // Likelihood for individual COAs (estimated locations)
-  for (i in 1:nind) {
-    for (t in 1:ntime) {
+  for (i in 1:n_ind) {
+    for (t in 1:n_time) {
       // Distance squared from each COA to each receiver at each time
-      vector[nrec] d2 = square(recX - sx[i, t]) + square(recY - sy[i, t]);
+      vector[n_rec] d2 = square(rec_x - x[i, t]) + square(rec_y - y[i, t]);
       
       // Calculate linear predictor
-      vector[nrec] lp = row(alpha0, t)' - (alpha1 * d2);
+      vector[n_rec] lp = row(alpha0, t)' - (alpha1 * d2);
       
       // Run binomial on logit scale
-      y[i, t] ~ binomial_logit(ntrans, lp);
+      det[i, t] ~ binomial_logit(n_trans, lp);
     }
   }
 }  
 
 generated quantities {
-   matrix[ntime, nrec] p0 = inv_logit(alpha0);
+   matrix[n_time, n_rec] p0 = inv_logit(alpha0);
    real sigma = sqrt(1.0 / (2.0 * alpha1));
 }

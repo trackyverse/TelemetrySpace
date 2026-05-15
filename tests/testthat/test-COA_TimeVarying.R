@@ -5,15 +5,15 @@
 
 # Base arguments for COA_Standard
 coa_args <- list(
-  n_ind = model_param_ex$n_ind,
-  n_rec = model_param_ex$n_rec,
+  n_ind = model_param_ex$nind,
+  n_rec = model_param_ex$nrec,
   n_time = model_param_ex$tsteps,
-  n_trans = model_param_ex$n_trans,
+  n_trans = model_param_ex$ntrans,
   det = Y,
   rec_x = rlocs$east,
   rec_y = rlocs$north,
-  x_lim = example_extent$x_lim,
-  y_lim = example_extent$y_lim,
+  x_lim = example_extent$xlim,
+  y_lim = example_extent$ylim,
   chains = 2,
   warmup = 1000,
   iter = 2000,
@@ -163,7 +163,7 @@ test_that("check to see model converged and has a good rhat", {
 
 test_that("check to see if gq is the correct length", {
   expected <- 11
-  expect_true(nrow(time_vary_gaussian$generated_quantities$yrep) %in% expected)
+  expect_true(nrow(time_vary_gaussian$generated_quantities$y_rep) %in% expected)
 })
 
 
@@ -182,7 +182,7 @@ test_that("check time_vary_logistic classes", {
   expect_s3_class(time_vary_logistic$all_estimates, "data.frame")
   expect_type(time_vary_logistic$summary, "double")
   expect_true(is.matrix(time_vary_logistic$summary))
-  expect_true(is.matrix(time_vary_logistic$generated_quantities$yrep))
+  expect_true(is.matrix(time_vary_logistic$generated_quantities$y_rep))
   expect_type(time_vary_logistic$generated_quantities, "list")
   expect_true(is.numeric(time_vary_logistic$time))
 })

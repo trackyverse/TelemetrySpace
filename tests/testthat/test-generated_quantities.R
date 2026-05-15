@@ -9,7 +9,7 @@ all_models <- list(
 )
 # ---- do the same for the data -----
 all_data <- rep(
-  list(standata, standata_testtag),
+  list(standata, standata_test_tag),
   times = c(4, 2)
 )
 # set the number of draws to test
@@ -87,7 +87,7 @@ for (i in seq_along(all_models)) {
 bs_returned <- rep(c(1, 2), times = c(4, 2))
 
 # length of yrep give the 5 draws
-length_yrep <- n_draws_test
+length_y_rep <- n_draws_test
 
 # -----  checks the structure of the structure of generated_quantites -------
 test_that("generated_quantities returns correct structure", {
@@ -101,7 +101,7 @@ test_that("generated_quantities returns correct structure", {
       post_draws <- bs[[n]]
 
       expect_type(post_draws, "list")
-      expect_length(post_draws, length_yrep)
+      expect_length(post_draws, length_y_rep)
 
       for (h in seq_along(post_draws)) {
         one_draw <- post_draws[[h]]
