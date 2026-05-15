@@ -6,6 +6,7 @@
 \alias{check_array}
 \alias{check_array_tag}
 \alias{check_stan_object}
+\alias{check_sf_object}
 \title{Error functions}
 \usage{
 check_num_vec_len(x, vec_length = NULL, arg_name = NULL)
@@ -15,9 +16,11 @@ check_array(x, arg_name = NULL)
 check_array_tag(x, len, arg_name = NULL)
 
 check_stan_object(x, arg_name = NULL)
+
+check_sf_object(x, arg_name = NULL)
 }
 \arguments{
-\item{x}{is a \code{Stan} object}
+\item{x}{is a \code{sf} object}
 
 \item{vec_length}{is the length of the vector to check.}
 
