@@ -55,7 +55,7 @@ standard_gaussian <- do.call(
       iter = 2000,
       control = list(adapt_delta = 0.95),
       seed = 4,
-      ndraws = 11,
+      n_draws = 11,
       init = init_fun,
       decay = "gaussian"
     )
