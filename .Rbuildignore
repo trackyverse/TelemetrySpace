@@ -14,3 +14,5 @@
 ^StanExports_*
 ^[.]?air[.]toml$
 ^\.vscode$
+^\.positai$
+^\.claude$

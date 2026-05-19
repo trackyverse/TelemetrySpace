@@ -7,3 +7,4 @@ docs
 .vscode
 src/RcppExports.cpp
 src/stanExports_*
+.positai
