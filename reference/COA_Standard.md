@@ -16,6 +16,7 @@ COA_Standard(
   recY,
   xlim,
   ylim,
+  decay = "gaussian",
   ndraws = NULL,
   ...
 )
@@ -61,6 +62,11 @@ COA_Standard(
 - ylim:
 
   North-south boundaries of spatial extent (receiver array + buffer).
+
+- decay:
+
+  desired decay function. Currently one of "gaussian" or "logistic".
+  Default is "gaussian".
 
 - ndraws:
 

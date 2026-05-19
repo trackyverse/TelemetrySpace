@@ -21,6 +21,7 @@ COA_TagInt(
   ylim,
   testX,
   testY,
+  decay = "gaussian",
   ndraws = NULL,
   ...
 )
@@ -85,6 +86,11 @@ COA_TagInt(
 
   Test tag coordinates in the north-south direction (should be projected
   and scaled for computational efficiency)
+
+- decay:
+
+  desired decay function. Currently one of "gaussian" or "logistic".
+  Default is "gaussian".
 
 - ndraws:
 
