@@ -16,6 +16,8 @@ COA_Standard(
   ylim,
   decay = "gaussian",
   ndraws = NULL,
+  use_bndry = FALSE,
+  bndry = NULL,
   ...
 )
 }
@@ -41,6 +43,10 @@ COA_Standard(
 \item{decay}{desired decay function. Currently one of "gaussian" or "logistic". Default is "gaussian".}
 
 \item{ndraws}{to be passed to \code{generated_quantities}. Changes the number of draws. Default is 10.}
+
+\item{use_bndry}{logical value to control whether a boundary is to be supplied. Defaults to \code{FALSE}.}
+
+\item{bndry}{boundary object created by \code{build_pixel_grid()}.}
 
 \item{...}{Additional arguments passed to \code{sampling} from \code{rstan}.
 This can include setting \code{chains}, \code{iter}, \code{warmup}, and \code{control}. Please see
