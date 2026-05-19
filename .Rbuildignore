@@ -6,7 +6,9 @@
 ^\.github$
 ^Dockerfile$
 ^_pkgdown\.yml$
+^\.devcontainer$
 ^docs$
 ^pkgdown$
 ^CNAME$
 ^air\.toml$
+^src/StanExports_*

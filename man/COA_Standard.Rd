@@ -14,6 +14,7 @@ COA_Standard(
   recY,
   xlim,
   ylim,
+  decay = "gaussian",
   ndraws = NULL,
   ...
 )
@@ -36,6 +37,8 @@ COA_Standard(
 \item{xlim}{East-west boundaries of spatial extent (receiver array + buffer)}
 
 \item{ylim}{North-south boundaries of spatial extent (receiver array + buffer).}
+
+\item{decay}{desired decay function. Currently one of "gaussian" or "logistic". Default is "gaussian".}
 
 \item{ndraws}{to be passed to \code{generated_quantities}. Changes the number of draws. Default is 10.}
 

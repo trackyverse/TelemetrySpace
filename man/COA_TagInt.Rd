@@ -18,6 +18,7 @@ COA_TagInt(
   ylim,
   testX,
   testY,
+  decay = "gaussian",
   ndraws = NULL,
   ...
 )
@@ -48,6 +49,8 @@ COA_TagInt(
 \item{testX}{Test tag coordinates in the east-west direction (should be projected and scaled for computational efficiency)}
 
 \item{testY}{Test tag coordinates in the north-south direction (should be projected and scaled for computational efficiency)}
+
+\item{decay}{desired decay function. Currently one of "gaussian" or "logistic". Default is "gaussian".}
 
 \item{ndraws}{to be passed to \code{generated_quantities}. Changes the number of draws. Default is 10.}
 

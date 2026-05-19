@@ -1,4 +1,4 @@
-# ----- Model checked from setup-test-env is object model_coa_time_vary -----
+# ----- Model checked from setup-test-env is object time_vary_gaussian -----
 
 # ---- test each argument if it errors appropriately -----
 # ---- Check if nind errors -----
@@ -104,39 +104,39 @@ test_that("parameter validation works", {
 
 
 # ---- run model and check of it works ----
-# summary(model_coa_time_vary)
+# summary(time_vary_gaussian)
 
-# bayesplot::ppc_dens_overlay(y = as.vector(Y), yrep = model_coa_time_vary$generated_quantities)
-# rstan::traceplot(model_coa_time_vary$model, pars = c(
+# bayesplot::ppc_dens_overlay(y = as.vector(Y), yrep = time_vary_gaussian$generated_quantities)
+# rstan::traceplot(time_vary_gaussian$model, pars = c(
 #   # "alpha0",
 #   "alpha1",
 #   "sigma", "lp__"))
-# model_coa_time_vary$coas
-test_that("test COA_TimeVarying model results to make sure its consisitent", {
-  mean_p0 <- model_coa_time_vary$summary[1]
+# time_vary_gaussian$coas
+test_that("test COA_TimeVarying model results to make sure its consistent", {
+  mean_p0 <- time_vary_gaussian$summary[1]
   expected_mean_p0 <- 0.4928
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.07)
 })
 
 
-test_that("check to see if model_coa_time_vary classes", {
-  expect_type(model_coa_time_vary, "list")
-  expect_s4_class(model_coa_time_vary$model, "stanfit")
-  expect_s3_class(model_coa_time_vary$coas, "data.frame")
-  expect_s3_class(model_coa_time_vary$all_estimates, "data.frame")
-  expect_type(model_coa_time_vary$summary, "double")
-  expect_true(is.matrix(model_coa_time_vary$summary))
-  expect_true(is.matrix(model_coa_time_vary$generated_quantities$yrep))
-  expect_type(model_coa_time_vary$generated_quantities, "list")
-  expect_true(is.numeric(model_coa_time_vary$time))
+test_that("check time_vary_gaussian classes", {
+  expect_type(time_vary_gaussian, "list")
+  expect_s4_class(time_vary_gaussian$model, "stanfit")
+  expect_s3_class(time_vary_gaussian$coas, "data.frame")
+  expect_s3_class(time_vary_gaussian$all_estimates, "data.frame")
+  expect_type(time_vary_gaussian$summary, "double")
+  expect_true(is.matrix(time_vary_gaussian$summary))
+  expect_true(is.matrix(time_vary_gaussian$generated_quantities$yrep))
+  expect_type(time_vary_gaussian$generated_quantities, "list")
+  expect_true(is.numeric(time_vary_gaussian$time))
 })
 
 
 test_that("check to see if coa returns proper info", {
-  expect_true("coas" %in% names(model_coa_time_vary))
-  expect_equal(nrow(model_coa_time_vary$coas), model_param_ex$tsteps)
+  expect_true("coas" %in% names(time_vary_gaussian))
+  expect_equal(nrow(time_vary_gaussian$coas), model_param_ex$tsteps)
   expect_equal(
-    colnames(model_coa_time_vary$coas),
+    colnames(time_vary_gaussian$coas),
     c(
       "time",
       "x",
@@ -148,14 +148,14 @@ test_that("check to see if coa returns proper info", {
     )
   )
 
-  for (col in colnames(model_coa_time_vary$coas)) {
-    expect_type(model_coa_time_vary$coas[[col]], "double")
-    expect_true(all(is.finite(model_coa_time_vary$coas[[col]])))
+  for (col in colnames(time_vary_gaussian$coas)) {
+    expect_type(time_vary_gaussian$coas[[col]], "double")
+    expect_true(all(is.finite(time_vary_gaussian$coas[[col]])))
   }
 })
 
 test_that("check to see model converged and has a good rhat", {
-  rhat <- model_coa_time_vary$summary[, "Rhat"]
+  rhat <- time_vary_gaussian$summary[, "Rhat"]
   expect_true(all(rhat > 0.95 & rhat < 1.05))
 })
 
@@ -163,5 +163,61 @@ test_that("check to see model converged and has a good rhat", {
 
 test_that("check to see if gq is the correct length", {
   expected <- 11
-  expect_true(nrow(model_coa_time_vary$generated_quantities$yrep) %in% expected)
+  expect_true(nrow(time_vary_gaussian$generated_quantities$yrep) %in% expected)
+})
+
+
+#### LOGISTIC ####
+test_that("test COA_TimeVarying model results to make sure its consistent", {
+  mean_p0 <- time_vary_logistic$summary[1]
+  expected_mean_p0 <- 0.49815
+  expect_equal(mean_p0, expected_mean_p0, tolerance = 0.07)
+})
+
+
+test_that("check time_vary_logistic classes", {
+  expect_type(time_vary_logistic, "list")
+  expect_s4_class(time_vary_logistic$model, "stanfit")
+  expect_s3_class(time_vary_logistic$coas, "data.frame")
+  expect_s3_class(time_vary_logistic$all_estimates, "data.frame")
+  expect_type(time_vary_logistic$summary, "double")
+  expect_true(is.matrix(time_vary_logistic$summary))
+  expect_true(is.matrix(time_vary_logistic$generated_quantities$yrep))
+  expect_type(time_vary_logistic$generated_quantities, "list")
+  expect_true(is.numeric(time_vary_logistic$time))
+})
+
+
+test_that("check to see if coa returns proper info", {
+  expect_true("coas" %in% names(time_vary_logistic))
+  expect_equal(nrow(time_vary_logistic$coas), model_param_ex$tsteps)
+  expect_equal(
+    colnames(time_vary_logistic$coas),
+    c(
+      "time",
+      "x",
+      "y",
+      "x_lower",
+      "x_upper",
+      "y_lower",
+      "y_upper"
+    )
+  )
+
+  for (col in colnames(time_vary_logistic$coas)) {
+    expect_type(time_vary_logistic$coas[[col]], "double")
+    expect_true(all(is.finite(time_vary_logistic$coas[[col]])))
+  }
+})
+
+test_that("check to see model converged and has a good rhat", {
+  rhat <- time_vary_logistic$summary[, "Rhat"]
+  expect_true(all(rhat > 0.95 & rhat < 1.05))
+})
+
+# ----- check if gq retruns the correct length ------
+
+test_that("check to see if gq is the correct length", {
+  expected <- 11
+  expect_true(nrow(time_vary_logistic$generated_quantities$yrep) %in% expected)
 })
