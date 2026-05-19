@@ -14,6 +14,9 @@
 #' @param ylim   North-south boundaries of spatial extent (receiver array + buffer).
 #' @param decay  desired decay function. Currently one of "gaussian" or "logistic". Default is "gaussian".
 #' @param ndraws to be passed to `generated_quantities`. Changes the number of draws. Default is 10.
+#' @param use_bndry logical value to control whether a boundary is to be supplied. Defaults to `FALSE`.
+#' @param bndry boundary object created by `build_pixel_grid()`.
+#' @param ndraws to be passed to `generated_quantities`. Changes the number of draws. Default is 10.
 #' @param ... Additional arguments passed to `sampling` from `rstan`.
 #' This can include setting `chains`, `iter`, `warmup`, and `control`. Please see
 #' `rstan::sampling()` for more info.
@@ -33,23 +36,44 @@ COA_Standard <- function(
   recX,
   recY,
   xlim,
+  use_bndry = FALSE,
+  bndry = NULL,
   ylim,
   decay = "gaussian",
   ndraws = NULL,
+  use_bndry = FALSE,
+  bndry = NULL,
   ...
 ) {
   # First move everything into a list
-  standata <- list(
-    nind = nind,
-    nrec = nrec,
-    ntime = ntime,
-    ntrans = ntrans,
-    y = y,
-    recX = recX,
-    recY = recY,
-    xlim = xlim,
-    ylim = ylim
-  )
+  if (isTRUE(use_bndry)) {
+    standata <- list(
+      nind = nind,
+      nrec = nrec,
+      ntime = ntime,
+      ntrans = ntrans,
+      y = y,
+      recX = recX,
+      recY = recY,
+      xlim = xlim,
+      ylim = ylim,
+      n_pixels = bndry$n_pixels,
+      pix_x = bndry$pix_x,
+      pix_y = bndry$pix_y
+    )
+  } else {
+    standata <- list(
+      nind = nind,
+      nrec = nrec,
+      ntime = ntime,
+      ntrans = ntrans,
+      y = y,
+      recX = recX,
+      recY = recY,
+      xlim = xlim,
+      ylim = ylim
+    )
+  }
   # validate this list prior to sending it to the model
   exp_len <- expected_lengths(recX = recX, recY = recY)
 
@@ -62,11 +86,19 @@ COA_Standard <- function(
 
   # fit model
   if (decay == "gaussian") {
-    fit_model <- rstan::sampling(
-      stanmodels$COA_Standard_gaussian,
-      data = standata,
-      ...
-    )
+    if (isTRUE(use_bndry)) {
+      fit_model <- rstan::sampling(
+        stanmodels$COA_Standard_gaussian_bndry,
+        data = standata,
+        ...
+      )
+    } else {
+      fit_model <- rstan::sampling(
+        stanmodels$COA_Standard_gaussian,
+        data = standata,
+        ...
+      )
+    }
   } else if (decay == "logistic") {
     fit_model <- rstan::sampling(
       stanmodels$COA_Standard_logistic,
@@ -74,7 +106,9 @@ COA_Standard <- function(
       ...
     )
   } else {
-    stop("decay parameter must be one of \"gaussian\" or \"logistic\".")
+    cli::cli_alert_danger(
+      "decay parameter must be one of \"gaussian\" or \"logistic\"."
+    )
   }
 
   # Save chains after discarding warmup
