@@ -1,0 +1,74 @@
+---
+title: "Full Stan code"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{stancode}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+In the course of developing TelemetrySpace, we realized that we were reusing a ton of Stan code. To make this easier on ourselves, we decided to split out the chunks we use most-often utilizing [Stan's Includes framework](https://mc-stan.org/docs/reference-manual/includes.html). This is a dream for development, but makes it kind of tough to work step-by-step through the code: before you only had to go through the file line-by-line, whereas now you have to do this while _also_ flipping between different files.
+
+The following vignette serves to make things easier on you (and us!) by listing, in their completed form, the Stan code of the programs that TelemetrySpace uses.
+
+```{r setup}
+library(TelemetrySpace)
+```
+
+The Stan models used in TelemetrySpace are stored in a non-exported list [created by `rstantools`](https://mc-stan.org/rstantools/reference/use_rstan.html#using-the-pre-compiled-stan-programs-in-your-package), `stanmodels`. Each element of the list contains the knitted-together Stan code we're looking for. We can access the code like so:
+```{r eval=-2}
+stanmodels <- TelemetrySpace:::stanmodels
+stanmodels$COA_Standard_gaussian
+```
+
+This code will be hidden for the rest of the vignette, but feel free to poke around in the package yourself.
+
+## COA Standard
+
+### Gaussian transmitter signal decay
+`COA_Standard(...)` or `COA_Standard(..., decay = "gaussian")`:
+```{r echo=FALSE}
+stanmodels$COA_Standard_gaussian
+```
+
+### Logistic transmitter signal decay
+`COA_Standard(..., decay = "logistic")`:
+```{r echo=FALSE}
+stanmodels$COA_Standard_logistic
+```
+
+## COA Time Varying
+
+### Gaussian transmitter signal decay
+`COA_TimeVarying(...)` or `COA_TimeVarying(..., decay = "gaussian")`
+```{r echo=FALSE}
+stanmodels$COA_TimeVarying_gaussian
+```
+
+### Logistic transmitter signal decay
+`COA_TimeVarying(..., decay = "logistic")`:
+```{r echo=FALSE}
+stanmodels$COA_TimeVarying_logistic
+```
+
+
+## COA Tag-Itegrated
+
+### Gaussian transmitter signal decay
+`COA_TagInt(...)` or `COA_TagInt(..., decay = "gaussian")`:
+```{r echo=FALSE}
+stanmodels$COA_Tag_Integrated_gaussian
+```
+
+### Logistic transmitter signal decay
+`COA_TagInt(..., decay = "logistic")`:
+```{r echo=FALSE}
+stanmodels$COA_Tag_Integrated_logistic
+```
