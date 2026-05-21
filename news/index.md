@@ -1,12 +1,25 @@
 # Changelog
 
-## TelemetrySpace 1.3.0
+## TelemetrySpace 1.3
 
-- Code refactor, **BREAKING CHANGE**: The structure is now “per
-  individual” (loop) \> “per time” (loop) \> *vectorized over*
-  receivers. Because of this, input data must be an array with
-  dimensions 1: individual; 2: time; 3: receiver. Previously it was
-  individual, receiver, time.
+### 1.3.1
+
+- Code refactor
+  ([PR](https://github.com/trackyverse/TelemetrySpace/pull/13)
+  [\#13](https://github.com/trackyverse/TelemetrySpace/issues/13)):
+  leverage [Stan’s “Includes”
+  framework](https://mc-stan.org/docs/reference-manual/includes.html) to
+  reduce redundant code across files.
+
+### 1.3.0
+
+- Code refactor
+  ([PR](https://github.com/trackyverse/TelemetrySpace/pull/12)
+  [\#12](https://github.com/trackyverse/TelemetrySpace/issues/12)),
+  **BREAKING CHANGE**: The structure is now “per individual” (loop) \>
+  “per time” (loop) \> *vectorized over* receivers. Because of this,
+  input data must be an array with dimensions 1: individual; 2: time; 3:
+  receiver. Previously it was individual, receiver, time.
 - `p0` and `sigma` are generated quantities rather than transformed
   parameters. This should not affect anything on the user side, but the
   code runs a bit faster.

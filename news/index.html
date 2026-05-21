@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">TelemetrySpace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,14 +37,21 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.3.0" id="telemetryspace-130">TelemetrySpace 1.3.0<a class="anchor" aria-label="anchor" href="#telemetryspace-130"></a></h2>
-<ul><li>Code refactor, <strong>BREAKING CHANGE</strong>: The structure is now “per individual” (loop) &gt; “per time” (loop) &gt; <em>vectorized over</em> receivers. Because of this, input data must be an array with dimensions 1: individual; 2: time; 3: receiver. Previously it was individual, receiver, time.</li>
+<h2 class="pkg-version" data-toc-text="1.3" id="telemetryspace-13">TelemetrySpace 1.3<a class="anchor" aria-label="anchor" href="#telemetryspace-13"></a></h2>
+<div class="section level3">
+<h3 id="id_131-1-3">1.3.1<a class="anchor" aria-label="anchor" href="#id_131-1-3"></a></h3>
+<ul><li>Code refactor (<a href="https://github.com/trackyverse/TelemetrySpace/pull/13" class="external-link">PR </a><a href="https://github.com/trackyverse/TelemetrySpace/issues/13" class="external-link">#13</a>): leverage <a href="https://mc-stan.org/docs/reference-manual/includes.html" class="external-link">Stan’s “Includes” framework</a> to reduce redundant code across files.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_130-1-3">1.3.0<a class="anchor" aria-label="anchor" href="#id_130-1-3"></a></h3>
+<ul><li>Code refactor (<a href="https://github.com/trackyverse/TelemetrySpace/pull/12" class="external-link">PR </a><a href="https://github.com/trackyverse/TelemetrySpace/issues/12" class="external-link">#12</a>), <strong>BREAKING CHANGE</strong>: The structure is now “per individual” (loop) &gt; “per time” (loop) &gt; <em>vectorized over</em> receivers. Because of this, input data must be an array with dimensions 1: individual; 2: time; 3: receiver. Previously it was individual, receiver, time.</li>
 <li>
 <code>p0</code> and <code>sigma</code> are generated quantities rather than transformed parameters. This should not affect anything on the user side, but the code runs a bit faster.</li>
 <li>Calculated distances between receivers and COAs have been moved from the transformed parameters to the model block</li>
 <li>The model now operates on squared distances rather than Euclidean distance.</li>
 <li>We now use the <code>binomial_logit</code> function to avoid the <code>logit</code>/<code>inv_logit</code> round-trip.</li>
 </ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.2.0" id="telemetryspace-120">TelemetrySpace 1.2.0<a class="anchor" aria-label="anchor" href="#telemetryspace-120"></a></h2>
 <ul><li>Add <code>generated_quantities</code> function (<a href="https://github.com/trackyverse/TelemetrySpace/pull/3" class="external-link">PR # 3</a>)</li>
