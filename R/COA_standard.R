@@ -55,11 +55,6 @@ COA_Standard <- function(
 
   validate_standata(standata, exp_len)
 
-  # set rstan options
-  rstan::rstan_options(auto_write = TRUE)
-  # set coores - this probably should be an argument
-  options(mc.cores = parallel::detectCores())
-
   # fit model
   if (decay == "gaussian") {
     fit_model <- rstan::sampling(
