@@ -7,5 +7,3 @@
   vector[nrec] recY;              // receiver locations in north-south direction
   vector[2] xlim;                    // area bounds east-west
   vector[2] ylim;                    // area boundes north-south
-  
-  
