@@ -1,26 +1,6 @@
 #' Error functions
 #'
-#' @param x is a vector to pass to check.
-#' @param vec_length is the length of the vector to check.
-#' @param arg_name the name of the argument to check.
-#'
-#'
-#' @keywords internal
-#' @name error_functions
-
-check_num_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
-  if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
-  }
-
-  if (!is.numeric(x) || !is.vector(x) || length(x) != vec_length) {
-    cli::cli_abort(
-      "`{arg_name}` must be a numeric vector that has a length of {vec_length}."
-    )
-  }
-}
-
-#' @param x is a vector to pass to check.
+#' @param x is a `vector`` to pass to check.
 #' @param arg_name the name of the argument to check.
 #'
 #' @keywords internal
@@ -37,7 +17,7 @@ check_array <- function(x, arg_name = NULL) {
 }
 
 
-#' @param x is a vector to pass to check.
+#' @param x is a `vector`` to pass to check.
 #' @param len is the length to make the array. This needs to be the
 #' same length as `ntest` or the number of tags.
 #' @param arg_name the name of the argument to check.
@@ -56,6 +36,150 @@ check_array_tag <- function(x, len, arg_name = NULL) {
     )
   }
 }
+
+#' @param x is a `data.frame` to pass to check.
+#' @param arg_name the name of the argument to check.
+#'
+#' @keywords internal
+#' @name error_functions
+#'
+check_column_names <- function(x, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+  # right now this is the accepted names but we will changes this likely to ATO names
+
+  accepted_names <- c(
+    "tag_serial_no",
+    "rec",
+    # "easting", "northing",
+    "time"
+  )
+
+  if (!any(accepted_names %in% names(x))) {
+    missing_names <- setdiff(accepted_names, names(x))
+
+    cli::cli_abort(c(
+      "`{arg_name}` is missing: {missing_names}",
+      "i" = "Please provide {missing_names}"
+    ))
+  }
+}
+
+#' @param x is a `data.frame` to pass to check.
+#' @param arg_name the name of the argument to check.
+#'
+#' @keywords internal
+#' @name error_functions
+#'
+check_column_type <- function(x, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+  # right now this is the accepted names but we will changes this likely to ATO names
+
+  accepted_numeric <- c("rec", "easting", "northing", "time")
+
+  accepted_character <- c("tag_serial_no")
+
+  bad_numeric <- accepted_numeric[
+    !vapply(x[accepted_numeric], is.numeric, logical(1))
+  ]
+  bad_character <- accepted_character[
+    !vapply(x[accepted_character], is.character, logical(1))
+  ]
+
+  if (length(bad_numeric) > 0) {
+    cli::cli_abort(c(
+      "`{arg_name}` contains columns with incorrect types.",
+      "x" = "Expected numeric columns: {toString(bad_numeric)}"
+    ))
+  }
+  if (length(bad_character) > 0) {
+    cli::cli_abort(c(
+      "`{arg_name}` contains columns with incorrect types.",
+      "x" = "Expected character columns: {toString(bad_character)}"
+    ))
+  }
+}
+
+#' @param x is a `data.frame` to pass to check.
+#' @param arg_name the name of the argument to check.
+#'
+#' @keywords internal
+#' @name error_functions
+#'
+check_data_frame <- function(x, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+
+  if (!(inherits(x, c("data.frame", "tibble", "data.table")))) {
+    cli::cli_abort(c(
+      "`{arg_name}` must be a data.frame, tibble, or data.table",
+      "i" = "Please provide data.frame"
+    ))
+  }
+}
+
+#' @param x prior to check
+#'  @param arg_name the name of the argument to check.
+#'
+#' @name error_functions
+check_numerical <- function(x, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+
+  if (!is.numeric(x) || length(x) != 1) {
+    cli::cli_abort(c(
+      "`{arg_name}` argument must be a numerical value.",
+      "i" = "Please provide a numerical value"
+    ))
+  }
+}
+#' @param x is a `vector`` to pass to check.
+#' @param vec_length is the length of the `vector`` to check.
+#' @param arg_name the name of the argument to check.
+#'
+#'
+#' @keywords internal
+#' @name error_functions
+
+check_num_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+
+  if (!is.numeric(x) || !is.vector(x) || length(x) != vec_length) {
+    cli::cli_abort(
+      "`{arg_name}` must be a numeric vector that has a length of {vec_length}."
+    )
+  }
+}
+#' @param x is a `sf` object
+#' @param arg_name the name of the argument to check.
+#'
+#' @keywords internal
+#' @name error_functions
+
+check_sf_object <- function(x, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+
+  # valid classes from rstan and cmdstanr
+  valid_classes <- c(
+    "sf"
+  )
+
+  if (!inherits(x, valid_classes)) {
+    cli::cli_abort(
+      "`{arg_name}` must be a sf object (from {.pkg sf})."
+    )
+  }
+}
+
 
 #' @param x is a `Stan` object
 #' @param arg_name the name of the argument to check.

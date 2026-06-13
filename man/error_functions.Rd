@@ -2,29 +2,41 @@
 % Please edit documentation in R/utils.R
 \name{error_functions}
 \alias{error_functions}
-\alias{check_num_vec_len}
 \alias{check_array}
 \alias{check_array_tag}
+\alias{check_column_names}
+\alias{check_column_type}
+\alias{check_data_frame}
+\alias{check_num_vec_len}
+\alias{check_sf_object}
 \alias{check_stan_object}
 \title{Error functions}
 \usage{
-check_num_vec_len(x, vec_length = NULL, arg_name = NULL)
-
 check_array(x, arg_name = NULL)
 
 check_array_tag(x, len, arg_name = NULL)
+
+check_column_names(x, arg_name = NULL)
+
+check_column_type(x, arg_name = NULL)
+
+check_data_frame(x, arg_name = NULL)
+
+check_num_vec_len(x, vec_length = NULL, arg_name = NULL)
+
+check_sf_object(x, arg_name = NULL)
 
 check_stan_object(x, arg_name = NULL)
 }
 \arguments{
 \item{x}{is a \code{Stan} object}
 
-\item{vec_length}{is the length of the vector to check.}
-
 \item{arg_name}{the name of the argument to check.}
 
 \item{len}{is the length to make the array. This needs to be the
 same length as \code{ntest} or the number of tags.}
+
+\item{vec_length}{is the length of the `vector`` to check.}
 }
 \description{
 Error functions

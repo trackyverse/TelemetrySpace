@@ -11,16 +11,21 @@ utils::globalVariables(
   c(
     "alpha0",
     "alpha1",
+    "easting",
     "nind",
+    "northing",
     "nrec",
     "ntest",
     "ntime",
     "ntrans",
+    "rec",
     "recX",
     "recY",
     "sx",
     "sy",
+    "tag_serial_no",
     "testX",
-    "testY"
+    "testY",
+    "time"
   )
 )

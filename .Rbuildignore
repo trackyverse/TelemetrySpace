@@ -12,3 +12,5 @@
 ^CNAME$
 ^air\.toml$
 ^src/StanExports_*
+^[.]?air[.]toml$
+^\.vscode$
