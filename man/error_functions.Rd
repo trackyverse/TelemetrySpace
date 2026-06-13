@@ -4,9 +4,11 @@
 \alias{error_functions}
 \alias{check_array}
 \alias{check_array_tag}
+\alias{check_char_vec_len}
 \alias{check_column_names}
 \alias{check_column_type}
 \alias{check_data_frame}
+\alias{check_numerical}
 \alias{check_num_vec_len}
 \alias{check_sf_object}
 \alias{check_stan_object}
@@ -16,11 +18,15 @@ check_array(x, arg_name = NULL)
 
 check_array_tag(x, len, arg_name = NULL)
 
+check_char_vec_len(x, vec_length = NULL, arg_name = NULL)
+
 check_column_names(x, arg_name = NULL)
 
 check_column_type(x, arg_name = NULL)
 
 check_data_frame(x, arg_name = NULL)
+
+check_numerical(x, arg_name = NULL)
 
 check_num_vec_len(x, vec_length = NULL, arg_name = NULL)
 

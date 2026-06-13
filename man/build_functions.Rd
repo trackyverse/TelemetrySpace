@@ -5,34 +5,50 @@
 \alias{build_aeqd}
 \alias{build_counts}
 \alias{build_pixel_grid}
+\alias{build_tstep}
 \title{Build Azimuthal Equidistant Projection}
 \usage{
 build_aeqd(array_sf)
 
-build_counts(df)
+build_counts(df, nrec, rec_id, rec_names = NULL)
 
 build_pixel_grid(bnd_sf, res)
+
+build_tstep(x)
 }
 \arguments{
 \item{array_sf}{the receiver array as an \code{sf} object.}
 
-\item{df}{a \code{data.frame} that contains a \code{time_bin} column}
+\item{df}{a \code{data.frame} that contains the following column names
+\code{tag_serial_no}, \code{rec}, and \code{time}. The column \code{time} is an index of
+\code{time_bin}, while \code{rec} is an index of the \code{station_no}.}
+
+\item{nrec}{a \code{numerical} value that is number of receivers in the telemetry array.}
+
+\item{rec_id}{a \code{vector} that matches the length of \code{nrec} and needs to be index of the
+receivers in the telemetry array.}
 
 \item{bnd_sf}{a \code{sf} object that is boundary that is desired to impose}
 
 \item{res}{the resolution desired}
+
+\item{x}{a 3-dimensional count array.}
+
+\item{rec_name}{an optional \code{vector} that contains the station names of the receivers. If not
+supplied it will default to using \code{rec_id}}
 }
 \value{
 a \code{vector} containing the site specific projection string for
 the array to be able to supply \code{sf} functions with a valid
 crs to transform values into.
 
-a \code{data.frame} containing the number of detections at each station for each time bin.
-The returned \code{data.frame} will also have the \code{easting} and \code{northing}
-crs to transform values into.
+a 3-dimensional \code{array} containing the number of detections for the following dimensions
+the number of invividuals, by the number of time bins, by the number of receivers.
 
 a \code{list} contain the the number of pixels \code{n_pixel}, the pixel x coordinates
 (\code{pix_x}) and the pixel y coordinates (\code{pix_y}).
+
+a numerical value that is the number of timesteps
 }
 \description{
 To make computations in Telemetryspace easier
@@ -42,12 +58,15 @@ centroid. This function quickly creates the project string
 needed to supply a \code{sf} function the crs.
 
 Prior to running the model, detection data needs to be transformed into the number of
-counts at each recevier for each time bin for each individual. This \code{data.frame} will further be
-transformed into a 3-deminsional array that will be pased to the \code{Stan} model.
+counts at each recevier for each time bin for each individual. This functions
+takes in a detection \code{data.frame}, creates a count \code{data.frame} and then transforms it
+into a 3-dimensional \code{array} that will be pased to the \code{Stan} model.
 
 To make a barrier for the model, we need to convert the boundary into
 pixels that we can use to for the model to recongize where to estimate
 detection probablity.
+
+This function builds the number of total time steps that exist whithin the supplied a3-dimensional count array.
 }
 \details{
 the boundary that is supplied needs to match the crs of the receivers.

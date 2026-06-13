@@ -37,6 +37,25 @@ check_array_tag <- function(x, len, arg_name = NULL) {
   }
 }
 
+#' @param x is a `vector`` to pass to check.
+#' @param vec_length is the length of the `vector`` to check.
+#' @param arg_name the name of the argument to check.
+#'
+#' @keywords internal
+#' @name error_functions
+#'
+check_char_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+
+  if (!is.character(x) || !is.vector(x) || length(x) != vec_length) {
+    cli::cli_abort(
+      "`{arg_name}` must be a charcter vector that has a length of {vec_length}."
+    )
+  }
+}
+
 #' @param x is a `data.frame` to pass to check.
 #' @param arg_name the name of the argument to check.
 #'
@@ -157,6 +176,8 @@ check_num_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
     )
   }
 }
+
+
 #' @param x is a `sf` object
 #' @param arg_name the name of the argument to check.
 #'

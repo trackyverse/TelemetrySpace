@@ -39,32 +39,38 @@ build_aeqd <- function(array_sf) {
   return(aeqd_crs)
 }
 
-#' Build count a `data.frame`
+#' Build 3-dimensional count array
 #'
 #' Prior to running the model, detection data needs to be transformed into the number of
-#' counts at each recevier for each time bin for each individual. This `data.frame` will further be
-#' transformed into a 3-deminsional array that will be pased to the `Stan` model.
+#' counts at each recevier for each time bin for each individual. This functions
+#' takes in a detection `data.frame`, creates a count `data.frame` and then transforms it
+#'  into a 3-dimensional `array` that will be pased to the `Stan` model.
 #'
 #' @param df a `data.frame` that contains the following column names
-#' `tag_serial_no`, `rec`, `easting`, `northing`, and `time`. The column `time` is an index of
-#'  `time_bin`.
-#' @param nrec a `numerical` value that is number of receivers
+#' `tag_serial_no`, `rec`, and `time`. The column `time` is an index of
+#' `time_bin`, while `rec` is an index of the `station_no`.
+#' @param nrec a `numerical` value that is number of receivers in the telemetry array.
 #' @param rec_id a `vector` that matches the length of `nrec` and needs to be index of the
-#' receivers in the array.
-#' @param rec_name a `vector` that contains the station names of the receivers description
+#' receivers in the telemetry array.
+#' @param rec_name an optional `vector` that contains the station names of the receivers. If not
+#' supplied it will default to using `rec_id`
 #'
-#' @return a `data.frame` containing the number of detections at each station for each time bin.
-#' The returned `data.frame` will also have the `easting` and `northing`
-#' crs to transform values into.
+#' @return a 3-dimensional `array` containing the number of detections for the following dimensions
+#' the number of invividuals, by the number of time bins, by the number of receivers.
 #'
 #' @name build_functions
 #' @export
 
-build_counts <- function(df, nrec, rec_id) {
+build_counts <- function(df, nrec, rec_id, rec_names = NULL) {
   check_data_frame(df, arg_name = "df")
   check_column_names(df, arg_name = "df")
   check_column_type(df, arg_name = "df")
   check_numerical(nrec, arg_name = "nrec")
+  check_num_vec_len(rec_id, vec_length = nrec, arg_name = rec_id)
+
+  if (!is.null(rec_names)) {
+    check_char_vec_len(rec_names, "rec_names", vec_length = nrec)
+  }
 
   df_count <- df |>
     # Aggregate the number of detections for each individual at each receiver
@@ -73,7 +79,6 @@ build_counts <- function(df, nrec, rec_id) {
     # Create a numeric identifier for each transmitter
     dplyr::mutate(tag = as.numeric(as.factor(tag_serial_no)))
 
-  # build_det <- function(df, nrec, rec_id) {
   # wee need to make tag and rec ids
   tag_id <- sort(unique(df_count$tag_serial_no))
   time_id <- sort(unique(df_count$time))
@@ -91,6 +96,12 @@ build_counts <- function(df, nrec, rec_id) {
   # get number of invivdiausl and timestps
   tsteps <- length(time_id)
 
+  if (!is.null(rec_names)) {
+    rec_names
+  } else {
+    rec_names <- rec_id
+  }
+
   # now we can
   Y <- array(
     0L,
@@ -98,7 +109,7 @@ build_counts <- function(df, nrec, rec_id) {
     dimnames = list(
       ind = tag_id,
       time = time_id,
-      rec = rec_id
+      rec = rec_names
     )
   )
 
@@ -167,4 +178,21 @@ build_pixel_grid <- function(bnd_sf, res) {
     pix_y = coords[, "Y"]
   )
   return(out)
+}
+
+#' Build time steps
+#'
+#' This function builds the number of total time steps that exist whithin the supplied a3-dimensional count array.
+#'
+#' @param x a 3-dimensional count array.
+#'
+#' @return a numerical value that is the number of timesteps
+#' @name build_functions
+#'
+#' @export
+
+build_tstep <- function(x) {
+  check_array(x, "x")
+  tstep <- dim(x)[2]
+  return(tstep)
 }
