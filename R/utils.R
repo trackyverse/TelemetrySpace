@@ -5,6 +5,32 @@
 #'
 #' @keywords internal
 #' @name error_functions
+#'
+#'
+
+check_aeqd <- function(x, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+
+  check_sf_object(x)
+
+  x_crs <- sf::st_crs(x)
+
+  if (!grepl("\\+proj=aeqd", x_crs$input)) {
+    cli::cli_abort(
+      "x" = "`{arg_name}` must be in Azimuthal Equal Distance projection",
+      "i" = "Use {.code build_aeqd()} then {.code sf::st_transform()} to reproject into 
+       Azimuthal Equal Distance projection"
+    )
+  }
+}
+
+#' @param x is a `vector`` to pass to check.
+#' @param arg_name the name of the argument to check.
+#'
+#' @keywords internal
+#' @name error_functions
 
 check_array <- function(x, arg_name = NULL) {
   if (is.null(arg_name)) {
@@ -37,6 +63,7 @@ check_array_tag <- function(x, len, arg_name = NULL) {
   }
 }
 
+check_aeqd <- function(x, arg_name = NULL) {}
 #' @param x is a `vector`` to pass to check.
 #' @param vec_length is the length of the `vector`` to check.
 #' @param arg_name the name of the argument to check.
@@ -140,6 +167,25 @@ check_data_frame <- function(x, arg_name = NULL) {
     ))
   }
 }
+#' @param x is a `list` to pass to check.
+#' @param arg_name the name of the argument to check.
+#'
+#' @keywords internal
+#' @name error_functions
+#'
+check_list <- function(x, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+
+  if (!(inherits(x, c("list")))) {
+    cli::cli_abort(c(
+      "`{arg_name}` must be a list",
+      "i" = "Please provide a list"
+    ))
+  }
+}
+
 
 #' @param x prior to check
 #'  @param arg_name the name of the argument to check.

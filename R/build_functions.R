@@ -1,5 +1,3 @@
-# ---- Azimuthal Equidistant projection----
-
 #' Build Azimuthal Equidistant Projection
 #'
 #' To make computations in Telemetryspace easier
@@ -17,13 +15,14 @@
 #' @name build_functions
 #' @export
 #'
+
 build_aeqd <- function(array_sf) {
   check_sf_object(array_sf, "array_sf")
   centre <- sf::st_centroid(sf::st_union(array_sf))
 
   array_crs <- sf::st_crs(array_sf)
 
-  if (array_crs %in% 4326) {
+  if (!(array_crs$input %in% "EPSG:4326")) {
     center_dd <- centre |>
       sf::st_transform(4326)
   }
@@ -39,7 +38,8 @@ build_aeqd <- function(array_sf) {
   return(aeqd_crs)
 }
 
-#' Build 3-dimensional count array
+# ---- 3-dimensional Count Array ----
+#' Build 3-dimensional Count Array
 #'
 #' Prior to running the model, detection data needs to be transformed into the number of
 #' counts at each recevier for each time bin for each individual. This functions
@@ -52,7 +52,7 @@ build_aeqd <- function(array_sf) {
 #' @param nrec a `numerical` value that is number of receivers in the telemetry array.
 #' @param rec_id a `vector` that matches the length of `nrec` and needs to be index of the
 #' receivers in the telemetry array.
-#' @param rec_name an optional `vector` that contains the station names of the receivers. If not
+#' @param rec_names an optional `vector` that contains the station names of the receivers. If not
 #' supplied it will default to using `rec_id`
 #'
 #' @return a 3-dimensional `array` containing the number of detections for the following dimensions
@@ -129,6 +129,8 @@ build_counts <- function(df, nrec, rec_id, rec_names = NULL) {
   return(Y)
 }
 
+# ----- Pixel Grid -----
+
 #' Build Pixel Grid
 #'
 #' To make a barrier for the model, we need to convert the boundary into
@@ -166,7 +168,7 @@ build_pixel_grid <- function(bnd_sf, res) {
   pts <- expand.grid(x = gx, y = gy)
   # convert to sf object
   pts_sf <- pts |>
-    sf::st_as_sf(coords = c("x", "y"), crs = st_crs(bnd_sf))
+    sf::st_as_sf(coords = c("x", "y"), crs = sf::st_crs(bnd_sf))
 
   # Keep only pixels whose centroid falls inside the lake polygon
   inside <- sf::st_filter(pts_sf, bnd_sf)
@@ -180,9 +182,78 @@ build_pixel_grid <- function(bnd_sf, res) {
   return(out)
 }
 
-#' Build time steps
+# ----- Pixel Grid -----
+
+#' Build Receiver Coordinates
 #'
-#' This function builds the number of total time steps that exist whithin the supplied a3-dimensional count array.
+#' The models need the easting and northing (i.e., x and y) coordinates of the receivers.
+#' This function takes a sf object and returns a `list` that contains the
+#' easting and northing coordinates in Azimuthal Equidistant Projection.
+#'
+#' @param obj_sf a `sf` object that the receiver locations as `sf` `POINT` object.
+#' The `sf` object has to be in Azimuthal Equidistant projection.
+#'
+#' @return a `list` conttaining two `vectors` named `recX` and `recY` which are the
+#' receiver locations transformed into Azimuthal Equidistant projection.
+#'
+#' @name build_functions
+#'
+#' @export
+
+build_rec_coords <- function(obj_sf) {
+  check_sf_object(obj_sf, "obj_sf")
+  check_aeqd(obj_sf)
+
+  recX <- sf::st_coordinates(obj_sf, geometry)[, "X"]
+  recY <- sf::st_coordinates(obj_sf, geometry)[, "Y"]
+
+  # ---- could return x and y as vector in a list ----
+  coord_list <- list(
+    recX = recX,
+    recY = recY
+  )
+
+  return(coord_list)
+}
+#' Build Coordinate Limits
+#'
+#' The models need the limits of easting and northing (i.e., x and y) coordinates of the
+#' receiver array. This can viewed as the boundary box.
+#'
+#' @param coord_list a `list` object that contains two `vectors` named `recX` and `recY`
+#' created by `build_rec_coords`.
+#' @param buffer a `numerical` value to set the buffer. Defaults to `1`. Considering the
+#' default Azimuthal Equidistant projection is km, 1 represents a 1 km buffer.
+#'
+#'
+#' @return a `list` conttaining two `vectors` named `xlim` and `ylim` which are the
+#' minimum and maximum values +/- a buffer for x and y.
+#'
+#' @name build_functions
+#'
+#' @export
+
+build_rec_limits <- function(coord_list, buffer = NULL) {
+  if (is.null(buffer)) {
+    buffer <- 1
+  }
+  check_numerical(buffer)
+  check_list(coord_list)
+
+  xlim <- c(min(coord_list$recX - buffer), max(coord_list$recX + buffer))
+  ylim <- c(min(coord_list$recY - buffer), max(coord_list$recY + buffer))
+
+  coord_limit <- list(
+    xlim = xlim,
+    ylim = ylim
+  )
+
+  return(coord_limit)
+}
+# ----- Time steps -----
+#' Build Time Steps
+#'
+#' This function builds the number of total time steps that exist whithin the supplied 3-dimensional count array.
 #'
 #' @param x a 3-dimensional count array.
 #'

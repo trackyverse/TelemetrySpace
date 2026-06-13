@@ -5,6 +5,8 @@
 \alias{build_aeqd}
 \alias{build_counts}
 \alias{build_pixel_grid}
+\alias{build_rec_coords}
+\alias{build_rec_limits}
 \alias{build_tstep}
 \title{Build Azimuthal Equidistant Projection}
 \usage{
@@ -13,6 +15,10 @@ build_aeqd(array_sf)
 build_counts(df, nrec, rec_id, rec_names = NULL)
 
 build_pixel_grid(bnd_sf, res)
+
+build_rec_coords(obj_sf)
+
+build_rec_limits(coord_list, buffer = NULL)
 
 build_tstep(x)
 }
@@ -28,14 +34,23 @@ build_tstep(x)
 \item{rec_id}{a \code{vector} that matches the length of \code{nrec} and needs to be index of the
 receivers in the telemetry array.}
 
+\item{rec_names}{an optional \code{vector} that contains the station names of the receivers. If not
+supplied it will default to using \code{rec_id}}
+
 \item{bnd_sf}{a \code{sf} object that is boundary that is desired to impose}
 
 \item{res}{the resolution desired}
 
-\item{x}{a 3-dimensional count array.}
+\item{obj_sf}{a \code{sf} object that the receiver locations as \code{sf} \code{POINT} object.
+The \code{sf} object has to be in Azimuthal Equidistant projection.}
 
-\item{rec_name}{an optional \code{vector} that contains the station names of the receivers. If not
-supplied it will default to using \code{rec_id}}
+\item{coord_list}{a \code{list} object that contains two \code{vectors} named \code{recX} and \code{recY}
+created by \code{build_rec_coords}.}
+
+\item{buffer}{a \code{numerical} value to set the buffer. Defaults to \code{1}. Considering the
+default Azimuthal Equidistant projection is km, 1 represents a 1 km buffer.}
+
+\item{x}{a 3-dimensional count array.}
 }
 \value{
 a \code{vector} containing the site specific projection string for
@@ -47,6 +62,12 @@ the number of invividuals, by the number of time bins, by the number of receiver
 
 a \code{list} contain the the number of pixels \code{n_pixel}, the pixel x coordinates
 (\code{pix_x}) and the pixel y coordinates (\code{pix_y}).
+
+a \code{list} conttaining two \code{vectors} named \code{recX} and \code{recY} which are the
+receiver locations transformed into Azimuthal Equidistant projection.
+
+a \code{list} conttaining two \code{vectors} named \code{xlim} and \code{ylim} which are the
+minimum and maximum values +/- a buffer for x and y.
 
 a numerical value that is the number of timesteps
 }
@@ -66,7 +87,14 @@ To make a barrier for the model, we need to convert the boundary into
 pixels that we can use to for the model to recongize where to estimate
 detection probablity.
 
-This function builds the number of total time steps that exist whithin the supplied a3-dimensional count array.
+The models need the easting and northing (i.e., x and y) coordinates of the receivers.
+This function takes a sf object and returns a \code{list} that contains the
+easting and northing coordinates in Azimuthal Equidistant Projection.
+
+The models need the limits of easting and northing (i.e., x and y) coordinates of the
+receiver array. This can viewed as the boundary box.
+
+This function builds the number of total time steps that exist whithin the supplied 3-dimensional count array.
 }
 \details{
 the boundary that is supplied needs to match the crs of the receivers.

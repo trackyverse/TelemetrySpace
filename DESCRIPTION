@@ -21,6 +21,7 @@ Imports:
     rlang,
     rstan (>= 2.18.1),
     rstantools (>= 2.4.0),
+    sf,
     stats
 Suggests: 
     ggplot2,

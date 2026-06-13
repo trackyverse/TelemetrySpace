@@ -2,18 +2,22 @@
 % Please edit documentation in R/utils.R
 \name{error_functions}
 \alias{error_functions}
+\alias{check_aeqd}
 \alias{check_array}
 \alias{check_array_tag}
 \alias{check_char_vec_len}
 \alias{check_column_names}
 \alias{check_column_type}
 \alias{check_data_frame}
+\alias{check_list}
 \alias{check_numerical}
 \alias{check_num_vec_len}
 \alias{check_sf_object}
 \alias{check_stan_object}
 \title{Error functions}
 \usage{
+check_aeqd(x, arg_name = NULL)
+
 check_array(x, arg_name = NULL)
 
 check_array_tag(x, len, arg_name = NULL)
@@ -25,6 +29,8 @@ check_column_names(x, arg_name = NULL)
 check_column_type(x, arg_name = NULL)
 
 check_data_frame(x, arg_name = NULL)
+
+check_list(x, arg_name = NULL)
 
 check_numerical(x, arg_name = NULL)
 

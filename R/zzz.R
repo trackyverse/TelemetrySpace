@@ -14,6 +14,7 @@ utils::globalVariables(
     "alpha0",
     "alpha1",
     "easting",
+    "geometry",
     "nind",
     "northing",
     "nrec",
