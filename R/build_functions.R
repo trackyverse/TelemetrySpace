@@ -1,25 +1,25 @@
+# ----- Build aeqd -----
+
 #' Build Functions
 #'
-#' These functions all build key data compoents that are needed to
-#' properly structure the data to be submitted to Stan.
+#' These functions structure and build data compoents that are needed by
+#' the model. Each function will either return an object that
+#' is properly built and structured for Stan or will produce an object
+#' to be latter used in the pre-process phase of analysis
 #'
 #' @param array_sf the receiver array as an `sf` object.
 #'
 #' @details
-#' Build Azimuthal Equidistant Projection - To make computations in Telemetryspace easier
-#' Azimuthal Equidistant projection is used which relies
-#' on creating a centroid and creating equal distances from that
+#' `build_aeqd()`- Azimuthal Equidistant projection is needed by the model
+#' which relies on creating a centroid and creating equal distances from the
 #' centroid. This function quickly creates the project string
-#' needed to supply a `sf` function the crs.
+#' needed to transform an exisiting crs to Azimuthal Equidistant projection.
 #'
 #' @return a `vector` containing the site specific projection string for
-#' the array to be able to supply `sf` functions with a valid
-#' crs to transform values into.
-#'
+#' the array to be able to transform the crs.
 #'
 #' @name build_functions
 #' @export
-#'
 
 build_aeqd <- function(array_sf) {
   check_sf_object(array_sf, "array_sf")
@@ -41,12 +41,13 @@ build_aeqd <- function(array_sf) {
     clon
   )
   cli::cli_alert_success(
-    "Successfully created {.val {aeqd_crs}}"
+    "Successfully built {.val {aeqd_crs}}"
   )
   return(aeqd_crs)
 }
 
 # ---- 3-dimensional Count Array ----
+
 #' @param df a `data.frame` that contains the following column names
 #' `tag_serial_no`, `rec`, and `time`. The column `time` is an index of
 #' `time_bin`, while `rec` is an index of the `station_no`.
@@ -57,19 +58,17 @@ build_aeqd <- function(array_sf) {
 #' supplied it will default to using `rec_id`
 #'
 #' @details
-#' Build 3-dimensional Count Array - Prior to running the model, detection data needs to be
-#' transformed into the number of
-#' counts at each recevier for each time bin for each individual. This functions
-#' takes in a detection `data.frame`, creates a count `data.frame` and then transforms it
-#'  into a 3-dimensional `array` that will be pased to the `Stan` model.
+#' `build_counts()` builds a 3-dimensional count `array`. The models need the
+#' counts at each recevier for each time bin for each individual structure in  3-dimensional `array``.
+#' This functions takes in a detection `data.frame`, creates a count `data.frame` and then transforms it
+#' into a 3-dimensional `array` that will be pased to the `Stan` model.
 #'
 #'
-#' @return a 3-dimensional `array` containing the number of detections for the following dimensions
+#' @return a 3-dimensional `array` containing the number of detections for the following dimensions,
 #' the number of invividuals, by the number of time bins, by the number of receivers.
 #'
 #' @name build_functions
 #' @export
-#'
 
 build_counts <- function(df, nrec, rec_id, rec_names = NULL) {
   check_data_frame(df, arg_name = "df")
@@ -141,17 +140,18 @@ build_counts <- function(df, nrec, rec_id, rec_names = NULL) {
 # ---- build ntrans ------
 
 #' @param df a `data.frame` that contains the following column names
-#' `tag_serial_no`, `rec`, and `time`. The column `time` is an index of
+#' `tag_serial_no`, `rec`, `time`, `min_delay`, `max_delay`. The column `time` is an index of
 #' `time_bin`, while `rec` is an index of the `station_no`.
 #'
 #' @details
 #'
-#' Build Nubmer of Transmissions - Build the number of transmissions to be expected within a given time bin.
+#' `build_ntrans()` builds the nubmer of transmissions to be expected within a given time bin.
 #'
 #' @return a single value vector.
 #'
 #' @name build_functions
 #' @export
+
 build_ntrans <- function(df) {
   check_data_frame(df)
 
@@ -171,6 +171,10 @@ build_ntrans <- function(df) {
     ) |>
     dplyr::pull(ntrans) |>
     unique()
+
+  cli::cli_alert_success(
+    "Successfully built the number of transmission {.val {ntrans}} expectd in {.val {}}"
+  )
   return(ntrans)
 }
 
@@ -178,30 +182,28 @@ build_ntrans <- function(df) {
 # ----- Pixel Grid -----
 
 #' @param bnd_sf a `sf` object that is boundary that is desired to impose
-#' @param res the resolution desired
+#' @param res the resolution desired.
 #'
-#' @details the boundary that is supplied needs to match the crs of the receivers.
-#' Often an azimuth eqaul distance projection is used for TelemetrySpace. This
-#' projection is in kilometer (km). To build this
+#' @details
+#' `build_pixel_grid()` builds a barrier for the model,
+#' we need to convert the boundary into pixels that can be used to recongize where to estimate
+#' detection probablity. The boundary that is supplied needs to match the crs of the receivers.
+#' An azimuth eqaul distance projection is used with this
+#' projection being in kilometer (km). To build this
 #' project see `build_aeqd()` function. When supplying the desired resolution
 #' remember that this is in km so a value of `1`` would be quite large while a value
 #' of `0.1` is 100 m which makes a much more dense grid.
 #'
 #'
-#' @details
-#' Build Pixel Grid - To make a barrier for the model, we need to convert the boundary into
-#' pixels that we can use to for the model to recongize where to estimate
-#' detection probablity.
-#'
 #' @return a `list` contain the the number of pixels `n_pixel`, the pixel x coordinates
 #' (`pix_x`) and the pixel y coordinates (`pix_y`).
 #'
 #' @name build_functions
-#'
 #' @export
 
 build_pixel_grid <- function(bnd_sf, res) {
   check_sf_object(bnd_sf, "bnd_sf")
+  check_aeqd(bnd_sf, "bnd_sf")
 
   # get boundary box of boundary
   bbox <- sf::st_bbox(bnd_sf)
@@ -228,21 +230,19 @@ build_pixel_grid <- function(bnd_sf, res) {
   return(out)
 }
 
-# ----- Pixel Grid -----
+# ----- build_rec_coords ----
 
-#' @param obj_sf a `sf` object that the receiver locations as `sf` `POINT` object.
+#' @param obj_sf a `sf` object that the receiver locations as `POINT` geometry.
 #' The `sf` object has to be in Azimuthal Equidistant projection.
 #'
 #' @details
-#' Build Receiver Coordinates - The models need the easting and northing (i.e., x and y) coordinates of the receivers.
-#' This function takes a sf object and returns a `list` that contains the
-#' easting and northing coordinates in Azimuthal Equidistant Projection.
+#' `build_rec_coords()` builds receiver coordinates as the models need the
+#' easting and northing (i.e., x and y) coordinates of the receivers.
 #'
-#' @return a `list` conttaining two `vectors` named `recX` and `recY` which are the
+#' @return a `data.frame` containing two `columns` named `recX` and `recY` which are the
 #' receiver locations transformed into Azimuthal Equidistant projection.
 #'
 #' @name build_functions
-#'
 #' @export
 
 build_rec_coords <- function(obj_sf) {
@@ -253,43 +253,42 @@ build_rec_coords <- function(obj_sf) {
   recY <- sf::st_coordinates(obj_sf, geometry)[, "Y"]
 
   # ---- could return x and y as vector in a list ----
-  coord_list <- list(
+  coord_df <- data.frame(
     recX = recX,
     recY = recY
   )
 
-  return(coord_list)
+  return(coord_df)
 }
 
-#' @param coord_list a `list` object that contains two `vectors` named `recX` and `recY`
-#' created by `build_rec_coords`.
+# ---- build rec limits ----
+
+#' @param coord_df a `data.frame` that contains two columns named `recX` and `recY`
+#' created by `build_rec_coords()`.
 #' @param buffer a `numerical` value to set the buffer. Defaults to `1`. Considering the
 #' default Azimuthal Equidistant projection is km, 1 represents a 1 km buffer.
 #'
 #' @details
-#' Build Coordinate Limits - The models need the limits of easting and northing (i.e., x and y) coordinates of the
-#' receiver array. This can viewed as the boundary box.
+#' `build_rec_limits()` The models need the limits of easting and northing
+#' (i.e., x and y) coordinates of the receiver array. This can viewed as the boundary box.
 #'
-#'
-#'
-#' @return a `list` conttaining two `vectors` named `xlim` and `ylim` which are the
+#' @return a `data.frame` containing two two columns named `xlim` and `ylim` which are the
 #' minimum and maximum values +/- a buffer for x and y.
 #'
 #' @name build_functions
-#'
 #' @export
 
-build_rec_limits <- function(coord_list, buffer = NULL) {
+build_rec_limits <- function(coord_df, buffer = NULL) {
   if (is.null(buffer)) {
     buffer <- 1
   }
   check_numerical(buffer)
-  check_list(coord_list)
+  check_data_frame(coord_df)
 
-  xlim <- c(min(coord_list$recX - buffer), max(coord_list$recX + buffer))
-  ylim <- c(min(coord_list$recY - buffer), max(coord_list$recY + buffer))
+  xlim <- c(min(coord_df$recX - buffer), max(coord_df$recX + buffer))
+  ylim <- c(min(coord_df$recY - buffer), max(coord_df$recY + buffer))
 
-  coord_limit <- list(
+  coord_limit <- data.frame(
     xlim = xlim,
     ylim = ylim
   )
@@ -297,40 +296,54 @@ build_rec_limits <- function(coord_list, buffer = NULL) {
   return(coord_limit)
 }
 
-build_time_bin <- function(x, unit = NULL) {
-  check_data_frame(x)
+#' @param df a `data.frame` that contains the following column names
+#' `tag_serial_no`
+#' @param unit a `character` that is the unit desired to bin. Default is `"1 hour"`.
+#' See `lubridate::floor_date()`'s `unit` argument for more details.
+#'
+#' @details
+#' `build_time_bin()` builds and adds time bins to the detection `data.frame`.
+#'
+#' @return a `data.frame` that has had the columns `time_bin` and `time`added. `time` is an
+#' index value of `time_bin` and is needed by the model. This will further be used by `build_counts()`.
+#'
+#' @name build_functions
+#' @export
+
+build_time_bin <- function(df, unit = NULL) {
+  check_data_frame(df, "df")
 
   if (is.null(unit)) {
     unit <- "1 hour"
   }
   check_unit(unit)
 
-  x <- x |>
-    dplyr::arrange(detection_timestamp_est) |>
+  df <- df |>
+    dplyr::arrange(detection_timestamp_utc) |>
     dplyr::mutate(
-      time_bin = lubridate::floor_date(detection_timestamp_est, unit = unit),
+      time_bin = lubridate::floor_date(detection_timestamp_utc, unit = unit),
       time = dplyr::dense_rank(time_bin)
     )
 
-  return(x)
+  return(df)
 }
 
 # ----- Time steps -----
 
 #' @param x a 3-dimensional count array.
 #' @details
-#' Build Time Steps - This function builds the number of total time steps that exist whithin the
+#' `build_tstep()` builds the number of total time steps that exist whithin the
 #' supplied 3-dimensional count array.
-#'
-#'
-#'
 #' @return a numerical value that is the number of timesteps
-#' @name build_functions
 #'
+#' @name build_functions
 #' @export
 
 build_tstep <- function(x) {
   check_array(x, "x")
   tstep <- dim(x)[2]
+  cli::cli_alert_success(
+    "Successfully built the number of time steps {.val {tstep}}"
+  )
   return(tstep)
 }
