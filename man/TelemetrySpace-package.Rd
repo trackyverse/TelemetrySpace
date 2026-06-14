@@ -25,6 +25,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Michael O'Brien \email{mike@obrien.page} (\href{https://orcid.org/0000-0003-1420-6395}{ORCID})
   \item Megan Winton \email{megan.winton@gmail.com} (\href{https://orcid.org/0000-0003-2628-7022}{ORCID})
   \item Benjamin L. Hlina \email{benjamin.hlina@gmail.com} (\href{https://orcid.org/0000-0002-4178-4900}{ORCID})
 }
