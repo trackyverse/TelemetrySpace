@@ -250,6 +250,25 @@ build_rec_limits <- function(coord_list, buffer = NULL) {
 
   return(coord_limit)
 }
+
+build_time_bin <- function(x, unit = NULL) {
+  check_data_frame(x)
+
+  if (is.null(unit)) {
+    unit <- "1 hour"
+  }
+  check_unit(unit)
+
+  x <- x |>
+    dplyr::arrange(detection_timestamp_est) |>
+    dplyr::mutate(
+      time_bin = lubridate::floor_date(detection_timestamp_est, unit = unit),
+      time = dplyr::dense_rank(time_bin)
+    )
+
+  return(x)
+}
+
 # ----- Time steps -----
 #' Build Time Steps
 #'
