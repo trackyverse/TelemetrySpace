@@ -1,16 +1,21 @@
-#' Build Azimuthal Equidistant Projection
+#' Build Functions
 #'
-#' To make computations in Telemetryspace easier
+#' These functions all build key data compoents that are needed to
+#' properly structure the data to be submitted to Stan.
+#'
+#' @param array_sf the receiver array as an `sf` object.
+#'
+#' @details
+#' Build Azimuthal Equidistant Projection - To make computations in Telemetryspace easier
 #' Azimuthal Equidistant projection is used which relies
 #' on creating a centroid and creating equal distances from that
 #' centroid. This function quickly creates the project string
 #' needed to supply a `sf` function the crs.
 #'
-#' @param array_sf the receiver array as an `sf` object.
-#'
 #' @return a `vector` containing the site specific projection string for
 #' the array to be able to supply `sf` functions with a valid
 #' crs to transform values into.
+#'
 #'
 #' @name build_functions
 #' @export
@@ -42,13 +47,6 @@ build_aeqd <- function(array_sf) {
 }
 
 # ---- 3-dimensional Count Array ----
-#' Build 3-dimensional Count Array
-#'
-#' Prior to running the model, detection data needs to be transformed into the number of
-#' counts at each recevier for each time bin for each individual. This functions
-#' takes in a detection `data.frame`, creates a count `data.frame` and then transforms it
-#'  into a 3-dimensional `array` that will be pased to the `Stan` model.
-#'
 #' @param df a `data.frame` that contains the following column names
 #' `tag_serial_no`, `rec`, and `time`. The column `time` is an index of
 #' `time_bin`, while `rec` is an index of the `station_no`.
@@ -58,11 +56,20 @@ build_aeqd <- function(array_sf) {
 #' @param rec_names an optional `vector` that contains the station names of the receivers. If not
 #' supplied it will default to using `rec_id`
 #'
+#' @details
+#' Build 3-dimensional Count Array - Prior to running the model, detection data needs to be
+#' transformed into the number of
+#' counts at each recevier for each time bin for each individual. This functions
+#' takes in a detection `data.frame`, creates a count `data.frame` and then transforms it
+#'  into a 3-dimensional `array` that will be pased to the `Stan` model.
+#'
+#'
 #' @return a 3-dimensional `array` containing the number of detections for the following dimensions
 #' the number of invividuals, by the number of time bins, by the number of receivers.
 #'
 #' @name build_functions
 #' @export
+#'
 
 build_counts <- function(df, nrec, rec_id, rec_names = NULL) {
   check_data_frame(df, arg_name = "df")
@@ -133,13 +140,13 @@ build_counts <- function(df, nrec, rec_id, rec_names = NULL) {
 }
 # ---- build ntrans ------
 
-#' Build Nubmer of Transmissions
-#'
-#' Build the number of transmissions to be expected within a given time bin.
-#'
 #' @param df a `data.frame` that contains the following column names
 #' `tag_serial_no`, `rec`, and `time`. The column `time` is an index of
 #' `time_bin`, while `rec` is an index of the `station_no`.
+#'
+#' @details
+#'
+#' Build Nubmer of Transmissions - Build the number of transmissions to be expected within a given time bin.
 #'
 #' @return a single value vector.
 #'
@@ -170,12 +177,6 @@ build_ntrans <- function(df) {
 
 # ----- Pixel Grid -----
 
-#' Build Pixel Grid
-#'
-#' To make a barrier for the model, we need to convert the boundary into
-#' pixels that we can use to for the model to recongize where to estimate
-#' detection probablity.
-#'
 #' @param bnd_sf a `sf` object that is boundary that is desired to impose
 #' @param res the resolution desired
 #'
@@ -185,6 +186,12 @@ build_ntrans <- function(df) {
 #' project see `build_aeqd()` function. When supplying the desired resolution
 #' remember that this is in km so a value of `1`` would be quite large while a value
 #' of `0.1` is 100 m which makes a much more dense grid.
+#'
+#'
+#' @details
+#' Build Pixel Grid - To make a barrier for the model, we need to convert the boundary into
+#' pixels that we can use to for the model to recongize where to estimate
+#' detection probablity.
 #'
 #' @return a `list` contain the the number of pixels `n_pixel`, the pixel x coordinates
 #' (`pix_x`) and the pixel y coordinates (`pix_y`).
@@ -223,14 +230,13 @@ build_pixel_grid <- function(bnd_sf, res) {
 
 # ----- Pixel Grid -----
 
-#' Build Receiver Coordinates
-#'
-#' The models need the easting and northing (i.e., x and y) coordinates of the receivers.
-#' This function takes a sf object and returns a `list` that contains the
-#' easting and northing coordinates in Azimuthal Equidistant Projection.
-#'
 #' @param obj_sf a `sf` object that the receiver locations as `sf` `POINT` object.
 #' The `sf` object has to be in Azimuthal Equidistant projection.
+#'
+#' @details
+#' Build Receiver Coordinates - The models need the easting and northing (i.e., x and y) coordinates of the receivers.
+#' This function takes a sf object and returns a `list` that contains the
+#' easting and northing coordinates in Azimuthal Equidistant Projection.
 #'
 #' @return a `list` conttaining two `vectors` named `recX` and `recY` which are the
 #' receiver locations transformed into Azimuthal Equidistant projection.
@@ -254,15 +260,16 @@ build_rec_coords <- function(obj_sf) {
 
   return(coord_list)
 }
-#' Build Coordinate Limits
-#'
-#' The models need the limits of easting and northing (i.e., x and y) coordinates of the
-#' receiver array. This can viewed as the boundary box.
-#'
+
 #' @param coord_list a `list` object that contains two `vectors` named `recX` and `recY`
 #' created by `build_rec_coords`.
 #' @param buffer a `numerical` value to set the buffer. Defaults to `1`. Considering the
 #' default Azimuthal Equidistant projection is km, 1 represents a 1 km buffer.
+#'
+#' @details
+#' Build Coordinate Limits - The models need the limits of easting and northing (i.e., x and y) coordinates of the
+#' receiver array. This can viewed as the boundary box.
+#'
 #'
 #'
 #' @return a `list` conttaining two `vectors` named `xlim` and `ylim` which are the
@@ -309,11 +316,13 @@ build_time_bin <- function(x, unit = NULL) {
 }
 
 # ----- Time steps -----
-#' Build Time Steps
-#'
-#' This function builds the number of total time steps that exist whithin the supplied 3-dimensional count array.
-#'
+
 #' @param x a 3-dimensional count array.
+#' @details
+#' Build Time Steps - This function builds the number of total time steps that exist whithin the
+#' supplied 3-dimensional count array.
+#'
+#'
 #'
 #' @return a numerical value that is the number of timesteps
 #' @name build_functions

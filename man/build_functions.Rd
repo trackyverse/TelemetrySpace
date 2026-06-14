@@ -9,7 +9,7 @@
 \alias{build_rec_coords}
 \alias{build_rec_limits}
 \alias{build_tstep}
-\title{Build Azimuthal Equidistant Projection}
+\title{Build Functions}
 \usage{
 build_aeqd(array_sf)
 
@@ -77,36 +77,41 @@ minimum and maximum values +/- a buffer for x and y.
 a numerical value that is the number of timesteps
 }
 \description{
-To make computations in Telemetryspace easier
+These functions all build key data compoents that are needed to
+properly structure the data to be submitted to Stan.
+}
+\details{
+Build Azimuthal Equidistant Projection - To make computations in Telemetryspace easier
 Azimuthal Equidistant projection is used which relies
 on creating a centroid and creating equal distances from that
 centroid. This function quickly creates the project string
 needed to supply a \code{sf} function the crs.
 
-Prior to running the model, detection data needs to be transformed into the number of
+Build 3-dimensional Count Array - Prior to running the model, detection data needs to be
+transformed into the number of
 counts at each recevier for each time bin for each individual. This functions
 takes in a detection \code{data.frame}, creates a count \code{data.frame} and then transforms it
 into a 3-dimensional \code{array} that will be pased to the \code{Stan} model.
 
-Build the number of transmissions to be expected within a given time bin.
+Build Nubmer of Transmissions - Build the number of transmissions to be expected within a given time bin.
 
-To make a barrier for the model, we need to convert the boundary into
-pixels that we can use to for the model to recongize where to estimate
-detection probablity.
-
-The models need the easting and northing (i.e., x and y) coordinates of the receivers.
-This function takes a sf object and returns a \code{list} that contains the
-easting and northing coordinates in Azimuthal Equidistant Projection.
-
-The models need the limits of easting and northing (i.e., x and y) coordinates of the
-receiver array. This can viewed as the boundary box.
-
-This function builds the number of total time steps that exist whithin the supplied 3-dimensional count array.
-}
-\details{
 the boundary that is supplied needs to match the crs of the receivers.
 Often an azimuth eqaul distance projection is used for TelemetrySpace. This
 projection is in kilometer (km). To build this
 project see \code{build_aeqd()} function. When supplying the desired resolution
 remember that this is in km so a value of \verb{1`` would be quite large while a value of }0.1` is 100 m which makes a much more dense grid.
+
+Build Pixel Grid - To make a barrier for the model, we need to convert the boundary into
+pixels that we can use to for the model to recongize where to estimate
+detection probablity.
+
+Build Receiver Coordinates - The models need the easting and northing (i.e., x and y) coordinates of the receivers.
+This function takes a sf object and returns a \code{list} that contains the
+easting and northing coordinates in Azimuthal Equidistant Projection.
+
+Build Coordinate Limits - The models need the limits of easting and northing (i.e., x and y) coordinates of the
+receiver array. This can viewed as the boundary box.
+
+Build Time Steps - This function builds the number of total time steps that exist whithin the
+supplied 3-dimensional count array.
 }
