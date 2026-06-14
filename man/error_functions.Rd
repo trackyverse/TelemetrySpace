@@ -14,6 +14,7 @@
 \alias{check_num_vec_len}
 \alias{check_sf_object}
 \alias{check_stan_object}
+\alias{check_unit}
 \title{Error functions}
 \usage{
 check_aeqd(x, arg_name = NULL)
@@ -39,6 +40,8 @@ check_num_vec_len(x, vec_length = NULL, arg_name = NULL)
 check_sf_object(x, arg_name = NULL)
 
 check_stan_object(x, arg_name = NULL)
+
+check_unit(x, arg_name = NULL)
 }
 \arguments{
 \item{x}{is a \code{Stan} object}

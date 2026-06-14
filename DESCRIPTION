@@ -16,6 +16,7 @@ Depends:
 Imports: 
     cli,
     dplyr,
+    lubridate,
     methods,
     RcppParallel (>= 5.0.1),
     rlang,

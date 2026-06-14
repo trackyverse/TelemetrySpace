@@ -124,7 +124,7 @@ check_column_type <- function(x, arg_name = NULL) {
   }
   # right now this is the accepted names but we will changes this likely to ATO names
 
-  accepted_numeric <- c("rec", "easting", "northing", "time")
+  accepted_numeric <- c("rec", "time")
 
   accepted_character <- c("tag_serial_no")
 
@@ -274,6 +274,37 @@ check_stan_object <- function(x, arg_name = NULL) {
       "`{arg_name}` must be a Stan object (from {.pkg rstan} or {.pkg cmdstanr})."
     )
   }
+}
+
+#' @param x is a `Stan` object
+#' @param arg_name the name of the argument to check.
+#'
+#' @keywords internal
+#' @name error_functions
+#'
+check_unit <- function(x, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+
+  if (!is.character(x) || length(x) != 1) {
+    cli::cli_abort(c(
+      "`{arg_name}` must be a single character string.",
+      "i" = "e.g. \"1 hour\", \"15 minutes\", \"1 day\""
+    ))
+  }
+
+  tryCatch(
+    lubridate::floor_date(Sys.time(), unit = x),
+    error = function(e) {
+      cli::cli_abort(c(
+        "`{arg_name}` is not a valid {.fn lubridate::floor_date} unit: {.val {x}}",
+        "i" = "e.g. \"1 hour\", \"15 minutes\", \"1 day\""
+      ))
+    }
+  )
+
+  invisible(x)
 }
 
 #' Expected lengths of variables in `standata`
