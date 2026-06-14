@@ -128,6 +128,42 @@ build_counts <- function(df, nrec, rec_id, rec_names = NULL) {
 
   return(Y)
 }
+# ---- build ntrans ------
+
+#' Build Nubmer of Transmissions
+#'
+#' Build the number of transmissions to be expected within a given time bin.
+#'
+#' @param df a `data.frame` that contains the following column names
+#' `tag_serial_no`, `rec`, and `time`. The column `time` is an index of
+#' `time_bin`, while `rec` is an index of the `station_no`.
+#'
+#' @return a single value vector.
+#'
+#' @name build_functions
+#' @export
+build_ntrans <- function(df) {
+  check_data_frame(df)
+
+  bin_secs <- df |>
+    dplyr::distinct(time_bin) |>
+    dplyr::arrange(time_bin) |>
+    dplyr::mutate(
+      bin_secs = as.numeric(dplyr::lead(time_bin) - time_bin, units = "secs")
+    ) |>
+    tidyr::fill(bin_secs, .direction = "down")
+
+  ntrans <- df |>
+    dplyr::left_join(bin_secs, by = "time_bin") |>
+    dplyr::mutate(
+      mean_delay = (min_delay + max_delay) / 2,
+      ntrans = floor(bin_secs / mean_delay)
+    ) |>
+    dplyr::pull(ntrans) |>
+    unique()
+  return(ntrans)
+}
+
 
 # ----- Pixel Grid -----
 
