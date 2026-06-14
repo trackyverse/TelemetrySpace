@@ -4,6 +4,7 @@
 \alias{build_functions}
 \alias{build_aeqd}
 \alias{build_counts}
+\alias{build_ntrans}
 \alias{build_pixel_grid}
 \alias{build_rec_coords}
 \alias{build_rec_limits}
@@ -13,6 +14,8 @@
 build_aeqd(array_sf)
 
 build_counts(df, nrec, rec_id, rec_names = NULL)
+
+build_ntrans(df)
 
 build_pixel_grid(bnd_sf, res)
 
@@ -60,6 +63,8 @@ crs to transform values into.
 a 3-dimensional \code{array} containing the number of detections for the following dimensions
 the number of invividuals, by the number of time bins, by the number of receivers.
 
+a single value vector.
+
 a \code{list} contain the the number of pixels \code{n_pixel}, the pixel x coordinates
 (\code{pix_x}) and the pixel y coordinates (\code{pix_y}).
 
@@ -82,6 +87,8 @@ Prior to running the model, detection data needs to be transformed into the numb
 counts at each recevier for each time bin for each individual. This functions
 takes in a detection \code{data.frame}, creates a count \code{data.frame} and then transforms it
 into a 3-dimensional \code{array} that will be pased to the \code{Stan} model.
+
+Build the number of transmissions to be expected within a given time bin.
 
 To make a barrier for the model, we need to convert the boundary into
 pixels that we can use to for the model to recongize where to estimate
