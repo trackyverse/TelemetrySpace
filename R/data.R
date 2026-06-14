@@ -55,6 +55,45 @@
 #'
 "example_extent"
 
+#' Parry Sound `sf` object
+#'
+#' A `MULTIPOLYGON` `sf` object that is Parry Sound which is a large embayment on
+#' Georgian Bay, Lake Huron
+#'
+#' @format A `sf` object with a single geomety feature. Current coordinate reference system is
+#' WGS 84.
+#'
+"ps"
+
+#' Parry Sound - Receiver Locations `sf` object
+#'
+#' A `POINT` `sf` object that contains the location of 80 acoustic telemetry receivers deployed
+#' in Parry Sound which is a large embayment on Georgian Bay, Lake Huron
+#'
+#'
+#' @format A `sf` object with a 80 `POINT` geomety features Current coordinate reference system is
+#' WGS 84.
+#'
+"ps_rec_loc"
+
+#' Detection `data.frame` for a tagged Lake Trout
+#'
+#'
+#' A `data.frame` that contains detections data for a tagged Lake Trout in `
+#' Parry Sound which is a large embayment on Georgian Bay, Lake Huron
+#'
+#'
+#' @format A `data.frame` with 5 columns and 592 rows.
+#'  \describe{
+#'    \item{detection_timestamp_est}{The detection timestamp as `POSIXct` with a tz of EST}
+#'    \item{station_no}{The receiver station number}
+#'    \item{tag_serial_no}{The tag serial number}
+#'    \item{min_delay}{The minimum delay between transmissions in seconds}
+#'    \item{max_delay}{The maximum delay between transmissions in seconds}
+#' }
+#'
+"ps_det_example"
+
 #' Counts of detection per time steps
 #'
 #' Array of counts of detection per time step per receiver. Originally with
