@@ -35,6 +35,9 @@ build_aeqd <- function(array_sf) {
     clat,
     clon
   )
+  cli::cli_alert_success(
+    "Successfully created {.val {aeqd_crs}}"
+  )
   return(aeqd_crs)
 }
 
