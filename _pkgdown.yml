@@ -19,6 +19,7 @@ reference:
   - title: Helper functions
     contents:
       -  distf
+      -  build_functions
   - title: Datasets
     desc: These are the test datasets shipped with the package.
     contents:
@@ -30,6 +31,9 @@ reference:
       - testdat
       - testloc
       - model_param_ex
+      - ps
+      - ps_rec_loc
+      - ps_det_example
   - title: Misc
     contents:
       - TelemetrySpace-package
