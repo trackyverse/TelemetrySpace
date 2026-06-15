@@ -146,6 +146,7 @@ m <- COA_Standard(
   recY = rec_loc_vec$recY,
   xlim = rec_limits$xlim,
   ylim = rec_limits$ylim,
-  chains = 2
+  chains = 2, 
+  thin = 5
 )
 ```
