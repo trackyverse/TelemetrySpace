@@ -18,8 +18,8 @@ reference:
       - COA_TagInt
   - title: Helper functions
     contents:
-      -  distf
       -  build_functions
+      -  distf
   - title: Datasets
     desc: These are the test datasets shipped with the package.
     contents:

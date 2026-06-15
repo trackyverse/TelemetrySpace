@@ -7,7 +7,7 @@
 \format{
 A \code{data.frame} with 5 columns and 592 rows.
 \describe{
-\item{detection_timestamp_est}{The detection timestamp as \code{POSIXct} with a tz of EST}
+\item{detection_timestamp_utc}{The detection timestamp as \code{POSIXct} with a tz of UTC}
 \item{station_no}{The receiver station number}
 \item{tag_serial_no}{The tag serial number}
 \item{min_delay}{The minimum delay between transmissions in seconds}
