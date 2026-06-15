@@ -142,6 +142,13 @@ build_counts <- function(df, nrec, rec_id, rec_names = NULL) {
 #' @param df a `data.frame` that contains the following column names
 #' `tag_serial_no`, `rec`, `time`, `min_delay`, `max_delay`. The column `time` is an index of
 #' `time_bin`, while `rec` is an index of the `station_no`.
+#' @param type can either be `mean`, `min`, or `max`. This will change how the number of
+#' transmissions that are expected within a time bin are calculated. When set to `mean`, the
+#' function will calculate the mean time delay between the minimumm and maximum delay,
+#' while `min` and `max`, will use the
+#' minimumm or maximum delay value, respectively. This can be useful to adjust as sometime the number of
+#' detections within a time bin can exceed the number of transmissions expected wtihin the time bin which
+#' will cause the model to fail. Default is `mean`.
 #'
 #' @details
 #'
@@ -152,8 +159,12 @@ build_counts <- function(df, nrec, rec_id, rec_names = NULL) {
 #' @name build_functions
 #' @export
 
-build_ntrans <- function(df) {
-  check_data_frame(df)
+build_ntrans <- function(df, type = c("mean", "min", "max")) {
+  check_data_frame(df, "df")
+  check_column_names(df, "df")
+  check_column_type(df, "df")
+
+  type <- match.arg(type)
 
   bin_secs <- df |>
     dplyr::distinct(time_bin) |>
@@ -163,17 +174,37 @@ build_ntrans <- function(df) {
     ) |>
     tidyr::fill(bin_secs, .direction = "down")
 
+  bin_label <- bin_secs |>
+    dplyr::mutate(
+      bin_label = dplyr::case_when(
+        bin_secs %% 86400 == 0 ~ paste(bin_secs / 86400, "day(s)"),
+        bin_secs %% 3600 == 0 ~ paste(bin_secs / 3600, "hour(s)"),
+        bin_secs %% 60 == 0 ~ paste(bin_secs / 60, "minute(s)"),
+        TRUE ~ paste(bin_secs, "second(s)")
+      )
+    ) |>
+    dplyr::pull(bin_label) |>
+    unique()
+
+  delay_col <- switch(
+    type,
+    mean = "mean_delay",
+    min = "min_delay",
+    max = "max_delay"
+  )
+
   ntrans <- df |>
     dplyr::left_join(bin_secs, by = "time_bin") |>
     dplyr::mutate(
       mean_delay = (min_delay + max_delay) / 2,
-      ntrans = floor(bin_secs / mean_delay)
+      ntrans = floor(bin_secs / .data[[delay_col]])
     ) |>
     dplyr::pull(ntrans) |>
     unique()
 
   cli::cli_alert_success(
-    "Successfully built the number of transmission {.val {ntrans}} expectd in {.val {}}"
+    "Successfully built the number of transmission {.val {ntrans}} expectd in {.val {bin_label}} bins based off of 
+    {.val {paste(type, 'delay')}}."
   )
   return(ntrans)
 }
@@ -204,6 +235,7 @@ build_ntrans <- function(df) {
 build_pixel_grid <- function(bnd_sf, res) {
   check_sf_object(bnd_sf, "bnd_sf")
   check_aeqd(bnd_sf, "bnd_sf")
+  check_numerical(res, "res")
 
   # get boundary box of boundary
   bbox <- sf::st_bbox(bnd_sf)
@@ -279,11 +311,11 @@ build_rec_coords <- function(obj_sf) {
 #' @export
 
 build_rec_limits <- function(coord_df, buffer = NULL) {
+  check_data_frame(coord_df)
   if (is.null(buffer)) {
     buffer <- 1
   }
   check_numerical(buffer)
-  check_data_frame(coord_df)
 
   xlim <- c(min(coord_df$recX - buffer), max(coord_df$recX + buffer))
   ylim <- c(min(coord_df$recY - buffer), max(coord_df$recY + buffer))
@@ -312,6 +344,8 @@ build_rec_limits <- function(coord_df, buffer = NULL) {
 
 build_time_bin <- function(df, unit = NULL) {
   check_data_frame(df, "df")
+  check_column_names(df, "df")
+  check_column_type(df, "df")
 
   if (is.null(unit)) {
     unit <- "1 hour"

@@ -12,6 +12,7 @@
 \alias{check_list}
 \alias{check_numerical}
 \alias{check_num_vec_len}
+\alias{check_present}
 \alias{check_sf_object}
 \alias{check_stan_object}
 \alias{check_unit}
@@ -37,6 +38,8 @@ check_numerical(x, arg_name = NULL)
 
 check_num_vec_len(x, vec_length = NULL, arg_name = NULL)
 
+check_present(x, cols, fnct, label)
+
 check_sf_object(x, arg_name = NULL)
 
 check_stan_object(x, arg_name = NULL)
@@ -52,6 +55,12 @@ check_unit(x, arg_name = NULL)
 same length as \code{ntest} or the number of tags.}
 
 \item{vec_length}{is the length of the `vector`` to check.}
+
+\item{cols}{\code{vector} containing the the columns the check}
+
+\item{fnct}{name of function to use for example \code{is.numeric}}
+
+\item{label}{\code{character} labeling the check}
 }
 \description{
 Error functions

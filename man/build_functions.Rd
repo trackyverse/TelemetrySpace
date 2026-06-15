@@ -16,7 +16,7 @@ build_aeqd(array_sf)
 
 build_counts(df, nrec, rec_id, rec_names = NULL)
 
-build_ntrans(df)
+build_ntrans(df, type = c("mean", "min", "max"))
 
 build_pixel_grid(bnd_sf, res)
 
@@ -41,6 +41,14 @@ receivers in the telemetry array.}
 
 \item{rec_names}{an optional \code{vector} that contains the station names of the receivers. If not
 supplied it will default to using \code{rec_id}}
+
+\item{type}{can either be \code{mean}, \code{min}, or \code{max}. This will change how the number of
+transmissions that are expected within a time bin are calculated. When set to \code{mean}, the
+function will calculate the mean time delay between the minimumm and maximum delay,
+while \code{min} and \code{max}, will use the
+minimumm or maximum delay value, respectively. This can be useful to adjust as sometime the number of
+detections within a time bin can exceed the number of transmissions expected wtihin the time bin which
+will cause the model to fail. Default is \code{mean}.}
 
 \item{bnd_sf}{a \code{sf} object that is boundary that is desired to impose}
 

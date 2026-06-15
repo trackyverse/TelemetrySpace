@@ -94,20 +94,46 @@ check_column_names <- function(x, arg_name = NULL) {
     arg_name <- rlang::as_label(rlang::enexpr(x))
   }
   # right now this is the accepted names but we will changes this likely to ATO names
+  # required_any <- list(
+  #   timestamp = c("time", "detection_timestamp_utc"),
+  #   receiver = c("rec", "station_no"),
+  #   tag = c("tag_serial_no")
+  # )
 
-  accepted_names <- c(
-    "tag_serial_no",
-    "rec",
-    # "easting", "northing",
-    "time"
+  # time_bin
+
+  required_any <- list(
+    timestamp = c("time", "detection_timestamp_utc", "time_bin"),
+    receiver = c("rec", "station_no"),
+    tag = c("tag_serial_no", "min_delay", "max_delay")
   )
+  # accepted_names <- c(
+  #   "tag_serial_no",
+  #   "rec",
+  #   "time"
+  # )
 
-  if (!any(accepted_names %in% names(x))) {
-    missing_names <- setdiff(accepted_names, names(x))
+  missing_groups <- names(Filter(
+    \(aliases) !any(aliases %in% names(x)),
+    required_any
+  ))
+
+  if (length(missing_groups) > 0) {
+    missing_detail <- vapply(
+      missing_groups,
+      \(g) {
+        aliases <- required_any[[g]]
+        cli::format_inline(
+          "{.field {g}}: needs to be named 
+        one of the folowing: {.or {.val {aliases}}}"
+        )
+      },
+      character(1)
+    )
 
     cli::cli_abort(c(
-      "`{arg_name}` is missing: {missing_names}",
-      "i" = "Please provide {missing_names}"
+      "`{arg_name}` is missing required colummn",
+      "i" = setNames(missing_detail, rep("x", length(missing_detail)))
     ))
   }
 }
@@ -124,27 +150,43 @@ check_column_type <- function(x, arg_name = NULL) {
   }
   # right now this is the accepted names but we will changes this likely to ATO names
 
-  accepted_numeric <- c("rec", "time")
+  accepted_numeric <- c("rec", "time", "min_delay", "max_delay")
 
-  accepted_character <- c("tag_serial_no")
+  accepted_character <- c("tag_serial_no", "station_no")
 
-  bad_numeric <- accepted_numeric[
-    !vapply(x[accepted_numeric], is.numeric, logical(1))
-  ]
-  bad_character <- accepted_character[
-    !vapply(x[accepted_character], is.character, logical(1))
-  ]
+  datetime_cols <- c("detection_timestamp_utc")
 
+  bad_numeric <- check_present(x, accepted_numeric, is.numeric, "numeric")
+
+  bad_character <- check_present(
+    x,
+    accepted_character,
+    is.character,
+    "character"
+  )
+
+  bad_datetime <- check_present(
+    x,
+    datetime_cols,
+    \(col) inherits(col, "POSIXct"),
+    "POSIXct"
+  )
   if (length(bad_numeric) > 0) {
     cli::cli_abort(c(
       "`{arg_name}` contains columns with incorrect types.",
-      "x" = "Expected numeric columns: {toString(bad_numeric)}"
+      "x" = "Expected numeric: {.field {bad_numeric}}"
     ))
   }
   if (length(bad_character) > 0) {
     cli::cli_abort(c(
       "`{arg_name}` contains columns with incorrect types.",
-      "x" = "Expected character columns: {toString(bad_character)}"
+      "x" = "Expected character: {.field {bad_character}}"
+    ))
+  }
+  if (length(bad_datetime) > 0) {
+    cli::cli_abort(c(
+      "`{arg_name}` contains columns with incorrect types.",
+      "x" = "Expected POSIXct: {.field {bad_datetime}}"
     ))
   }
 }
@@ -187,8 +229,8 @@ check_list <- function(x, arg_name = NULL) {
 }
 
 
-#' @param x prior to check
-#'  @param arg_name the name of the argument to check.
+#' @param x object to check.
+#' @param arg_name the name of the argument to check.
 #'
 #' @name error_functions
 check_numerical <- function(x, arg_name = NULL) {
@@ -221,6 +263,19 @@ check_num_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
       "`{arg_name}` must be a numeric vector that has a length of {vec_length}."
     )
   }
+}
+
+#' @param x is a `data.frame` to pass to check.
+#' @param cols `vector` containing the the columns the check
+#' @param fnct name of function to use for example `is.numeric`
+#' @param label `character` labeling the check
+#'
+#' @keywords internal
+#' @name error_functions
+check_present <- function(x, cols, fnct, label) {
+  fnct <- match.fun(fnct)
+  present <- intersect(cols, names(x))
+  present[!vapply(x[present], fnct, logical(1))]
 }
 
 
