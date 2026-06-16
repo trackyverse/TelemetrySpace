@@ -1,27 +1,31 @@
 #' Error functions
 #'
-#' @param x is a `vector`` to pass to check.
+#' @param x is a `vector` to pass to check.
 #' @param arg_name the name of the argument to check.
 #'
 #' @keywords internal
 #' @name error_functions
-#'
-#'
 
 check_aeqd <- function(x, arg_name = NULL) {
   if (is.null(arg_name)) {
     arg_name <- rlang::as_label(rlang::enexpr(x))
   }
 
-  check_sf_object(x)
-
   x_crs <- sf::st_crs(x)
 
-  if (!grepl("\\+proj=aeqd", x_crs$input)) {
+  wkt <- x_crs$wkt
+
+  if (
+    is.null(wkt) ||
+      is.na(wkt) ||
+      !grepl("Azimuthal.Equidistant", wkt, ignore.case = TRUE)
+  ) {
     cli::cli_abort(
-      "x" = "`{arg_name}` must be in Azimuthal Equal Distance projection",
-      "i" = "Use {.code build_aeqd()} then {.code sf::st_transform()} to reproject into 
-       Azimuthal Equal Distance projection"
+      c(
+        "x" = "`{arg_name}` must be in Azimuthal Equal Distance projection",
+        "i" = "Use {.code build_aeqd()} then {.code sf::st_transform()} to reproject
+      into Azimuthal Equal Distance projection."
+      )
     )
   }
 }
@@ -63,7 +67,7 @@ check_array_tag <- function(x, len, arg_name = NULL) {
   }
 }
 
-check_aeqd <- function(x, arg_name = NULL) {}
+
 #' @param x is a `vector`` to pass to check.
 #' @param vec_length is the length of the `vector`` to check.
 #' @param arg_name the name of the argument to check.
@@ -124,7 +128,7 @@ check_column_names <- function(x, arg_name = NULL) {
       \(g) {
         aliases <- required_any[[g]]
         cli::format_inline(
-          "{.field {g}}: needs to be named 
+          "{.field {g}}: needs to be named
         one of the folowing: {.or {.val {aliases}}}"
         )
       },
@@ -408,7 +412,7 @@ check_utm <- function(x, arg_name = NULL) {
   if (!is_utm) {
     cli::cli_alert_warning(
       c(
-        "{.arg {arg_name}} is currently not in UTMs (EPSG:32601-32660 or EPSG:32701-32760), potentially 
+        "{.arg {arg_name}} is currently not in UTMs (EPSG:32601-32660 or EPSG:32701-32760), potentially
         making distance calculations inaccurate. Are you sure this is correct? ",
         "i" = "Current CRS: {.val {crs$input}} ",
         "i" = "To transform call {.code sf::st_transform({arg_name}, <utm_epsg>)}."

@@ -221,7 +221,7 @@ build_ntrans <- function(
     unique()
 
   cli::cli_alert_success(
-    "Successfully built the number of transmission {.val {ntrans}} expectd in {.val {bin_label}} bins based off of 
+    "Successfully built the number of transmission {.val {ntrans}} expectd in {.val {bin_label}} bins based off of
     {.val {paste(type, 'delay')}}."
   )
   return(ntrans)
@@ -297,7 +297,7 @@ build_pixel_grid <- function(bnd_sf, res) {
 
 build_rec_coords <- function(obj_sf) {
   check_sf_object(obj_sf)
-  check_aeqd(obj_sf)
+  check_aeqd(obj_sf, "obj_sf")
 
   recX <- sf::st_coordinates(obj_sf, geometry)[, "X"]
   recY <- sf::st_coordinates(obj_sf, geometry)[, "Y"]
