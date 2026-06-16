@@ -74,14 +74,14 @@ build_aeqd <- function(array_sf) {
 #' @export
 
 build_counts <- function(df, nrec, rec_id, rec_names = NULL) {
-  check_data_frame(df, arg_name = "df")
-  check_column_names(df, arg_name = "df")
-  check_column_type(df, arg_name = "df")
-  check_numerical(nrec, arg_name = "nrec")
-  check_num_vec_len(rec_id, vec_length = nrec, arg_name = rec_id)
+  check_data_frame(df)
+  check_column_names(df)
+  check_column_type(df)
+  check_numerical(nrec)
+  check_num_vec_len(rec_id, vec_length = nrec)
 
   if (!is.null(rec_names)) {
-    check_char_vec_len(rec_names, "rec_names", vec_length = nrec)
+    check_char_vec_len(rec_names, vec_length = nrec)
   }
 
   df_count <- df |>
@@ -251,9 +251,9 @@ build_ntrans <- function(
 #' @export
 
 build_pixel_grid <- function(bnd_sf, res) {
-  check_sf_object(bnd_sf, "bnd_sf")
-  check_aeqd(bnd_sf, "bnd_sf")
-  check_numerical(res, "res")
+  check_sf_object(bnd_sf)
+  check_aeqd(bnd_sf)
+  check_numerical(res)
 
   # get boundary box of boundary
   bbox <- sf::st_bbox(bnd_sf)
@@ -296,7 +296,7 @@ build_pixel_grid <- function(bnd_sf, res) {
 #' @export
 
 build_rec_coords <- function(obj_sf) {
-  check_sf_object(obj_sf, "obj_sf")
+  check_sf_object(obj_sf)
   check_aeqd(obj_sf)
 
   recX <- sf::st_coordinates(obj_sf, geometry)[, "X"]
@@ -361,9 +361,9 @@ build_rec_limits <- function(coord_df, buffer = NULL) {
 #' @export
 
 build_time_bin <- function(df, unit = NULL) {
-  check_data_frame(df, "df")
-  check_column_names(df, "df")
-  check_column_type(df, "df")
+  check_data_frame(df)
+  check_column_names(df)
+  check_column_type(df)
 
   if (is.null(unit)) {
     unit <- "1 hour"
@@ -392,7 +392,7 @@ build_time_bin <- function(df, unit = NULL) {
 #' @export
 
 build_tstep <- function(x) {
-  check_array(x, "x")
+  check_array(x)
   tstep <- dim(x)[2]
   cli::cli_alert_success(
     "Successfully built the number of time steps {.val {tstep}}"
