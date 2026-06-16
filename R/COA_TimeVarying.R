@@ -53,6 +53,7 @@ COA_TimeVarying <- function(
   exp_len <- expected_lengths(recX = recX, recY = recY)
 
   validate_standata(standata, exp_len)
+  options(mc.cores = parallel::detectCores())
 
   # fit model
   if (decay == "gaussian") {

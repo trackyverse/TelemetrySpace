@@ -4,7 +4,6 @@
     loadModule(m, what = TRUE)
   }
   rstan::rstan_options(auto_write = TRUE)
-  options(mc.cores = parallel::detectCores())
 }
 
 # ---- global variables ------
