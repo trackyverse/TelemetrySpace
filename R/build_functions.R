@@ -145,13 +145,16 @@ build_counts <- function(df, nrec, rec_id, rec_names = NULL) {
 #' @param df a `data.frame` that contains the following column names
 #' `tag_serial_no`, `rec`, `time`, `min_delay`, `max_delay`. The column `time` is an index of
 #' `time_bin`, while `rec` is an index of the `station_no`.
-#' @param type can either be `mean`, `min`, or `max`. This will change how the number of
-#' transmissions that are expected within a time bin are calculated. When set to `mean`, the
-#' function will calculate the mean time delay between the minimumm and maximum delay,
-#' while `min` and `max`, will use the
-#' minimumm or maximum delay value, respectively. This can be useful to adjust as sometime the number of
+#' @param type can either be `mean`, `min`, `max`, or `custom`. This will change how the number of
+#' transmissions that are expected within a time bin are calculated. When set to `mean` (the deafult), the
+#' function will calculate the mean time delay (s) between the minimumm and maximum delay (s),
+#' while `min` and `max`, will use the minimumm or maximum delay value, respectively. If
+#' specifying `custom` (see `custom_delay`), the user can enter the delay of their choosing.
+#' Adjusting the delays used can useful becaue the number of
 #' detections within a time bin can exceed the number of transmissions expected wtihin the time bin which
-#' will cause the model to fail. Default is `mean`.
+#' will cause the model to fail.
+#' @param custom_delay Only needed when `type` is set to `"custom"`. When supplied, this argument, which is
+#' a `numeric` will allow a custom value to be used for the tag delays.
 #'
 #' @details
 #'
@@ -162,12 +165,21 @@ build_counts <- function(df, nrec, rec_id, rec_names = NULL) {
 #' @name build_functions
 #' @export
 
-build_ntrans <- function(df, type = c("mean", "min", "max")) {
-  check_data_frame(df, "df")
-  check_column_names(df, "df")
-  check_column_type(df, "df")
+build_ntrans <- function(
+  df,
+  type = c("mean", "min", "max", "custom"),
+  custom_delay = NULL
+) {
+  check_data_frame(df)
+  check_column_names(df)
+  check_column_type(df)
+  if (!(is.null(custom_delay))) {
+    check_numerical(custom_delay)
+  }
 
   type <- match.arg(type)
+
+  check_delay(x = custom_delay, type = type, arg_name = "custom_delay")
 
   bin_secs <- df |>
     dplyr::distinct(time_bin) |>
@@ -193,13 +205,16 @@ build_ntrans <- function(df, type = c("mean", "min", "max")) {
     type,
     mean = "mean_delay",
     min = "min_delay",
-    max = "max_delay"
+    max = "max_delay",
+    custom = "custom_delay"
   )
+  # check_delay(custom_delay)
 
   ntrans <- df |>
     dplyr::left_join(bin_secs, by = "time_bin") |>
     dplyr::mutate(
       mean_delay = (min_delay + max_delay) / 2,
+      custom_delay = custom_delay,
       ntrans = floor(bin_secs / .data[[delay_col]])
     ) |>
     dplyr::pull(ntrans) |>

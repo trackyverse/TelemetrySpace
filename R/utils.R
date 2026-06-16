@@ -190,6 +190,23 @@ check_column_type <- function(x, arg_name = NULL) {
     ))
   }
 }
+#' @param x is a `data.frame` to pass to check.
+#' @param arg_name the name of the argument to check.
+#'
+#' @keywords internal
+#' @name error_functions
+#'
+check_delay <- function(x, type, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+
+  if (type == "custom" && is.null(x)) {
+    cli::cli_abort(
+      "{arg_name} must be provided when {.arg type} is {.val {type}}."
+    )
+  }
+}
 
 #' @param x is a `data.frame` to pass to check.
 #' @param arg_name the name of the argument to check.

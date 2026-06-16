@@ -16,7 +16,7 @@ build_aeqd(array_sf)
 
 build_counts(df, nrec, rec_id, rec_names = NULL)
 
-build_ntrans(df, type = c("mean", "min", "max"))
+build_ntrans(df, type = c("mean", "min", "max", "custom"), custom_delay = NULL)
 
 build_pixel_grid(bnd_sf, res)
 
@@ -42,13 +42,17 @@ receivers in the telemetry array.}
 \item{rec_names}{an optional \code{vector} that contains the station names of the receivers. If not
 supplied it will default to using \code{rec_id}}
 
-\item{type}{can either be \code{mean}, \code{min}, or \code{max}. This will change how the number of
-transmissions that are expected within a time bin are calculated. When set to \code{mean}, the
-function will calculate the mean time delay between the minimumm and maximum delay,
-while \code{min} and \code{max}, will use the
-minimumm or maximum delay value, respectively. This can be useful to adjust as sometime the number of
+\item{type}{can either be \code{mean}, \code{min}, \code{max}, or \code{custom}. This will change how the number of
+transmissions that are expected within a time bin are calculated. When set to \code{mean} (the deafult), the
+function will calculate the mean time delay (s) between the minimumm and maximum delay (s),
+while \code{min} and \code{max}, will use the minimumm or maximum delay value, respectively. If
+specifying \code{custom} (see \code{custom_delay}), the user can enter the delay of their choosing.
+Adjusting the delays used can useful becaue the number of
 detections within a time bin can exceed the number of transmissions expected wtihin the time bin which
-will cause the model to fail. Default is \code{mean}.}
+will cause the model to fail.}
+
+\item{custom_delay}{Only needed when \code{type} is set to \code{"custom"}. When supplied, this argument, which is
+a \code{numeric} will allow a custom value to be used for the tag delays.}
 
 \item{bnd_sf}{a \code{sf} object that is boundary that is desired to impose}
 
