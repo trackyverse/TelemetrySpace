@@ -16,6 +16,7 @@
 \alias{check_sf_object}
 \alias{check_stan_object}
 \alias{check_unit}
+\alias{check_utm}
 \title{Error functions}
 \usage{
 check_aeqd(x, arg_name = NULL)
@@ -45,6 +46,8 @@ check_sf_object(x, arg_name = NULL)
 check_stan_object(x, arg_name = NULL)
 
 check_unit(x, arg_name = NULL)
+
+check_utm(x, arg_name = NULL)
 }
 \arguments{
 \item{x}{is a \code{Stan} object}

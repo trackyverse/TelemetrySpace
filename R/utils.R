@@ -362,6 +362,46 @@ check_unit <- function(x, arg_name = NULL) {
   invisible(x)
 }
 
+#' @param x is a `Stan` object
+#' @param arg_name the name of the argument to check.
+#'
+#' @keywords internal
+#' @name error_functions
+
+check_utm <- function(x, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+  crs <- sf::st_crs(x)
+
+  if (is.na(crs)) {
+    cli::cli_abort(
+      "{.arg {arg_name}} has no CRS set. Please set CRS using {.fnct {sf::st_crs()}}.",
+      call = NULL
+    )
+  }
+
+  # UTM zones are EPSG:32601-32660 (N) and EPSG:32701-32760 (S)
+  crs_extract <- as.integer(gsub("^EPSG:", "", crs$input))
+
+  is_utm <- !is.na(crs_extract) &&
+    ((crs_extract >= 32601L && crs_extract <= 32660L) ||
+      (crs_extract >= 32701L && crs_extract <= 32760L))
+
+  if (!is_utm) {
+    cli::cli_alert_warning(
+      c(
+        "{.arg {arg_name}} is currently not in UTMs (EPSG:32601-32660 or EPSG:32701-32760), potentially 
+        making distance calculations inaccurate. Are you sure this is correct? ",
+        "i" = "Current CRS: {.val {crs$input}} ",
+        "i" = "To transform call {.code sf::st_transform({arg_name}, <utm_epsg>)}."
+      )
+    )
+  }
+
+  invisible(x)
+}
+
 #' Expected lengths of variables in `standata`
 #'
 #' @param recX is the receiver or station x coordinates (e.g, lon).

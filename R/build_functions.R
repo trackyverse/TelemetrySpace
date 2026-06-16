@@ -22,7 +22,8 @@
 #' @export
 
 build_aeqd <- function(array_sf) {
-  check_sf_object(array_sf, "array_sf")
+  check_sf_object(array_sf)
+  check_utm(array_sf)
   centre <- sf::st_centroid(sf::st_union(array_sf))
 
   array_crs <- sf::st_crs(array_sf)
@@ -30,6 +31,8 @@ build_aeqd <- function(array_sf) {
   if (!(array_crs$input %in% "EPSG:4326")) {
     center_dd <- centre |>
       sf::st_transform(4326)
+  } else {
+    center_dd <- centre
   }
 
   clon <- sf::st_coordinates(center_dd)[, "X"]
