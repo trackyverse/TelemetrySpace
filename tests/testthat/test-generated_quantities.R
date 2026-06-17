@@ -107,13 +107,13 @@ test_that("generated_quantities returns correct structure", {
         one_draw <- post_draws[[h]]
 
         expect_true(is.array(one_draw))
-        expect_true(any(dim(one_draw) %in% c(1, 10, 30)))
+        expect_true(any(dim(one_draw) %in% c(1, 2, 80)))
 
         dn <- dimnames(one_draw)
         expect_named(dn, c("tag", "rec", "time"))
         expect_equal(dn$tag, "1")
-        expect_equal(dn$rec, as.character(1:30))
-        expect_equal(dn$time, as.character(1:10))
+        expect_equal(dn$rec, as.character(1:80))
+        expect_equal(dn$time, as.character(1:2))
       }
     }
   }

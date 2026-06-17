@@ -1,43 +1,153 @@
-nsentinel <- 1
-# ----- standata 1 ------
+# ----- lets setup using new data -----
+# transform to utms
+
+ps_rec_loc
+
+ps_rec_loc <- ps_rec_loc |>
+  sf::st_as_sf(coords = c("deploy_long", "deploy_lat"), crs = 4326)
+
+ps_rec_loc_utm <- ps_rec_loc |>
+  sf::st_transform(32617)
+
+# ---- build aeqd ------
+aeqd_crs <- build_aeqd(ps_rec_loc_utm)
+# transform to aeqd
+ps_rec_loc_aeqd <- ps_rec_loc |>
+  sf::st_transform(aeqd_crs) |>
+  (\(.) .[order(.$station_no), ])()
+# ---- index the receivers -----
+
+ps_rec_loc_aeqd
+ps_rec_loc_aeqd$rec <- 1:nrow(ps_rec_loc_aeqd)
+
+# build receiver vectors
+rec_loc_vec <- build_rec_coords(ps_rec_loc_aeqd)
+
+# build receiver limits
+rec_limits <- build_rec_limits(rec_loc_vec)
+
+# ----- build time bins -----
+ps_det_example_clean <- ps_det_example
+ps_det_example <- build_time_bin(ps_det_example, unit = "1 hour")
+ps_det_example_t <- build_time_bin(ps_det_example, unit = "1 hour")
+ps_det_example
+ps_det_example <- ps_det_example[ps_det_example$time < 3, ]
+
+
+# ----- merge receiver index with detection info -----
+
+ps_det_example <- merge(
+  ps_det_example,
+  sf::st_drop_geometry(ps_rec_loc_aeqd),
+  by = "station_no"
+)
+# ----- build counts ------
+ps_count_example <- build_counts(
+  df = ps_det_example,
+  nrec = nrow(ps_rec_loc_aeqd),
+  rec_id = ps_rec_loc_aeqd$rec,
+  rec_names = ps_rec_loc_aeqd$station_no
+)
+# ----- build timesteps -------
+time_steps <- build_tstep(ps_count_example)
+
+# ----- build nind and ntrans -----
+nind <- length(unique(ps_det_example$tag_serial_no))
+
+ntrans <- build_ntrans(ps_det_example)
+
+# ------ create stand data to use to test the models ------
 standata <- list(
-  nind = model_param_ex$nind, # number of individuals
-  nrec = model_param_ex$nrec, # number of receivers
-  ntime = model_param_ex$tsteps, # number of time steps
-  ntrans = model_param_ex$ntrans, # number of expected transmissions per tag per time interval
-  y = Y, # array of detections
-  recX = rlocs$east, # E-W receiver coordinates
-  recY = rlocs$north, # N-S receiver coordinates
-  xlim = example_extent$xlim, # E-W boundary of spatial extent (receiver array + buffer)
-  ylim = example_extent$ylim
+  nind = nind,
+  nrec = nrow(ps_rec_loc_aeqd),
+  ntime = time_steps,
+  ntrans = ntrans,
+  y = ps_count_example,
+  recX = rec_loc_vec$recX,
+  recY = rec_loc_vec$recY,
+  xlim = rec_limits$xlim,
+  ylim = rec_limits$ylim
 )
+
+
+# --------------------- BUILD TEST TAG LOCS -------
+ps_test_tag_loc_sf <- ps_test_tag_loc |>
+  sf::st_as_sf(coords = c("deploy_long", "deploy_lat"), crs = 4326) |>
+  sf::st_transform(32617)
+
+
+ps_test_tag_loc_aeqd <- ps_test_tag_loc_sf |>
+  sf::st_transform(aeqd_crs)
+ps_test_tag_loc_aeqd
+
+test_tag_locs <- build_rec_coords(ps_test_tag_loc_aeqd)
+test_tag_locs
+# ----- build test data ----
+# ---- build time bins -----
+
+ps_det_test_tag <- build_time_bin(ps_det_test_tag, unit = "1 hour")
+
+# ----- add in rec from receiver ----
+ps_det_test_tag <- merge(
+  ps_det_test_tag,
+  sf::st_drop_geometry(ps_rec_loc_aeqd),
+  by = "station_no"
+) |>
+  (\(.) .[order(.$time_bin), ])()
+ps_det_test_tag
+
+
+# ----- only select the first 2 times ----
+ps_det_test_tag <- ps_det_test_tag[ps_det_test_tag$time < 3, ]
+str(ps_det_test_tag)
+
+ps_test_tag_count <- build_counts(
+  df = ps_det_test_tag,
+  nrec = nrow(ps_rec_loc_aeqd),
+  rec_id = ps_rec_loc_aeqd$rec,
+  rec_names = ps_rec_loc_aeqd$station_no
+)
+ps_test_tag_count
+
+
+# ---- nsent ----
+nsentinel <- length(unique(ps_det_test_tag$tag_serial_no))
+
+
 standata_testtag <- list(
-  nind = model_param_ex$nind, # number of individuals
-  nrec = model_param_ex$nrec, # number of receivers
-  ntime = model_param_ex$tsteps, # number of time steps
-  ntrans = model_param_ex$ntrans, # number of expected transmissions per tag per time interval
-  y = Y, # array of detections
-  recX = rlocs$east, # E-W receiver coordinates
-  recY = rlocs$north, # N-S receiver coordinates
-  xlim = example_extent$xlim, # E-W boundary of spatial extent (receiver array + buffer)
-  ylim = example_extent$ylim,
+  nind = nind,
+  nrec = nrow(ps_rec_loc_aeqd),
+  ntime = time_steps,
+  ntrans = ntrans,
+  y = ps_count_example,
+  recX = rec_loc_vec$recX,
+  recY = rec_loc_vec$recY,
+  xlim = rec_limits$xlim,
+  ylim = rec_limits$ylim,
   ntest = nsentinel,
-  test = testY,
-  testX = array(testloc$east, dim = c(nsentinel)),
-  testY = array(testloc$north, dim = c(nsentinel)) # N-S b
+  test = ps_test_tag_count,
+  testX = array(test_tag_locs$recX, dim = c(nsentinel)),
+  testY = array(test_tag_locs$recY, dim = c(nsentinel)) # N-S b
 )
+
+
+# ----- intiatal value functions
 
 init_fun <- function() {
   list(
     sx = matrix(
-      mean(rlocs$east),
-      nrow = model_param_ex$nind,
-      ncol = model_param_ex$tsteps
+      mean(rec_loc_vec$recX),
+      nrow = nind,
+      # ncol = 2
+      ncol = time_steps
     ),
     sy = matrix(
-      mean(rlocs$north),
-      nrow = model_param_ex$nind,
-      ncol = model_param_ex$tsteps
+      mean(rec_loc_vec$recY),
+      nrow = nind,
+      # nrow = model_param_ex$nind,
+      # ncol = 2
+      # ncol = 2
+      ncol = time_steps
     )
   )
 }
@@ -50,8 +160,8 @@ standard_gaussian <- do.call(
     standata,
     list(
       chains = 2,
-      warmup = 1500,
-      iter = 2000,
+      warmup = 100,
+      iter = 1000,
       control = list(adapt_delta = 0.95),
       seed = 4,
       ndraws = 11,
@@ -66,8 +176,8 @@ standard_logistic <- do.call(
     standata,
     list(
       chains = 2,
-      warmup = 2000,
-      iter = 2500,
+      warmup = 200,
+      iter = 1200,
       control = list(adapt_delta = 0.95),
       seed = 4,
       ndraws = 11,
@@ -83,8 +193,10 @@ time_vary_gaussian <- do.call(
     standata,
     list(
       chains = 2,
-      warmup = 3000,
-      iter = 7000,
+      warmup = 100,
+      iter = 700,
+      # warmup = 3000,
+      # iter = 7000,
       control = list(adapt_delta = 0.95),
       seed = 4,
       ndraws = 11,
@@ -99,8 +211,10 @@ time_vary_logistic <- do.call(
     standata,
     list(
       chains = 2,
-      warmup = 3000,
-      iter = 7000,
+      warmup = 100,
+      iter = 700,
+      # warmup = 3000,
+      # iter = 7000,
       control = list(adapt_delta = 0.95),
       seed = 4,
       ndraws = 11,
