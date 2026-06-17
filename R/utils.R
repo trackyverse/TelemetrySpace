@@ -137,7 +137,7 @@ check_column_names <- function(x, arg_name = NULL) {
 
     cli::cli_abort(c(
       "`{arg_name}` is missing required colummn",
-      "i" = setNames(missing_detail, rep("x", length(missing_detail)))
+      "i" = stats::setNames(missing_detail, rep("x", length(missing_detail)))
     ))
   }
 }
@@ -366,7 +366,7 @@ check_time <- function(x, arg_name = NULL) {
   time_na <- is.na(x$detection_timestamp_utc)
 
   if (any(time_na)) {
-    cli::cli_error(c(
+    cli::cli_abort(c(
       "`{arg_name}` contains {sum(time_na)} missing value{?s}.",
       "i" = "`detection_timestamp_utc` cannot have values of {.field NA}"
     ))

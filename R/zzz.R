@@ -10,10 +10,14 @@
 # add variables going forward in alphabetical order
 utils::globalVariables(
   c(
+    ".data",
     "alpha0",
     "alpha1",
+    "detection_timestamp_utc",
     "easting",
     "geometry",
+    "max_delay",
+    "min_delay",
     "nind",
     "northing",
     "nrec",
@@ -28,6 +32,7 @@ utils::globalVariables(
     "tag_serial_no",
     "testX",
     "testY",
-    "time"
+    "time",
+    "time_bin"
   )
 )
