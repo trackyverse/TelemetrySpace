@@ -16,6 +16,7 @@
 \alias{check_present}
 \alias{check_sf_object}
 \alias{check_stan_object}
+\alias{check_time}
 \alias{check_unit}
 \alias{check_utm}
 \title{Error functions}
@@ -47,6 +48,8 @@ check_present(x, cols, fnct, label)
 check_sf_object(x, arg_name = NULL)
 
 check_stan_object(x, arg_name = NULL)
+
+check_time(x, arg_name = NULL)
 
 check_unit(x, arg_name = NULL)
 

@@ -65,21 +65,25 @@
 #'
 "ps"
 
-#' Parry Sound - Receiver Locations `sf` object
+#' Parry Sound - Receiver Location
 #'
-#' A `POINT` `sf` object that contains the location of 80 acoustic telemetry receivers deployed
+#' A `data.frame` that contains the locations of 80 acoustic telemetry receivers deployed
 #' in Parry Sound which is a large embayment on Georgian Bay, Lake Huron
 #'
 #'
-#' @format A `sf` object with a 80 `POINT` geomety features Current coordinate reference system is
-#' WGS 84.
+#' A `data.frame` with 3 columns and 80 rows.
+#'  \describe{
+#'    \item{station_no}{The station number of the receiver}
+#'    \item{deploy_lat}{The latitude of the deployed receiver}
+#'    \item{deploy_long}{The longitude of the deployed receiver}
+#' }
 #'
 "ps_rec_loc"
 
 #' Detection `data.frame` for a tagged Lake Trout
 #'
 #'
-#' A `data.frame` that contains detections data for a tagged Lake Trout in `
+#' A `data.frame` that contains detections data for a tagged Lake Trout in
 #' Parry Sound which is a large embayment on Georgian Bay, Lake Huron
 #'
 #'
@@ -93,6 +97,41 @@
 #' }
 #'
 "ps_det_example"
+#' Detection `data.frame` for a test tag
+#'
+#'
+#' A `data.frame` that contains detections data for aan internal transmitter
+#' of a VR2AR deployed in Parry Sound which is a large embayment on Georgian Bay, Lake Huron
+#'
+#'
+#' @format A `data.frame` with 7 columns and 214 rows.
+#'  \describe{
+#'    \item{detection_timestamp_utc}{The detection timestamp as `POSIXct` with a tz of UTC}
+#'    \item{station_no}{The receiver station number the tag was detected on}
+#'    \item{tag_ins_serial_no}{The serial number of the VR2AR receiver}
+#'    \item{tag_id}{The tag id value from of the VR2AR receiver}
+#'    \item{tag_station_no}{The station number of the tag}
+#'    \item{min_delay}{The minimum delay between transmissions in seconds}
+#'    \item{max_delay}{The maximum delay between transmissions in seconds}
+#' }
+#'
+"ps_det_test_tag"
+
+#' Parry Sound - Test Tag Locations object
+#'
+#' A `data.frame` that contains the `tag_station_no` and the deployment latitude and longitude of
+#' the test tag deployed in Parry Sound which is a large embayment on Georgian Bay, Lake Huron
+#'
+#'
+#' A `data.frame` with 3 columns and 1 rows.
+#'  \describe{
+#'    \item{tag_station_no}{The station number of the tag}
+#'    \item{tag_deploy_lat}{The latitude of the deployed tag}
+#'    \item{tag_deploy_long}{The longitude of the deployed tag}
+#' }
+
+"ps_rec_loc"
+
 
 #' Counts of detection per time steps
 #'

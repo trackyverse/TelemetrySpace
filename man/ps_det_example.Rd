@@ -18,7 +18,7 @@ A \code{data.frame} with 5 columns and 592 rows.
 ps_det_example
 }
 \description{
-A \code{data.frame} that contains detections data for a tagged Lake Trout in `
+A \code{data.frame} that contains detections data for a tagged Lake Trout in
 Parry Sound which is a large embayment on Georgian Bay, Lake Huron
 }
 \keyword{datasets}
