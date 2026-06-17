@@ -31,9 +31,9 @@ A \code{data.frame} with 3 columns and 80 rows.
 
 A \code{data.frame} with 3 columns and 1 rows.
 \describe{
-\item{tag_station_no}{The station number of the tag}
-\item{tag_deploy_lat}{The latitude of the deployed tag}
-\item{tag_deploy_long}{The longitude of the deployed tag}
+\item{station_no}{The station number of the tag}
+\item{deploy_lat}{The latitude of the deployed tag}
+\item{deploy_long}{The longitude of the deployed tag}
 }
 }
 \keyword{datasets}

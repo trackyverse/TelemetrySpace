@@ -108,7 +108,7 @@
 #'  \describe{
 #'    \item{detection_timestamp_utc}{The detection timestamp as `POSIXct` with a tz of UTC}
 #'    \item{station_no}{The receiver station number the tag was detected on}
-#'    \item{tag_ins_serial_no}{The serial number of the VR2AR receiver}
+#'    \item{tag_serial_no}{The serial number of the VR2AR receiver}
 #'    \item{tag_id}{The tag id value from of the VR2AR receiver}
 #'    \item{tag_station_no}{The station number of the tag}
 #'    \item{min_delay}{The minimum delay between transmissions in seconds}
@@ -125,9 +125,9 @@
 #'
 #' A `data.frame` with 3 columns and 1 rows.
 #'  \describe{
-#'    \item{tag_station_no}{The station number of the tag}
-#'    \item{tag_deploy_lat}{The latitude of the deployed tag}
-#'    \item{tag_deploy_long}{The longitude of the deployed tag}
+#'    \item{station_no}{The station number of the tag}
+#'    \item{deploy_lat}{The latitude of the deployed tag}
+#'    \item{deploy_long}{The longitude of the deployed tag}
 #' }
 
 "ps_rec_loc"

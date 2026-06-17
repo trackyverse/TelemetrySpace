@@ -9,7 +9,7 @@ A \code{data.frame} with 7 columns and 214 rows.
 \describe{
 \item{detection_timestamp_utc}{The detection timestamp as \code{POSIXct} with a tz of UTC}
 \item{station_no}{The receiver station number the tag was detected on}
-\item{tag_ins_serial_no}{The serial number of the VR2AR receiver}
+\item{tag_serial_no}{The serial number of the VR2AR receiver}
 \item{tag_id}{The tag id value from of the VR2AR receiver}
 \item{tag_station_no}{The station number of the tag}
 \item{min_delay}{The minimum delay between transmissions in seconds}
