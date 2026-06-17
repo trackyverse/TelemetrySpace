@@ -12,6 +12,8 @@
 #' @param recY   Receiver coordinates in the north-south direction (should be projected and scaled for computational efficiency)
 #' @param xlim   East-west boundaries of spatial extent (receiver array + buffer)
 #' @param ylim   North-south boundaries of spatial extent (receiver array + buffer).
+#' @param cov_type The name of the covariate being supplied e.g., `delta_temp`, `depth`. Default is `NULL`.`
+#' @param cov_data The data to be supplied for the covariate
 #' @param decay  desired decay function. Currently one of "gaussian" or "logistic". Default is "gaussian".
 #' @param ndraws to be passed to `generated_quantities`. Changes the number of draws. Default is 10.
 #' @param ... Additional arguments passed to `sampling` from `rstan`.
@@ -34,6 +36,8 @@ COA_Standard <- function(
   recY,
   xlim,
   ylim,
+  cov_type = NULL,
+  cov_data = NULL,
   decay = "gaussian",
   ndraws = NULL,
   ...
@@ -48,7 +52,8 @@ COA_Standard <- function(
     recX = recX,
     recY = recY,
     xlim = xlim,
-    ylim = ylim
+    ylim = ylim,
+    cov_data = cov_data
   )
   # validate this list prior to sending it to the model
   exp_len <- expected_lengths(recX = recX, recY = recY)
