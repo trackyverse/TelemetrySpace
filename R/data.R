@@ -130,7 +130,7 @@
 #'    \item{deploy_long}{The longitude of the deployed tag}
 #' }
 
-"ps_rec_loc"
+"ps_test_tag_loc"
 
 
 #' Counts of detection per time steps

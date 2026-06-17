@@ -6,20 +6,13 @@
 \title{Parry Sound - Receiver Location}
 \format{
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 80 rows and 3 columns.
-
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 80 rows and 3 columns.
 }
 \usage{
-ps_rec_loc
-
 ps_rec_loc
 }
 \description{
 A \code{data.frame} that contains the locations of 80 acoustic telemetry receivers deployed
 in Parry Sound which is a large embayment on Georgian Bay, Lake Huron
-
-A \code{data.frame} that contains the \code{tag_station_no} and the deployment latitude and longitude of
-the test tag deployed in Parry Sound which is a large embayment on Georgian Bay, Lake Huron
 }
 \details{
 A \code{data.frame} with 3 columns and 80 rows.
@@ -27,13 +20,6 @@ A \code{data.frame} with 3 columns and 80 rows.
 \item{station_no}{The station number of the receiver}
 \item{deploy_lat}{The latitude of the deployed receiver}
 \item{deploy_long}{The longitude of the deployed receiver}
-}
-
-A \code{data.frame} with 3 columns and 1 rows.
-\describe{
-\item{station_no}{The station number of the tag}
-\item{deploy_lat}{The latitude of the deployed tag}
-\item{deploy_long}{The longitude of the deployed tag}
 }
 }
 \keyword{datasets}
