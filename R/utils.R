@@ -352,6 +352,27 @@ check_stan_object <- function(x, arg_name = NULL) {
   }
 }
 
+#' @param x is a `data.frame` to pass to check.
+#' @param arg_name the name of the argument to check.
+#' @keywords internal
+#' @name error_functions
+#'
+#'
+check_time <- function(x, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+
+  time_na <- is.na(x$detection_timestamp_utc)
+
+  if (any(time_na)) {
+    cli::cli_error(c(
+      "`{arg_name}` contains {sum(time_na)} missing value{?s}.",
+      "i" = "`detection_timestamp_utc` cannot have values of {.field NA}"
+    ))
+  }
+}
+
 #' @param x is a `Stan` object
 #' @param arg_name the name of the argument to check.
 #'

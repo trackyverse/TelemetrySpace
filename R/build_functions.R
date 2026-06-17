@@ -364,6 +364,7 @@ build_time_bin <- function(df, unit = NULL) {
   check_data_frame(df)
   check_column_names(df)
   check_column_type(df)
+  check_time(df)
 
   if (is.null(unit)) {
     unit <- "1 hour"
