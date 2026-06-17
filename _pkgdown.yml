@@ -34,6 +34,8 @@ reference:
       - ps
       - ps_rec_loc
       - ps_det_example
+      - ps_det_test_tag
+      - ps_test_tag_loc
   - title: Misc
     contents:
       - TelemetrySpace-package
