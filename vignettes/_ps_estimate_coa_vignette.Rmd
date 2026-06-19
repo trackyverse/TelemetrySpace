@@ -45,7 +45,7 @@ be in metre which we can transform these locations to a UTM crs that will be in 
 `st_as_sf()` from [{sf}](https://r-spatial.github.io/sf/). 
 ```{r recs inspect}
 # first look at the example
-ps_rec_loc
+head(ps_rec_loc)
 str(ps_rec_loc)
 
 # make it into a sf object
@@ -81,14 +81,14 @@ box/limits extend.
 ```{r build rec}
 rec_loc_vec <- build_rec_coords(ps_rec_loc_aeqd)
 
-rec_limits <- build_rec_limits(rec_loc_vec)
+rec_limits <- build_bbox(rec_loc_vec)
 ```
 
 ### Detection Data 
 
 Now that we have the receiver locations in a format that Stan can handle, we are going to prepare the detection data. First lets look at the detection data. 
 ```{r inspect det data}
-ps_det_example
+head(ps_det_example)
 str(ps_det_example)
 ```
 
@@ -100,7 +100,7 @@ Lets build our time bins
 
 ```{r build time bin}
 ps_det_example <- build_time_bin(ps_det_example, unit = "1 hour")
-ps_det_example
+head(ps_det_example)
 ```
 
 You will notice both a `POSIXct` column that is called `time_bin` and a numerical column called `time`. This `time` column is a numerical index of the time bins. 
@@ -112,7 +112,7 @@ ps_det_example <- merge(
   st_drop_geometry(ps_rec_loc_aeqd),
   by = "station_no"
 )
-ps_det_example
+head(ps_det_example)
 ```
 We are starting to get somewhere, you can see that we now have the time and recevier index values lined up. The last two things we need to do is first determine the numer of individuals - in this case it will be 1 and for right now we likely suggest running the model for each invidual with extended time periods being broken into chunks for example 1 years worth of data being broken down into 7 day chunks that are then model, the detection example transformed into the number of detections for invidiaul for each receiver for each time bin, and the number of transmissions this is where `min_delay` and `max_delay` come into play. 
 

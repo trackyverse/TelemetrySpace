@@ -2,6 +2,7 @@
 ^\.Rproj\.user$
 ^vignettes/precompile\.R$
 ^vignettes/_Estimate_COA_vignette\.Rmd$
+^vignettes/_ps_estimate_coa_vignette\.Rmd$
 ^LICENSE\.md$
 ^\.github$
 ^Dockerfile$

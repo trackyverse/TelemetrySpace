@@ -25,6 +25,10 @@ library(knitr)
 orig_wd <- getwd()
 setwd(file.path(orig_wd, "vignettes"))
 
-knit("_Estimate_COA_vignette.Rmd", "Estimate_COA_vignette.Rmd")
+knit(
+  "_Estimate_COA_vignette.Rmd",
+  "Estimate_COA_vignette.Rmd",
+  "_ps_estimate_coa_vignette.Rmd"
+)
 
 setwd(orig_wd)
