@@ -66,7 +66,6 @@ COA_TagInt <- function(
   exp_len <- expected_lengths(recX = recX, recY = recY, ntest_len = ntest)
 
   validate_standata(standata, exp_len)
-  options(mc.cores = parallel::detectCores())
   # fit model
   if (decay == "gaussian") {
     fit_model <- rstan::sampling(

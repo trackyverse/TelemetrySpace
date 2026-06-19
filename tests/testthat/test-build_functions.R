@@ -1,3 +1,60 @@
+# ----- lets setup using new data -----
+# transform to utms
+
+# ps_rec_loc <- ps_rec_loc |>
+#   sf::st_as_sf(coords = c("deploy_long", "deploy_lat"), crs = 4326)
+
+# ps_rec_loc_utm <- ps_rec_loc |>
+#   sf::st_transform(32617)
+
+# # ---- build aeqd ------
+# aeqd_crs <- build_aeqd(ps_rec_loc_utm)
+# # transform to aeqd
+# ps_rec_loc_aeqd <- ps_rec_loc |>
+#   sf::st_transform(aeqd_crs) |>
+#   (\(.) .[order(.$station_no), ])()
+# # ---- index the receivers -----
+
+# ps_rec_loc_aeqd
+# ps_rec_loc_aeqd$rec <- 1:nrow(ps_rec_loc_aeqd)
+
+# # build receiver vectors
+# rec_loc_vec <- build_rec_coords(ps_rec_loc_aeqd)
+
+# # build receiver limits
+# rec_limits <- build_bbox(rec_loc_vec)
+
+# # ----- build time bins -----
+# ps_det_example_clean <- ps_det_example
+# ps_det_example <- build_time_bin(ps_det_example, unit = "1 hour")
+# ps_det_example_t <- build_time_bin(ps_det_example, unit = "1 hour")
+
+# ps_det_example <- ps_det_example[ps_det_example$time < 3, ]
+
+# # ----- merge receiver index with detection info -----
+
+# ps_det_example <- merge(
+#   ps_det_example,
+#   sf::st_drop_geometry(ps_rec_loc_aeqd),
+#   by = "station_no"
+# )
+# unique(ps_det_example$station_no)
+
+# # ----- build counts ------
+# ps_count_example <- build_counts(
+#   df = ps_det_example,
+#   nrec = nrow(ps_rec_loc_aeqd),
+#   rec_id = ps_rec_loc_aeqd$rec,
+#   rec_names = ps_rec_loc_aeqd$station_no
+# )
+# # ----- build timesteps -------
+# time_steps <- build_tstep(ps_count_example)
+
+# # ----- build nind and ntrans -----
+# nind <- length(unique(ps_det_example$tag_serial_no))
+
+# ntrans <- build_ntrans(ps_det_example)
+
 # ------ test build aeqd ------
 test_that("build_aeqd returns a valid AEQD proj string from UTM input", {
   # ps_rec_loc is EPSG:4326; workflow transforms to UTM first
@@ -48,7 +105,6 @@ test_that("build_aeqd errors on non-sf input", {
 
 test_that("build_rec_coords returns correct coordinate data frame", {
   rec_loc_vec_f <- rec_loc_vec[1:2, ]
-  rec_loc_vec_f
 
   expect_s3_class(rec_loc_vec_f, "data.frame")
   expect_named(rec_loc_vec_f, c("recX", "recY"))
@@ -87,20 +143,20 @@ test_that("default buffer of 1 is applied correctly", {
 
 test_that("custom buffer is applied correctly", {
   df <- data.frame(recX = c(0, 10), recY = c(0, 20))
-  rec_limits_b <- build_rec_limits(rec_loc_vec, 2)
+  rec_limits_b <- build_bbox(rec_loc_vec, 2)
   expect_equal(rec_limits_b$xlim, c(-5.49618, 4.10701), tolerance = 0.0001)
   expect_equal(rec_limits_b$ylim, c(-4.28273, 5.18936), tolerance = 0.0001)
 })
 
 test_that("errors on non-data.frame input", {
-  expect_error(build_rec_limits(matrix(1:4, 2, 2)))
-  expect_error(build_rec_limits(list(recX = 1:3, recY = 1:3)))
+  expect_error(build_bbox(matrix(1:4, 2, 2)))
+  expect_error(build_bbox(list(recX = 1:3, recY = 1:3)))
 })
 
 test_that("errors on non-numeric buffer", {
   df <- data.frame(recX = 1:3, recY = 1:3)
-  expect_error(build_rec_limits(df, buffer = "large"))
-  expect_error(build_rec_limits(df, buffer = TRUE)) #
+  expect_error(build_bbox(df, buffer = "large"))
+  expect_error(build_bbox(df, buffer = TRUE)) #
 })
 
 # ------ build_time_bin -----

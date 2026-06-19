@@ -55,8 +55,6 @@ COA_Standard <- function(
 
   validate_standata(standata, exp_len)
 
-  options(mc.cores = parallel::detectCores())
-
   # fit model
   if (decay == "gaussian") {
     fit_model <- rstan::sampling(

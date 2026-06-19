@@ -1,19 +1,18 @@
 #' Error functions
 #'
-#' @param x is a `vector` to pass to check.
+#' @param x is a `vector`, `data.frame`, or `sf` object
+#' that needs to be checked.
 #' @param arg_name the name of the argument to check.
 #'
 #' @keywords internal
-#' @name error_functions
+#' @rdname error_functions
 
 check_aeqd <- function(x, arg_name = NULL) {
   if (is.null(arg_name)) {
     arg_name <- rlang::as_label(rlang::enexpr(x))
   }
 
-  x_crs <- sf::st_crs(x)
-
-  wkt <- x_crs$wkt
+  wkt <- sf::st_crs(x)$wkt
 
   if (
     is.null(wkt) ||
@@ -30,11 +29,9 @@ check_aeqd <- function(x, arg_name = NULL) {
   }
 }
 
-#' @param x is a `vector`` to pass to check.
-#' @param arg_name the name of the argument to check.
-#'
+
 #' @keywords internal
-#' @name error_functions
+#' @rdname error_functions
 
 check_array <- function(x, arg_name = NULL) {
   if (is.null(arg_name)) {
@@ -47,13 +44,8 @@ check_array <- function(x, arg_name = NULL) {
 }
 
 
-#' @param x is a `vector`` to pass to check.
-#' @param len is the length to make the array. This needs to be the
-#' same length as `ntest` or the number of tags.
-#' @param arg_name the name of the argument to check.
-#'
 #' @keywords internal
-#' @name error_functions
+#' @rdname error_functions
 #'
 check_array_tag <- function(x, len, arg_name = NULL) {
   if (is.null(arg_name)) {
@@ -67,13 +59,8 @@ check_array_tag <- function(x, len, arg_name = NULL) {
   }
 }
 
-
-#' @param x is a `vector`` to pass to check.
-#' @param vec_length is the length of the `vector`` to check.
-#' @param arg_name the name of the argument to check.
-#'
 #' @keywords internal
-#' @name error_functions
+#' @rdname error_functions
 #'
 check_char_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
   if (is.null(arg_name)) {
@@ -87,11 +74,8 @@ check_char_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
   }
 }
 
-#' @param x is a `data.frame` to pass to check.
-#' @param arg_name the name of the argument to check.
-#'
 #' @keywords internal
-#' @name error_functions
+#' @rdname error_functions
 #'
 check_column_names <- function(x, arg_name = NULL) {
   if (is.null(arg_name)) {
@@ -143,11 +127,10 @@ check_column_names <- function(x, arg_name = NULL) {
 }
 
 #' @param x is a `data.frame` to pass to check.
-#' @param arg_name the name of the argument to check.
-#'
+
 #' @keywords internal
-#' @name error_functions
-#'
+#' @rdname error_functions
+
 check_column_type <- function(x, arg_name = NULL) {
   if (is.null(arg_name)) {
     arg_name <- rlang::as_label(rlang::enexpr(x))
@@ -194,12 +177,10 @@ check_column_type <- function(x, arg_name = NULL) {
     ))
   }
 }
-#' @param x is a `data.frame` to pass to check.
-#' @param arg_name the name of the argument to check.
-#'
+
 #' @keywords internal
-#' @name error_functions
-#'
+#' @rdname error_functions
+
 check_delay <- function(x, type, arg_name = NULL) {
   if (is.null(arg_name)) {
     arg_name <- rlang::as_label(rlang::enexpr(x))
@@ -212,12 +193,9 @@ check_delay <- function(x, type, arg_name = NULL) {
   }
 }
 
-#' @param x is a `data.frame` to pass to check.
-#' @param arg_name the name of the argument to check.
-#'
 #' @keywords internal
-#' @name error_functions
-#'
+#' @rdname error_functions
+
 check_data_frame <- function(x, arg_name = NULL) {
   if (is.null(arg_name)) {
     arg_name <- rlang::as_label(rlang::enexpr(x))
@@ -230,12 +208,11 @@ check_data_frame <- function(x, arg_name = NULL) {
     ))
   }
 }
-#' @param x is a `list` to pass to check.
-#' @param arg_name the name of the argument to check.
-#'
+
+
 #' @keywords internal
-#' @name error_functions
-#'
+#' @rdname error_functions
+
 check_list <- function(x, arg_name = NULL) {
   if (is.null(arg_name)) {
     arg_name <- rlang::as_label(rlang::enexpr(x))
@@ -249,11 +226,8 @@ check_list <- function(x, arg_name = NULL) {
   }
 }
 
-
-#' @param x object to check.
-#' @param arg_name the name of the argument to check.
-#'
-#' @name error_functions
+#' @keywords internal
+#' @rdname error_functions
 check_numerical <- function(x, arg_name = NULL) {
   if (is.null(arg_name)) {
     arg_name <- rlang::as_label(rlang::enexpr(x))
@@ -266,13 +240,27 @@ check_numerical <- function(x, arg_name = NULL) {
     ))
   }
 }
-#' @param x is a `vector`` to pass to check.
-#' @param vec_length is the length of the `vector`` to check.
-#' @param arg_name the name of the argument to check.
-#'
-#'
 #' @keywords internal
-#' @name error_functions
+#' @rdname error_functions
+check_nrec <- function(x, y, arg_name_x = NULL, arg_name_y = NULL) {
+  if (is.null(arg_name_x)) {
+    arg_name_x <- rlang::as_label(rlang::enexpr(x))
+  }
+  if (is.null(arg_name_y)) {
+    arg_name_y <- rlang::as_label(rlang::enexpr(y))
+  }
+  x_l <- length(unique(x$rec))
+
+  if (!(y >= x_l)) {
+    cli::cli_abort(
+      "`{arg_name_y}` must be be equal to or greater than the number of receivers in {arg_name_x} "
+    )
+  }
+}
+
+
+#' @keywords internal
+#' @rdname error_functions
 
 check_num_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
   if (is.null(arg_name)) {
@@ -286,13 +274,10 @@ check_num_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
   }
 }
 
-#' @param x is a `data.frame` to pass to check.
-#' @param cols `vector` containing the the columns the check
-#' @param fnct name of function to use for example `is.numeric`
-#' @param label `character` labeling the check
-#'
+
 #' @keywords internal
-#' @name error_functions
+#' @rdname error_functions
+
 check_present <- function(x, cols, fnct, label) {
   fnct <- match.fun(fnct)
   present <- intersect(cols, names(x))
@@ -304,7 +289,7 @@ check_present <- function(x, cols, fnct, label) {
 #' @param arg_name the name of the argument to check.
 #'
 #' @keywords internal
-#' @name error_functions
+#' @rdname error_functions
 
 check_sf_object <- function(x, arg_name = NULL) {
   if (is.null(arg_name)) {
@@ -355,9 +340,8 @@ check_stan_object <- function(x, arg_name = NULL) {
 #' @param x is a `data.frame` to pass to check.
 #' @param arg_name the name of the argument to check.
 #' @keywords internal
-#' @name error_functions
-#'
-#'
+#' @rdname error_functions
+
 check_time <- function(x, arg_name = NULL) {
   if (is.null(arg_name)) {
     arg_name <- rlang::as_label(rlang::enexpr(x))
@@ -377,7 +361,7 @@ check_time <- function(x, arg_name = NULL) {
 #' @param arg_name the name of the argument to check.
 #'
 #' @keywords internal
-#' @name error_functions
+#' @rdname error_functions
 #'
 check_unit <- function(x, arg_name = NULL) {
   if (is.null(arg_name)) {
@@ -405,10 +389,10 @@ check_unit <- function(x, arg_name = NULL) {
 }
 
 #' @param x is a `Stan` object
-#' @param arg_name the name of the argument to check.
+
 #'
 #' @keywords internal
-#' @name error_functions
+#' @rdname error_functions
 
 check_utm <- function(x, arg_name = NULL) {
   if (is.null(arg_name)) {
