@@ -1,4 +1,5 @@
 # ----- lets setup using new data -----
+
 # transform to utms
 
 ps_rec_loc <- ps_rec_loc |>
@@ -13,9 +14,15 @@ aeqd_crs <- build_aeqd(ps_rec_loc_utm)
 ps_rec_loc_aeqd <- ps_rec_loc |>
   sf::st_transform(aeqd_crs) |>
   (\(.) .[order(.$station_no), ])()
+
+# ---- build pixel grid ----
+ps_utm <- ps |>
+  sf::st_transform(32617)
+
+
+ps_pixel_grid <- build_pixel_grid(ps_utm, res = 500, crs = aeqd_crs)
 # ---- index the receivers -----
 
-ps_rec_loc_aeqd
 ps_rec_loc_aeqd$rec <- 1:nrow(ps_rec_loc_aeqd)
 
 # build receiver vectors
@@ -132,24 +139,8 @@ standata_testtag <- list(
 # ----- intiatal value functions
 
 init_fun <- function() {
-  list(
-    sx = matrix(
-      mean(rec_loc_vec$recX),
-      nrow = nind,
-      # ncol = 2
-      ncol = time_steps
-    ),
-    sy = matrix(
-      mean(rec_loc_vec$recY),
-      nrow = nind,
-      # nrow = model_param_ex$nind,
-      # ncol = 2
-      # ncol = 2
-      ncol = time_steps
-    )
-  )
+  build_init(rec_loc_vec, nind = nind, tstep = time_steps)
 }
-
 # ----- run each model ------
 # ----- standard coa ------
 standard_gaussian <- do.call(
