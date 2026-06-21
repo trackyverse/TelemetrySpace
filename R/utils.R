@@ -196,6 +196,64 @@ check_column_type <- function(x, arg_name = NULL) {
   }
 }
 
+
+#' @keywords internal
+#' @rdname error_functions
+check_coord_names <- function(x, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+
+  required_any <- list(
+    coords_x = c("recX"),
+    coords_y = c("recY")
+  )
+
+  missing_groups <- names(Filter(
+    \(aliases) !any(aliases %in% names(x)),
+    required_any
+  ))
+
+  if (length(missing_groups) > 0) {
+    missing_detail <- vapply(
+      missing_groups,
+      \(g) {
+        aliases <- required_any[[g]]
+        cli::format_inline(
+          "{.field {g}}: needs to be named
+        one of the folowing: {.or {.val {aliases}}}"
+        )
+      },
+      character(1)
+    )
+
+    cli::cli_abort(c(
+      "`{arg_name}` is missing required colummn",
+      "i" = stats::setNames(missing_detail, rep("x", length(missing_detail)))
+    ))
+  }
+}
+#' @keywords internal
+#' @rdname error_functions
+check_coord_type <- function(x, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+  # right now this is the accepted names but we will changes this likely to ATO names
+
+  accepted_numeric <- c("recX", "recY")
+
+  bad_numeric <- check_present(x, accepted_numeric, is.numeric, "numeric")
+
+  if (length(bad_numeric) > 0) {
+    cli::cli_abort(c(
+      "`{arg_name}` contains columns with incorrect types.",
+      "x" = "Expected numeric: {.field {bad_numeric}}"
+    ))
+  }
+}
+
+
 #' @keywords internal
 #' @rdname error_functions
 

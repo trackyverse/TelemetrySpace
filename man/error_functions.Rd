@@ -8,6 +8,8 @@
 \alias{check_char_vec_len}
 \alias{check_column_names}
 \alias{check_column_type}
+\alias{check_coord_names}
+\alias{check_coord_type}
 \alias{check_delay}
 \alias{check_data_frame}
 \alias{check_list}
@@ -36,6 +38,10 @@ check_char_vec_len(x, vec_length = NULL, arg_name = NULL)
 check_column_names(x, arg_name = NULL)
 
 check_column_type(x, arg_name = NULL)
+
+check_coord_names(x, arg_name = NULL)
+
+check_coord_type(x, arg_name = NULL)
 
 check_delay(x, type, arg_name = NULL)
 

@@ -65,6 +65,9 @@ build_aeqd <- function(array_sf) {
 
 build_bbox <- function(coord_df, buffer = NULL) {
   check_data_frame(coord_df)
+  check_coord_names(coord_df)
+  check_coord_type(coord_df)
+
   if (is.null(buffer)) {
     buffer <- 1
   }
@@ -192,6 +195,8 @@ build_counts <- function(df, nrec, rec_id, rec_names = NULL) {
 
 build_init <- function(coord_df, nind, tstep) {
   check_data_frame(coord_df)
+  check_coord_names(coord_df)
+  check_coord_type(coord_df)
   check_numerical(nind)
   check_numerical(tstep)
 
