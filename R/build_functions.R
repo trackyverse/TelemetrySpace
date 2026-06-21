@@ -18,7 +18,7 @@
 #' @return `build_aeqd()`- retruns a `vector` containing the site specific projection string for
 #' the array to be able to transform the crs.
 #'
-#' @rdname build_functions
+#' @name build_functions
 #' @export
 
 build_aeqd <- function(array_sf) {
@@ -57,10 +57,10 @@ build_aeqd <- function(array_sf) {
 #' @details
 #' `build_bbox()`- builds the boundary box of receiver array needed by the model.
 #'
-#' @return `build_bbox()`- returns a `data.frame` containing two two columns named `xlim` and `ylim` which are the
+#' @return `build_bbox()`- returns a `data.frame` containing two columns named `xlim` and `ylim` which are the
 #' minimum and maximum values +/- a buffer for x and y.
 #'
-#' @rdname build_functions
+#' @name build_functions
 #' @export
 
 build_bbox <- function(coord_df, buffer = NULL) {
@@ -101,7 +101,7 @@ build_bbox <- function(coord_df, buffer = NULL) {
 #' @return `build_counts()` - returns a 3-dimensional `array` containing the number of detections for the following dimensions,
 #' the number of invividuals, by the number of time bins, by the number of receivers.
 #'
-#' @rdname build_functions
+#' @name build_functions
 #' @export
 
 build_counts <- function(df, nrec, rec_id, rec_names = NULL) {
@@ -173,6 +173,42 @@ build_counts <- function(df, nrec, rec_id, rec_names = NULL) {
 
   return(Y)
 }
+
+# ---- build intials ------
+#' @param coord_df a `data.frame` that contains two columns named `recX` and `recY`
+#' created by `build_rec_coords()`.
+#' @param nind a `numerical` value to the number of individuals.
+#' @param tstep a `numerical` value to the number of time steps.
+#'
+#' @details
+#' `build_init()`- builds the initial values to supply to the model. Supplying these values
+#' can helps the model know where to intially start.
+#'
+#' @return `build_init()`- returns a `list` containing  two matrices named `sx` and `sy`. Each
+#' matrix is the mean of either `recX` or `recY` produced by `build_rec_coords()` by the
+#' number of individuals by the number of timesteps.
+#' @name build_functions
+#' @export
+
+build_init <- function(coord_df, nind, tstep) {
+  check_data_frame(coord_df)
+  check_numerical(nind)
+  check_numerical(tstep)
+
+  out <- list(
+    sx = matrix(
+      mean(coord_df$recX),
+      nrow = nind,
+      ncol = tstep
+    ),
+    sy = matrix(
+      mean(coord_df$recY),
+      nrow = nind,
+      ncol = tstep
+    )
+  )
+  return(out)
+}
 # ---- build ntrans ------
 
 #' @param df a `data.frame` that contains the following column names
@@ -195,7 +231,7 @@ build_counts <- function(df, nrec, rec_id, rec_names = NULL) {
 #'
 #' @return `build_ntrans()` - retruns a single value vector.
 #'
-#' @rdname build_functions
+#' @name build_functions
 #' @export
 
 build_ntrans <- function(
@@ -265,33 +301,34 @@ build_ntrans <- function(
 
 #' @param bnd_sf a `sf` object that is boundary that is desired to impose
 #' @param res the resolution desired.
-#' @param crs the crs aeqd.
+#' @param crs the Azimuthal Equidistant projection desired. If the supplied
+#' projection string does not contain `"+proj=aeqd"`. The function will error.
 #'
 #' @details
-#' `build_pixel_grid()` - builds a barrier for the model,
-#' we need to convert the boundary into pixels that can be used to recongize where to estimate
-#' detection probablity. The boundary that is supplied needs to match the crs of the receivers.
-#' An azimuth eqaul distance projection is used with this
-#' projection being in kilometer (km). To build this
-#' project see `build_aeqd()` function. When supplying the desired resolution
-#' remember that this is in km so a value of `1` would be quite large while a value
-#' of `0.1` is 100 m which makes a much more dense grid.
+#' `build_pixel_grid()` - builds barrier grid for the model.
+#' We need to convert the boundary into pixels that can be used to recongize where to estimate
+#' detection probablity. The boundary that is supplied needs to be in UTMs, with the returned
+#' values being in Azimuthal Equidistant projection. To build this projection see `build_aeqd()`.
+#' When supplying the desired resolution remember that this is in m so
+#' a value of `1` would be quite small while of `1000` is 1 km which makes a less dense grid.
 #'
 #'
-#' @return build_pixel_grid() - returns a `list` contain the the number of pixels `n_pixel`, the pixel x coordinates
+#' @return `build_pixel_grid()` - returns a `list` contain the the number of pixels `n_pixel`, the pixel x coordinates
 #' (`pix_x`) and the pixel y coordinates (`pix_y`).
 #'
-#' @rdname build_functions
+#' @name build_functions
 #' @export
 
 build_pixel_grid <- function(bnd_sf, res, crs) {
   check_sf_object(bnd_sf)
   check_utm(bnd_sf)
+  check_aeqd_string(crs)
   check_numerical(res)
 
   coords <- bnd_sf |>
     sf::st_bbox() |>
     sf::st_make_grid(cellsize = res, what = "centers") |>
+    sf::st_as_sf() |>
     sf::st_filter(bnd_sf) |>
     sf::st_transform(crs) |>
     sf::st_coordinates()
@@ -316,7 +353,7 @@ build_pixel_grid <- function(bnd_sf, res, crs) {
 #' @return `build_rec_coords()` - a `data.frame` containing two `columns` named `recX` and `recY` which are the
 #' receiver locations transformed into Azimuthal Equidistant projection.
 #'
-#' @rdname build_functions
+#' @name build_functions
 #' @export
 
 build_rec_coords <- function(obj_sf) {
@@ -346,7 +383,7 @@ build_rec_coords <- function(obj_sf) {
 #' @return `build_time_bin()`- returns a `data.frame` that has had the columns `time_bin` and `time`added. `time` is an
 #' index value of `time_bin` and is needed by the model. This will further be used by `build_counts()`.
 #'
-#' @rdname build_functions
+#' @name build_functions
 #' @export
 
 build_time_bin <- function(df, unit = "1 hour") {
@@ -374,7 +411,7 @@ build_time_bin <- function(df, unit = "1 hour") {
 #' supplied 3-dimensional count array.
 #' @return `build_tstep()` - a numerical value that is the number of timesteps.
 #'
-#' @rdname build_functions
+#' @name build_functions
 #' @export
 
 build_tstep <- function(x) {

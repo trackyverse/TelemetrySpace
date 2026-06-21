@@ -17,6 +17,8 @@ build_bbox(coord_df, buffer = NULL)
 
 build_counts(df, nrec, rec_id, rec_names = NULL)
 
+build_init(coord_df, nind, tstep)
+
 build_ntrans(df, type = c("mean", "min", "max", "custom"), custom_delay = NULL)
 
 build_pixel_grid(bnd_sf, res, crs)
@@ -46,6 +48,10 @@ receivers in the telemetry array.}
 
 \item{rec_names}{an optional \code{vector} that contains the station names of the receivers. If not
 supplied it will default to using \code{rec_id}}
+
+\item{nind}{a \code{numerical} value to the number of individuals.}
+
+\item{tstep}{a \code{numerical} value to the number of time steps.}
 
 \item{type}{can either be \code{mean}, \code{min}, \code{max}, or \code{custom}. This will change how the number of
 transmissions that are expected within a time bin are calculated. When set to \code{mean} (the deafult), the
@@ -83,6 +89,10 @@ minimum and maximum values +/- a buffer for x and y.
 \code{build_counts()} - returns a 3-dimensional \code{array} containing the number of detections for the following dimensions,
 the number of invividuals, by the number of time bins, by the number of receivers.
 
+\code{build_init()}- returns a \code{list} containing  two matrices named \code{sx} and \code{sy}. Each
+matrix is the mean of either \code{recX} or \code{recY} produced by \code{build_rec_coords()} by the
+number of individuals by the number of timesteps.
+
 \code{build_ntrans()} - retruns a single value vector.
 
 build_pixel_grid() - returns a \code{list} contain the the number of pixels \code{n_pixel}, the pixel x coordinates
@@ -114,6 +124,9 @@ needed to transform an exisiting crs to Azimuthal Equidistant projection.
 counts at each recevier for each time bin for each individual structure in 3-dimensional \code{array}.
 This functions takes in a detection \code{data.frame}, creates a count \code{data.frame} and then transforms it
 into a 3-dimensional \code{array} that will be pased to the \code{Stan} model.
+
+\code{build_init()}- builds the initial values to supply to the model. Supplying these values
+can helps the model know where to intially start.
 
 \code{build_ntrans()} - builds the nubmer of transmissions to be expected within a given time bin.
 
