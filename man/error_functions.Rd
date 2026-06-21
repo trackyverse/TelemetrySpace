@@ -2,6 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{check_aeqd}
 \alias{check_aeqd}
+\alias{check_aeqd_string}
 \alias{check_array}
 \alias{check_array_tag}
 \alias{check_char_vec_len}
@@ -23,6 +24,8 @@
 \title{Error functions}
 \usage{
 check_aeqd(x, arg_name = NULL)
+
+check_aeqd_string(x, arg_name = NULL)
 
 check_array(x, arg_name = NULL)
 

@@ -29,6 +29,24 @@ check_aeqd <- function(x, arg_name = NULL) {
   }
 }
 
+#' @keywords internal
+#' @rdname error_functions
+
+check_aeqd_string <- function(x, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(x))
+  }
+
+  if (!(grepl("+proj=aeqd", x))) {
+    cli::cli_abort(
+      c(
+        "x" = "`{arg_name}` must be in Azimuthal Equal Distance projection",
+        "i" = "Use {.code build_aeqd()} then supply {`arg_name`} with the 
+        Azimuthal Equal Distance projection string"
+      )
+    )
+  }
+}
 
 #' @keywords internal
 #' @rdname error_functions
