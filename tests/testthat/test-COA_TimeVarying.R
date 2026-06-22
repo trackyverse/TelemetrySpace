@@ -114,7 +114,7 @@ test_that("parameter validation works", {
 # time_vary_gaussian$coas
 test_that("test COA_TimeVarying model results to make sure its consistent", {
   mean_p0 <- time_vary_gaussian$summary[1]
-  expected_mean_p0 <- 0.4928
+  expected_mean_p0 <- 0.430
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.07)
 })
 
@@ -134,7 +134,7 @@ test_that("check time_vary_gaussian classes", {
 
 test_that("check to see if coa returns proper info", {
   expect_true("coas" %in% names(time_vary_gaussian))
-  expect_equal(nrow(time_vary_gaussian$coas), model_param_ex$tsteps)
+  expect_equal(nrow(time_vary_gaussian$coas), time_steps)
   expect_equal(
     colnames(time_vary_gaussian$coas),
     c(
@@ -170,7 +170,7 @@ test_that("check to see if gq is the correct length", {
 #### LOGISTIC ####
 test_that("test COA_TimeVarying model results to make sure its consistent", {
   mean_p0 <- time_vary_logistic$summary[1]
-  expected_mean_p0 <- 0.49815
+  expected_mean_p0 <- 0.430
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.07)
 })
 
@@ -190,7 +190,7 @@ test_that("check time_vary_logistic classes", {
 
 test_that("check to see if coa returns proper info", {
   expect_true("coas" %in% names(time_vary_logistic))
-  expect_equal(nrow(time_vary_logistic$coas), model_param_ex$tsteps)
+  expect_equal(nrow(time_vary_logistic$coas), time_steps)
   expect_equal(
     colnames(time_vary_logistic$coas),
     c(

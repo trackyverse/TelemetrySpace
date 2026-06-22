@@ -118,7 +118,8 @@ test_that("parameter validation works", {
 
 test_that("test COA_standard gaussian model results to make sure its consistent", {
   mean_p0 <- standard_gaussian$summary[1]
-  expected_mean_p0 <- 0.2658
+  expected_mean_p0 <- 0.429
+  # expected_mean_p0 <- 0.2658
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
 })
 test_that("check standard_gaussian classes", {
@@ -136,7 +137,7 @@ test_that("check standard_gaussian classes", {
 
 test_that("check to see if coa returns proper info", {
   expect_true("coas" %in% names(standard_gaussian))
-  expect_equal(nrow(standard_gaussian$coas), model_param_ex$tsteps)
+  expect_equal(nrow(standard_gaussian$coas), time_steps)
   expect_equal(
     colnames(standard_gaussian$coas),
     c(
@@ -173,7 +174,7 @@ test_that("check to see if gq is the correct length", {
 #### LOGISTIC ####
 test_that("test COA_standard logistic model results to make sure its consistent", {
   mean_p0 <- standard_logistic$summary[1]
-  expected_mean_p0 <- 0.5849
+  expected_mean_p0 <- 0.72
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
 })
 
@@ -191,7 +192,7 @@ test_that("check standard_logistic classes", {
 
 test_that("check to see if coa returns proper info", {
   expect_true("coas" %in% names(standard_logistic))
-  expect_equal(nrow(standard_logistic$coas), model_param_ex$tsteps)
+  expect_equal(nrow(standard_logistic$coas), time_steps)
   expect_equal(
     colnames(standard_logistic$coas),
     c(

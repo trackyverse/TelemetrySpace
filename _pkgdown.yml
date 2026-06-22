@@ -18,6 +18,7 @@ reference:
       - COA_TagInt
   - title: Helper functions
     contents:
+      -  build_functions
       -  distf
   - title: Datasets
     desc: These are the test datasets shipped with the package.
@@ -30,6 +31,11 @@ reference:
       - testdat
       - testloc
       - model_param_ex
+      - ps
+      - ps_rec_loc
+      - ps_det_example
+      - ps_det_test_tag
+      - ps_test_tag_loc
   - title: Misc
     contents:
       - TelemetrySpace-package

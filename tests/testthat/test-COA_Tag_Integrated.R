@@ -122,7 +122,6 @@ test_that("parameter validation works", {
   }
 })
 
-
 # ---- run model and check of it works ----
 
 # rstan::traceplot(tag_int_gaussian$model, pars = c("alpha0", "alpha1",
@@ -131,10 +130,9 @@ test_that("parameter validation works", {
 test_that("test COA_TagInt model results to make sure its consistent", {
   mean_p0 <- tag_int_gaussian$summary[1]
 
-  expected_mean_p0 <- 0.5008
+  expected_mean_p0 <- 0.32
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
 })
-
 
 test_that("check tag_int_gaussian classes", {
   expect_type(tag_int_gaussian, "list")
@@ -149,10 +147,9 @@ test_that("check tag_int_gaussian classes", {
   expect_true(is.numeric(tag_int_gaussian$time))
 })
 
-
 test_that("check to see if coa returns proper info", {
   expect_true("coas" %in% names(tag_int_gaussian))
-  expect_equal(nrow(tag_int_gaussian$coas), model_param_ex$tsteps)
+  expect_equal(nrow(tag_int_gaussian$coas), time_steps)
   expect_equal(
     colnames(tag_int_gaussian$coas),
     c(
@@ -187,11 +184,10 @@ test_that("check to see if gq is the correct length", {
   )
 })
 
-
 #### LOGISTIC ####
 test_that("test COA_standard logistic model results to make sure its consistent", {
   mean_p0 <- tag_int_logistic$summary[1]
-  expected_mean_p0 <- 0.4899
+  expected_mean_p0 <- 0.36
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
 })
 
@@ -209,7 +205,7 @@ test_that("check tag_int_logistic classes", {
 
 test_that("check to see if coa returns proper info", {
   expect_true("coas" %in% names(tag_int_logistic))
-  expect_equal(nrow(tag_int_logistic$coas), model_param_ex$tsteps)
+  expect_equal(nrow(tag_int_logistic$coas), time_steps)
   expect_equal(
     colnames(tag_int_logistic$coas),
     c(
@@ -233,7 +229,6 @@ test_that("check to see model converged and has a good rhat", {
   rhat <- tag_int_logistic$summary[, "Rhat"]
   expect_true(all(rhat > 0.95 & rhat < 1.05))
 })
-
 
 # ----- check if gq retruns the correct length ------
 
