@@ -52,8 +52,6 @@ poke around in the package yourself.
     #>   vector[nrec] recY;              // receiver locations in north-south direction
     #>   vector[2] xlim;                    // area bounds east-west
     #>   vector[2] ylim;                    // area boundes north-south
-    #> 
-    #> 
     #> }
     #> transformed data {
     #>   int logistic = 0; // Tells include file to use squared distance
@@ -112,8 +110,6 @@ poke around in the package yourself.
     #>   vector[nrec] recY;              // receiver locations in north-south direction
     #>   vector[2] xlim;                    // area bounds east-west
     #>   vector[2] ylim;                    // area boundes north-south
-    #> 
-    #> 
     #> }
     #> transformed data {
     #>   int logistic = 1; // Tells include file to use linear distance (sqrt)
@@ -168,8 +164,6 @@ poke around in the package yourself.
     #>   vector[nrec] recY;              // receiver locations in north-south direction
     #>   vector[2] xlim;                    // area bounds east-west
     #>   vector[2] ylim;                    // area boundes north-south
-    #> 
-    #> 
     #> }
     #> transformed data {
     #>   int logistic = 0;
@@ -223,8 +217,6 @@ poke around in the package yourself.
     #>   vector[nrec] recY;              // receiver locations in north-south direction
     #>   vector[2] xlim;                    // area bounds east-west
     #>   vector[2] ylim;                    // area boundes north-south
-    #> 
-    #> 
     #> }
     #> transformed data {
     #>   int logistic = 1;
@@ -279,8 +271,6 @@ poke around in the package yourself.
     #>   vector[nrec] recY;              // receiver locations in north-south direction
     #>   vector[2] xlim;                    // area bounds east-west
     #>   vector[2] ylim;                    // area boundes north-south
-    #> 
-    #> 
     #>   int<lower = 0> ntest;              // number of test tags
     #>   // number of detections from each test tag at each receiver in each time step
     #>   array[ntest, ntime, nrec] int<lower = 0> test;
@@ -353,8 +343,6 @@ poke around in the package yourself.
     #>   vector[nrec] recY;              // receiver locations in north-south direction
     #>   vector[2] xlim;                    // area bounds east-west
     #>   vector[2] ylim;                    // area boundes north-south
-    #> 
-    #> 
     #>   int<lower = 0> ntest;              // number of test tags
     #>   // number of detections from each test tag at each receiver in each time step
     #>   array[ntest, ntime, nrec] int<lower = 0> test;

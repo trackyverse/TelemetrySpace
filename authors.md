@@ -17,12 +17,12 @@ Source:
 
 Winton M, O'Brien M, Hlina B (2026). *TelemetrySpace: Spatial point
 process and random field models for electronic tagging data*. R package
-version 1.3.1, <https://telemetryspace.trackyverse.org>.
+version 1.3.2, <https://telemetryspace.trackyverse.org>.
 
     @Manual{,
       title = {TelemetrySpace: Spatial point process and random field models for electronic tagging data},
       author = {Megan Winton and Michael O'Brien and Benjamin L. Hlina},
       year = {2026},
-      note = {R package version 1.3.1},
+      note = {R package version 1.3.2},
       url = {https://telemetryspace.trackyverse.org},
     }

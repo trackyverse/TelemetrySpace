@@ -2,6 +2,15 @@
 
 ## TelemetrySpace 1.3
 
+### 1.3.2
+
+- `build_*()` functions have been added which streamlines the data
+  processing prior to the models
+  ([PR](https://github.com/trackyverse/TelemetrySpace/pull/16)
+  [\#16](https://github.com/trackyverse/TelemetrySpace/issues/16)). Unit
+  tests have been written for these functions and a small vignette which
+  will need to be further development has been initially made.
+
 ### 1.3.1
 
 - Code refactor
