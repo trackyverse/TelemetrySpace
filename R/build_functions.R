@@ -65,8 +65,8 @@ build_aeqd <- function(array_sf) {
 
 build_bbox <- function(coord_df, buffer = NULL) {
   check_data_frame(coord_df)
-  check_coord_names(coord_df)
-  check_coord_type(coord_df)
+  check_column_names(coord_df, coords = TRUE)
+  check_column_type(coord_df, coords = TRUE)
 
   if (is.null(buffer)) {
     buffer <- 1
@@ -195,8 +195,8 @@ build_counts <- function(df, nrec, rec_id, rec_names = NULL) {
 
 build_init <- function(coord_df, nind, tstep) {
   check_data_frame(coord_df)
-  check_coord_names(coord_df)
-  check_coord_type(coord_df)
+  check_column_names(coord_df, coords = TRUE)
+  check_column_type(coord_df, coords = TRUE)
   check_numerical(nind)
   check_numerical(tstep)
 
@@ -253,7 +253,7 @@ build_ntrans <- function(
 
   type <- match.arg(type)
 
-  check_delay(x = custom_delay, type = type, arg_name = "custom_delay")
+  check_delay(vec = custom_delay, type = type, arg_name = "custom_delay")
 
   bin_secs <- df |>
     dplyr::distinct(time_bin) |>
