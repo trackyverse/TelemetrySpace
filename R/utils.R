@@ -1,18 +1,17 @@
 #' Error functions
 #'
-#' @param x is a `vector`, `data.frame`, or `sf` object
-#' that needs to be checked.
+#' @param sf is a `sf` object that needs to be checked.
 #' @param arg_name the name of the argument to check.
 #'
 #' @keywords internal
 #' @rdname error_functions
 
-check_aeqd <- function(x, arg_name = NULL) {
+check_aeqd <- function(sf, arg_name = NULL) {
   if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
+    arg_name <- rlang::as_label(rlang::enexpr(sf))
   }
 
-  wkt <- sf::st_crs(x)$wkt
+  wkt <- sf::st_crs(sf)$wkt
 
   if (
     is.null(wkt) ||
@@ -29,15 +28,16 @@ check_aeqd <- function(x, arg_name = NULL) {
   }
 }
 
+#' @param vec is a `vector` that needs to be checked.
 #' @keywords internal
 #' @rdname error_functions
 
-check_aeqd_string <- function(x, arg_name = NULL) {
+check_aeqd_string <- function(vec, arg_name = NULL) {
   if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
+    arg_name <- rlang::as_label(rlang::enexpr(vec))
   }
 
-  if (!(grepl("+proj=aeqd", x))) {
+  if (!(grepl("+proj=aeqd", vec))) {
     cli::cli_abort(
       c(
         "x" = "`{arg_name}` must be in Azimuthal Equal Distance projection",
@@ -48,79 +48,80 @@ check_aeqd_string <- function(x, arg_name = NULL) {
   }
 }
 
+#' @param array is a `array` that needs to be checked.
 #' @keywords internal
 #' @rdname error_functions
 
-check_array <- function(x, arg_name = NULL) {
+check_array <- function(array, arg_name = NULL) {
   if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
+    arg_name <- rlang::as_label(rlang::enexpr(array))
   }
 
-  if (!is.array(x) || !is.numeric(x) || length(dim(x)) != 3) {
+  if (!is.array(array) || !is.numeric(array) || length(dim(array)) != 3) {
     cli::cli_abort("`{arg_name}` must be a 3-dimensional numeric array.")
   }
 }
 
 
+#' @param len is the length to make the array. This needs to be the
+#' same length as `ntest` or the number of tags.
 #' @keywords internal
 #' @rdname error_functions
 #'
-check_array_tag <- function(x, len, arg_name = NULL) {
+check_array_tag <- function(array, len, arg_name = NULL) {
   if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
+    arg_name <- rlang::as_label(rlang::enexpr(array))
   }
 
-  if (!is.array(x) || !is.numeric(x) || length(x) != len) {
+  if (!is.array(array) || !is.numeric(array) || length(array) != len) {
     cli::cli_abort(
-      "`{arg_name}` must be a numeric array with length equal to {.val {len}} (the number of test tags)."
+      "`{arg_name}` must be a numeric array with length equal to 
+      {.val {len}} (the number of test tags)."
     )
   }
 }
 
+#' @param vec_length is the length of the vector to check.
 #' @keywords internal
 #' @rdname error_functions
 #'
-check_char_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
+check_char_vec_len <- function(vec, vec_length = NULL, arg_name = NULL) {
   if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
+    arg_name <- rlang::as_label(rlang::enexpr(vec))
   }
 
-  if (!is.character(x) || !is.vector(x) || length(x) != vec_length) {
+  if (!is.character(vec) || !is.vector(vec) || length(vec) != vec_length) {
     cli::cli_abort(
       "`{arg_name}` must be a charcter vector that has a length of {vec_length}."
     )
   }
 }
 
+#' @param df is a `data.frame` object that needs to be checked.
 #' @keywords internal
 #' @rdname error_functions
-#'
-check_column_names <- function(x, arg_name = NULL) {
+
+check_column_names <- function(df, arg_name = NULL, coords = FALSE) {
   if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
+    arg_name <- rlang::as_label(rlang::enexpr(df))
   }
-  # right now this is the accepted names but we will changes this likely to ATO names
-  # required_any <- list(
-  #   timestamp = c("time", "detection_timestamp_utc"),
-  #   receiver = c("rec", "station_no"),
-  #   tag = c("tag_serial_no")
-  # )
 
-  # time_bin
-
-  required_any <- list(
-    timestamp = c("time", "detection_timestamp_utc", "time_bin"),
-    receiver = c("rec", "station_no"),
-    tag = c("tag_serial_no", "min_delay", "max_delay")
-  )
-  # accepted_names <- c(
-  #   "tag_serial_no",
-  #   "rec",
-  #   "time"
-  # )
+  if (isFALSE(coords)) {
+    required_any <- list(
+      timestamp = c("time", "detection_timestamp_utc", "time_bin"),
+      receiver = c("rec", "station_no"),
+      tag = c("tag_serial_no", "min_delay", "max_delay")
+    )
+  }
+  if (isTRUE(coords)) {
+    required_any <- list(
+      coords_x = c("recX"),
+      coords_y = c("recY")
+    )
+  }
 
   missing_groups <- names(Filter(
-    \(aliases) !any(aliases %in% names(x)),
+    \(aliases) !any(aliases %in% names(df)),
     required_any
   ))
 
@@ -144,34 +145,37 @@ check_column_names <- function(x, arg_name = NULL) {
   }
 }
 
-#' @param x is a `data.frame` to pass to check.
-
 #' @keywords internal
 #' @rdname error_functions
 
-check_column_type <- function(x, arg_name = NULL) {
+check_column_type <- function(df, arg_name = NULL, coords = FALSE) {
   if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
+    arg_name <- rlang::as_label(rlang::enexpr(df))
   }
   # right now this is the accepted names but we will changes this likely to ATO names
 
-  accepted_numeric <- c("rec", "time", "min_delay", "max_delay")
+  if (isFALSE(coords)) {
+    accepted_numeric <- c("rec", "time", "min_delay", "max_delay")
+  }
+  if (isTRUE(coords)) {
+    accepted_numeric <- c("recX", "recY")
+  }
 
   accepted_character <- c("tag_serial_no", "station_no")
 
   datetime_cols <- c("detection_timestamp_utc")
 
-  bad_numeric <- check_present(x, accepted_numeric, is.numeric, "numeric")
+  bad_numeric <- check_present(df, accepted_numeric, is.numeric, "numeric")
 
   bad_character <- check_present(
-    x,
+    df,
     accepted_character,
     is.character,
     "character"
   )
 
   bad_datetime <- check_present(
-    x,
+    df,
     datetime_cols,
     \(col) inherits(col, "POSIXct"),
     "POSIXct"
@@ -199,85 +203,13 @@ check_column_type <- function(x, arg_name = NULL) {
 
 #' @keywords internal
 #' @rdname error_functions
-check_coord_names <- function(x, arg_name = NULL) {
+
+check_data_frame <- function(df, arg_name = NULL) {
   if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
+    arg_name <- rlang::as_label(rlang::enexpr(df))
   }
 
-  required_any <- list(
-    coords_x = c("recX"),
-    coords_y = c("recY")
-  )
-
-  missing_groups <- names(Filter(
-    \(aliases) !any(aliases %in% names(x)),
-    required_any
-  ))
-
-  if (length(missing_groups) > 0) {
-    missing_detail <- vapply(
-      missing_groups,
-      \(g) {
-        aliases <- required_any[[g]]
-        cli::format_inline(
-          "{.field {g}}: needs to be named
-        one of the folowing: {.or {.val {aliases}}}"
-        )
-      },
-      character(1)
-    )
-
-    cli::cli_abort(c(
-      "`{arg_name}` is missing required colummn",
-      "i" = stats::setNames(missing_detail, rep("x", length(missing_detail)))
-    ))
-  }
-}
-#' @keywords internal
-#' @rdname error_functions
-check_coord_type <- function(x, arg_name = NULL) {
-  if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
-  }
-  # right now this is the accepted names but we will changes this likely to ATO names
-
-  accepted_numeric <- c("recX", "recY")
-
-  bad_numeric <- check_present(x, accepted_numeric, is.numeric, "numeric")
-
-  if (length(bad_numeric) > 0) {
-    cli::cli_abort(c(
-      "`{arg_name}` contains columns with incorrect types.",
-      "x" = "Expected numeric: {.field {bad_numeric}}"
-    ))
-  }
-}
-
-
-#' @keywords internal
-#' @rdname error_functions
-
-check_delay <- function(x, type, arg_name = NULL) {
-  if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
-  }
-
-  if (type == "custom" && is.null(x)) {
-    cli::cli_abort(
-      "{arg_name} must be provided when {.arg type} is {.val {type}}."
-    )
-  }
-}
-
-#' @keywords internal
-#' @rdname error_functions
-
-check_data_frame <- function(x, arg_name = NULL) {
-  if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
-  }
-
-  if (!(inherits(x, c("data.frame", "tibble", "data.table")))) {
+  if (!(inherits(df, c("data.frame", "tibble", "data.table")))) {
     cli::cli_abort(c(
       "`{arg_name}` must be a data.frame, tibble, or data.table",
       "i" = "Please provide data.frame"
@@ -285,16 +217,32 @@ check_data_frame <- function(x, arg_name = NULL) {
   }
 }
 
-
+#' @param type is a `character` that is the type of delay desired.
 #' @keywords internal
 #' @rdname error_functions
 
-check_list <- function(x, arg_name = NULL) {
+check_delay <- function(vec, type, arg_name = NULL) {
   if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
+    arg_name <- rlang::as_label(rlang::enexpr(vec))
   }
 
-  if (!(inherits(x, c("list")))) {
+  if (type == "custom" && is.null(vec)) {
+    cli::cli_abort(
+      "{arg_name} must be provided when {.arg type} is {.val {type}}."
+    )
+  }
+}
+
+#' @param list is a `list` to be checked.
+#' @keywords internal
+#' @rdname error_functions
+
+check_list <- function(list, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(list))
+  }
+
+  if (!(inherits(list, c("list")))) {
     cli::cli_abort(c(
       "`{arg_name}` must be a list",
       "i" = "Please provide a list"
@@ -302,82 +250,79 @@ check_list <- function(x, arg_name = NULL) {
   }
 }
 
+
+#' @param arg_name_df the name of the argument of df to check.
+#' @param arg_name_vec the name of the argument of vec to check.
 #' @keywords internal
 #' @rdname error_functions
-check_numerical <- function(x, arg_name = NULL) {
+check_nrec <- function(df, vec, arg_name_df = NULL, arg_name_vec = NULL) {
+  if (is.null(arg_name_df)) {
+    arg_name_df <- rlang::as_label(rlang::enexpr(df))
+  }
+  if (is.null(arg_name_vec)) {
+    arg_name_vec <- rlang::as_label(rlang::enexpr(vec))
+  }
+  df_l <- length(unique(df$rec))
+
+  if (!(vec >= df_l)) {
+    cli::cli_abort(
+      "`{arg_name_vec}` must be be equal to or greater than the number of receivers in {arg_name_df} "
+    )
+  }
+}
+
+#' @keywords internal
+#' @rdname error_functions
+
+check_numerical <- function(vec, arg_name = NULL) {
   if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
+    arg_name <- rlang::as_label(rlang::enexpr(vec))
   }
 
-  if (!is.numeric(x) || length(x) != 1) {
+  if (!is.numeric(vec) || length(vec) != 1) {
     cli::cli_abort(c(
       "`{arg_name}` argument must be a numerical value.",
       "i" = "Please provide a numerical value"
     ))
   }
 }
-#' @keywords internal
-#' @rdname error_functions
-check_nrec <- function(x, y, arg_name_x = NULL, arg_name_y = NULL) {
-  if (is.null(arg_name_x)) {
-    arg_name_x <- rlang::as_label(rlang::enexpr(x))
-  }
-  if (is.null(arg_name_y)) {
-    arg_name_y <- rlang::as_label(rlang::enexpr(y))
-  }
-  x_l <- length(unique(x$rec))
-
-  if (!(y >= x_l)) {
-    cli::cli_abort(
-      "`{arg_name_y}` must be be equal to or greater than the number of receivers in {arg_name_x} "
-    )
-  }
-}
-
 
 #' @keywords internal
 #' @rdname error_functions
 
-check_num_vec_len <- function(x, vec_length = NULL, arg_name = NULL) {
+check_num_vec_len <- function(vec, vec_length = NULL, arg_name = NULL) {
   if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
+    arg_name <- rlang::as_label(rlang::enexpr(vec))
   }
 
-  if (!is.numeric(x) || !is.vector(x) || length(x) != vec_length) {
+  if (!is.numeric(vec) || !is.vector(vec) || length(vec) != vec_length) {
     cli::cli_abort(
       "`{arg_name}` must be a numeric vector that has a length of {vec_length}."
     )
   }
 }
 
-
-#' @keywords internal
+#' @param cols is a character `vector` of column names to check
+#' @param fnct is the name of a function to appply e.g., `is.numeric`.
+#' @param label is the name of the group of cols e.g., `receiver`.
 #' @rdname error_functions
 
-check_present <- function(x, cols, fnct, label) {
+check_present <- function(df, cols, fnct, label) {
   fnct <- match.fun(fnct)
-  present <- intersect(cols, names(x))
-  present[!vapply(x[present], fnct, logical(1))]
+  present <- intersect(cols, names(df))
+  present[!vapply(df[present], fnct, logical(1))]
 }
 
 
-#' @param x is a `sf` object
-#' @param arg_name the name of the argument to check.
-#'
 #' @keywords internal
 #' @rdname error_functions
 
-check_sf_object <- function(x, arg_name = NULL) {
+check_sf_object <- function(sf, arg_name = NULL) {
   if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
+    arg_name <- rlang::as_label(rlang::enexpr(sf))
   }
 
-  # valid classes from rstan and cmdstanr
-  valid_classes <- c(
-    "sf"
-  )
-
-  if (!inherits(x, valid_classes)) {
+  if (!inherits(sf, "sf")) {
     cli::cli_abort(
       "`{arg_name}` must be a sf object (from {.pkg sf})."
     )
@@ -385,15 +330,13 @@ check_sf_object <- function(x, arg_name = NULL) {
 }
 
 
-#' @param x is a `Stan` object
-#' @param arg_name the name of the argument to check.
-#'
+#' @param stan is a `Stan` object.
 #' @keywords internal
 #' @name error_functions
 
-check_stan_object <- function(x, arg_name = NULL) {
+check_stan_object <- function(stan, arg_name = NULL) {
   if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
+    arg_name <- rlang::as_label(rlang::enexpr(stan))
   }
 
   # valid classes from rstan and cmdstanr
@@ -406,24 +349,22 @@ check_stan_object <- function(x, arg_name = NULL) {
     "CmdStanModel"
   )
 
-  if (!inherits(x, valid_classes)) {
+  if (!inherits(stan, valid_classes)) {
     cli::cli_abort(
       "`{arg_name}` must be a Stan object (from {.pkg rstan} or {.pkg cmdstanr})."
     )
   }
 }
 
-#' @param x is a `data.frame` to pass to check.
-#' @param arg_name the name of the argument to check.
 #' @keywords internal
 #' @rdname error_functions
 
-check_time <- function(x, arg_name = NULL) {
+check_time <- function(df, arg_name = NULL) {
   if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
+    arg_name <- rlang::as_label(rlang::enexpr(df))
   }
 
-  time_na <- is.na(x$detection_timestamp_utc)
+  time_na <- is.na(df$detection_timestamp_utc)
 
   if (any(time_na)) {
     cli::cli_abort(c(
@@ -433,18 +374,16 @@ check_time <- function(x, arg_name = NULL) {
   }
 }
 
-#' @param x is a `Stan` object
-#' @param arg_name the name of the argument to check.
-#'
+
 #' @keywords internal
 #' @rdname error_functions
-#'
-check_unit <- function(x, arg_name = NULL) {
+
+check_unit <- function(vec, arg_name = NULL) {
   if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
+    arg_name <- rlang::as_label(rlang::enexpr(vec))
   }
 
-  if (!is.character(x) || length(x) != 1) {
+  if (!is.character(vec) || length(vec) != 1) {
     cli::cli_abort(c(
       "`{arg_name}` must be a single character string.",
       "i" = "e.g. \"1 hour\", \"15 minutes\", \"1 day\""
@@ -452,7 +391,7 @@ check_unit <- function(x, arg_name = NULL) {
   }
 
   tryCatch(
-    lubridate::floor_date(Sys.time(), unit = x),
+    lubridate::floor_date(Sys.time(), unit = vec),
     error = function(e) {
       cli::cli_abort(c(
         "`{arg_name}` is not a valid {.fn lubridate::floor_date} unit: {.val {x}}",
@@ -461,20 +400,17 @@ check_unit <- function(x, arg_name = NULL) {
     }
   )
 
-  invisible(x)
+  invisible(vec)
 }
 
-#' @param x is a `Stan` object
-
-#'
 #' @keywords internal
 #' @rdname error_functions
 
-check_utm <- function(x, arg_name = NULL) {
+check_utm <- function(sf, arg_name = NULL) {
   if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(x))
+    arg_name <- rlang::as_label(rlang::enexpr(sf))
   }
-  crs <- sf::st_crs(x)
+  crs <- sf::st_crs(sf)
 
   if (is.na(crs)) {
     cli::cli_abort(
@@ -501,7 +437,7 @@ check_utm <- function(x, arg_name = NULL) {
     )
   }
 
-  invisible(x)
+  invisible(sf)
 }
 
 #' Expected lengths of variables in `standata`
@@ -540,8 +476,6 @@ expected_lengths <- function(recX = NULL, recY = NULL, ntest_len = NULL) {
 #'
 #' @param standata is a list of data that will be supplied to the model.
 #' @param lengths is the length of each object.
-#'
-#'
 #' @keywords internal
 #' @name vaidate_standata
 

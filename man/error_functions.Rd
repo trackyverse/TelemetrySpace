@@ -8,13 +8,11 @@
 \alias{check_char_vec_len}
 \alias{check_column_names}
 \alias{check_column_type}
-\alias{check_coord_names}
-\alias{check_coord_type}
-\alias{check_delay}
 \alias{check_data_frame}
+\alias{check_delay}
 \alias{check_list}
-\alias{check_numerical}
 \alias{check_nrec}
+\alias{check_numerical}
 \alias{check_num_vec_len}
 \alias{check_present}
 \alias{check_sf_object}
@@ -25,52 +23,75 @@
 \alias{check_utm}
 \title{Error functions}
 \usage{
-check_aeqd(x, arg_name = NULL)
+check_aeqd(sf, arg_name = NULL)
 
-check_aeqd_string(x, arg_name = NULL)
+check_aeqd_string(vec, arg_name = NULL)
 
-check_array(x, arg_name = NULL)
+check_array(array, arg_name = NULL)
 
-check_array_tag(x, len, arg_name = NULL)
+check_array_tag(array, len, arg_name = NULL)
 
-check_char_vec_len(x, vec_length = NULL, arg_name = NULL)
+check_char_vec_len(vec, vec_length = NULL, arg_name = NULL)
 
-check_column_names(x, arg_name = NULL)
+check_column_names(df, arg_name = NULL, coords = FALSE)
 
-check_column_type(x, arg_name = NULL)
+check_column_type(df, arg_name = NULL, coords = FALSE)
 
-check_coord_names(x, arg_name = NULL)
+check_data_frame(df, arg_name = NULL)
 
-check_coord_type(x, arg_name = NULL)
+check_delay(vec, type, arg_name = NULL)
 
-check_delay(x, type, arg_name = NULL)
+check_list(list, arg_name = NULL)
 
-check_data_frame(x, arg_name = NULL)
+check_nrec(df, vec, arg_name_df = NULL, arg_name_vec = NULL)
 
-check_list(x, arg_name = NULL)
+check_numerical(vec, arg_name = NULL)
 
-check_numerical(x, arg_name = NULL)
+check_num_vec_len(vec, vec_length = NULL, arg_name = NULL)
 
-check_nrec(x, y, arg_name_x = NULL, arg_name_y = NULL)
+check_present(df, cols, fnct, label)
 
-check_num_vec_len(x, vec_length = NULL, arg_name = NULL)
+check_sf_object(sf, arg_name = NULL)
 
-check_present(x, cols, fnct, label)
+check_stan_object(stan, arg_name = NULL)
 
-check_sf_object(x, arg_name = NULL)
+check_time(df, arg_name = NULL)
 
-check_stan_object(x, arg_name = NULL)
+check_unit(vec, arg_name = NULL)
 
-check_time(x, arg_name = NULL)
-
-check_unit(x, arg_name = NULL)
-
-check_utm(x, arg_name = NULL)
+check_utm(sf, arg_name = NULL)
 }
 \arguments{
-\item{x}{is a \code{Stan} object}
+\item{sf}{is a \code{sf} object that needs to be checked.}
 
 \item{arg_name}{the name of the argument to check.}
+
+\item{vec}{is a \code{vector} that needs to be checked.}
+
+\item{array}{is a \code{array} that needs to be checked.}
+
+\item{len}{is the length to make the array. This needs to be the
+same length as \code{ntest} or the number of tags.}
+
+\item{vec_length}{is the length of the vector to check.}
+
+\item{df}{is a \code{data.frame} object that needs to be checked.}
+
+\item{type}{is a \code{character} that is the type of delay desired.}
+
+\item{list}{is a \code{list} to be checked.}
+
+\item{arg_name_df}{the name of the argument of df to check.}
+
+\item{arg_name_vec}{the name of the argument of vec to check.}
+
+\item{cols}{is a character \code{vector} of column names to check}
+
+\item{fnct}{is the name of a function to appply e.g., \code{is.numeric}.}
+
+\item{label}{is the name of the group of cols e.g., \code{receiver}.}
+
+\item{stan}{is a \code{Stan} object.}
 }
 \description{
 Error functions
