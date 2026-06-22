@@ -249,10 +249,36 @@ test_that("build_counts uses rec_names for dimnames when provided", {
     rec_id = rec_id,
     rec_names = rec_names
   )
+})
 
+test_that("build_counts when nind is > 1", {
+  df <- data.frame(
+    tag_serial_no = c("A1", "A2", "A1", "A1"),
+    rec = c(101, 102, 101, 101),
+    time = c(1, 1, 2, 2)
+  )
+
+  rec_id <- c(101, 102)
+  rec_names <- c("station_a", "station_b")
+
+  Y <- build_counts(
+    df = df,
+    nrec = 2,
+    rec_id = rec_id,
+    rec_names = rec_names
+  )
+Y
   expect_equal(dimnames(Y)$rec, rec_names)
-  # underlying rec_id is still used for matching, not rec_names
+
+  expect_equal(dimnames(Y)$ind, c("A1", "A2"))
+
   expect_equal(Y["A1", "1", "station_a"], 1L)
+  expect_equal(Y["A1", "2", "station_a"], 2L)
+  expect_equal(Y["A1", "1", "station_b"], 0L)
+  expect_equal(Y["A1", "2", "station_b"], 0L)
+  expect_equal(Y["A2", "1", "station_a"], 0L)
+  expect_equal(Y["A2", "2", "station_a"], 0L)
+  expect_equal(Y["A2", "2", "station_b"], 0L)
 })
 
 test_that("build_counts errors when rec_names length does not match nrec", {
