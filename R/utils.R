@@ -526,16 +526,17 @@ extract_coa <- function(summary_draws) {
 
 
 #' @details
-#' `extract_d_prob()` - extracts median and the 2.5, and 97.5% quantiles for posterior draws of
-#' `p0` when estimated in time varying and tag integrated models.
+#' `extract_d_probs()` - extracts median and the 2.5, and 97.5% quantiles for posterior draws of
+#' `p0` which is the detection probablity at distance 0, used when
+#'  estimated in time varying and tag integrated models.
 #'
-#' @return `extract_d_prob()` - returns a `data.frame` containing
+#' @return `extract_d_probs()` - returns a `data.frame` containing
 #' the median and the 2.5, and 97.5% quantiles.
 #'
 #' @keywords internal
 #' @name extract_functions
 
-extract_d_prob <- function(summary_draws) {
+extract_d_probs <- function(summary_draws) {
   check_draw_summary(summary_draws)
 
   d_probs <- summary_draws |>
@@ -638,7 +639,7 @@ summarize_draws <- function(draws) {
 
   sum_draws <- posterior::summarise_draws(
     draws,
-    median = median,
+    median = stats::median,
     ~ stats::quantile(.x, probs = c(0.025, 0.975))
   ) |>
     dplyr::rename(

@@ -117,7 +117,7 @@ COA_TagInt <- function(
   param_draws <- extract_param_draws(fit_draws)
 
   # Extract time-varying detection probability estimates
-  param_draws <- extract_param_draws(fit_draws)
+  d_probs <- extract_d_probs(summary_draws)
 
   # Report results
   model_results <- list(

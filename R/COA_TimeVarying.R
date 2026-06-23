@@ -108,7 +108,7 @@ COA_TimeVarying <- function(
 
   # Extract time-varying detection probability estimates
 
-  d_probs <- extract_d_prob(summary_draws)
+  d_probs <- extract_d_probs(summary_draws)
 
   # Report results
   model_results <- list(
