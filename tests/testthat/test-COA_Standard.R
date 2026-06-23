@@ -138,10 +138,10 @@ test_that("check standard_gaussian classes", {
 
 
 # ----- alll draws -----
-test_that("check to see if all_draws returns proper info", {
-  expect_true("all_draws" %in% names(standard_gaussian))
+test_that("check to see if all_estimates returns proper info", {
+  expect_true("all_estimates" %in% names(standard_gaussian))
   expect_equal(
-    colnames(standard_gaussian$all_draws),
+    colnames(standard_gaussian$all_estimates),
     c(
       "alpha0",
       "alpha1",
@@ -158,21 +158,22 @@ test_that("check to see if all_draws returns proper info", {
     )
   )
 
-  for (col in colnames(standard_gaussian$all_draws)) {
+  for (col in colnames(standard_gaussian$all_estimates)) {
     expect_true(
-      typeof(standard_gaussian$all_draws[[col]]) %in% c("double", "integer"),
+      typeof(standard_gaussian$all_estimates[[col]]) %in%
+        c("double", "integer"),
       info = paste(
         "Column",
         col,
         "has type",
-        typeof(standard_gaussian$all_draws[[col]])
+        typeof(standard_gaussian$all_estimates[[col]])
       )
     )
-    expect_true(all(is.finite(standard_logistic$all_draws[[col]])))
+    expect_true(all(is.finite(standard_logistic$all_estimates[[col]])))
   }
 })
 
-test_that("check to see if all_draws returns proper values", {
+test_that("check to see if all_estimates returns proper values", {
   # ----- check if vals in all draws is correct
   expected_vals <- c(
     alpha0 = -0.36,
@@ -184,7 +185,7 @@ test_that("check to see if all_draws returns proper values", {
     p0 = 0.41,
     sigma = 0.90
   )
-  row <- standard_gaussian$all_draws[1, ]
+  row <- standard_gaussian$all_estimates[1, ]
 
   for (col in names(expected_vals)) {
     expect_equal(
@@ -223,7 +224,7 @@ test_that("check to see if loc_draws returns proper info", {
         typeof(standard_gaussian$loc_draws[[col]])
       )
     )
-    expect_true(all(is.finite(standard_logistic$loc_draws[[col]])))
+    expect_true(all(is.finite(standard_gaussian$loc_draws[[col]])))
   }
 })
 
@@ -280,7 +281,7 @@ test_that("check to see if param_draws returns proper info", {
         typeof(standard_gaussian$param_draws[[col]])
       )
     )
-    expect_true(all(is.finite(standard_logistic$param_draws[[col]])))
+    expect_true(all(is.finite(standard_gaussian$param_draws[[col]])))
   }
 })
 # ------ coa -----
