@@ -177,6 +177,23 @@ standard_logistic <- do.call(
   )
 )
 # ----- time integrated -----
+# first make p0 names to test
+ntime <- time_steps
+nrec <- nrow(ps_rec_loc_aeqd)
+
+p0_names <- outer(seq_len(ntime), seq_len(nrec), FUN = function(i, j) {
+  sprintf("p0[%d,%d]", i, j)
+})
+
+# column-major (Stan default): first index varies fastest
+p0_names <- sprintf(
+  "p0[%d,%d]",
+  rep(seq_len(ntime), times = nrec),
+  rep(seq_len(nrec), each = ntime)
+)
+
+
+# ----- run model
 time_vary_gaussian <- do.call(
   COA_TimeVarying,
   c(

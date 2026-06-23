@@ -124,7 +124,7 @@ COA_Standard <- function(
     'time',
     "summary_draws",
     'coas',
-    'all_draws',
+    'all_estimates',
     'loc_draws',
     'param_draws',
     'generated_quantities'
