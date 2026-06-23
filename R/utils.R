@@ -524,6 +524,30 @@ extract_coa <- function(summary_draws) {
   return(coas_df)
 }
 
+
+#' @details
+#' `extract_d_prob()` - extracts median and the 2.5, and 97.5% quantiles for posterior draws of
+#' `p0` when estimated in time varying and tag integrated models.
+#'
+#' @return `extract_d_prob()` - returns a `data.frame` containing
+#' the median and the 2.5, and 97.5% quantiles.
+#'
+#' @keywords internal
+#' @name extract_functions
+
+extract_d_prob <- function(summary_draws) {
+  check_draw_summary(summary_draws)
+
+  d_probs <- summary_draws |>
+    dplyr::filter(grepl("^p0\\[", variable)) |>
+    dplyr::mutate(
+      time = as.integer(sub("^p0\\[(\\d+),(\\d+)\\]$", "\\1", variable)),
+      rec = as.integer(sub("^p0\\[(\\d+),(\\d+)\\]$", "\\2", variable))
+    ) |>
+    dplyr::select(time, rec, median, q2.5, q97.5)
+
+  return(d_probs)
+}
 #' @param draws a `draws_df` object from `posterior::as_draws_df()`
 #' @details
 #' `extract_loc_draws()` - extracts posterior draws for the latent variables `sx` and `sy``

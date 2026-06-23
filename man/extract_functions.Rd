@@ -3,11 +3,14 @@
 \name{extract_functions}
 \alias{extract_functions}
 \alias{extract_coa}
+\alias{extract_d_prob}
 \alias{extract_loc_draws}
 \alias{extract_param_draws}
 \title{Extract Draws}
 \usage{
 extract_coa(summary_draws)
+
+extract_d_prob(summary_draws)
 
 extract_loc_draws(draws)
 
@@ -20,6 +23,9 @@ extract_param_draws(draws)
 }
 \value{
 \code{extract_coa()} - returns a \code{data.frame} containing
+the median and the 2.5, and 97.5\% quantiles.
+
+\code{extract_d_prob()} - returns a \code{data.frame} containing
 the median and the 2.5, and 97.5\% quantiles.
 
 \code{extract_loc_draws()} - returns a \code{data.frame} containing the following columns:
@@ -36,6 +42,9 @@ These functions allow draws to be extracted from \code{{posterior}} objects.
 \code{extract_coa()} - extracts median and the 2.5, and 97.5\% quantiles for posterior draws of
 \code{sx} and \code{sy}, which is the estiamted center of activity for a given individual within
 a given time bin.
+
+\code{extract_d_prob()} - extracts median and the 2.5, and 97.5\% quantiles for posterior draws of
+\code{p0} when estimated in time varying and tag integrated models.
 
 \code{extract_loc_draws()} - extracts posterior draws for the latent variables \code{sx} and \verb{sy`` for each fish at each time bin from }draws_df\verb{object and transforms it so that the fish number, time, and draw are in a}data.frame\verb{. This can then be further ploted or transformed into a }sf` object.
 
