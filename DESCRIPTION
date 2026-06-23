@@ -18,6 +18,7 @@ Imports:
     dplyr,
     lubridate,
     methods,
+    posterior,
     RcppParallel (>= 5.0.1),
     rlang,
     rstan (>= 2.18.1),
