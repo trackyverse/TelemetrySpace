@@ -69,7 +69,9 @@ COA_Standard <- function(
       ...
     )
   } else {
-    stop("decay parameter must be one of \"gaussian\" or \"logistic\".")
+    cli::cli_abort(
+      "{.arg decay} must be one of {.code 'gaussian' or 'logistic'}."
+    )
   }
 
   # Save chains after discarding warmup
