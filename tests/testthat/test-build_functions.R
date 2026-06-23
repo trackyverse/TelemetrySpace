@@ -249,6 +249,7 @@ test_that("build_counts uses rec_names for dimnames when provided", {
     rec_id = rec_id,
     rec_names = rec_names
   )
+  expect_equal(dimnames(Y)$rec, rec_names)
 })
 
 test_that("build_counts when nind is > 1", {
