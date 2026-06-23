@@ -233,6 +233,39 @@ check_delay <- function(vec, type, arg_name = NULL) {
   }
 }
 
+#' @param draws is a `draws_df`object to be checked.
+#' @keywords internal
+#' @rdname error_functions
+
+check_draws <- function(draws, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(draws))
+  }
+
+  if (!(inherits(draws, c("draws_df", "draws")))) {
+    cli::cli_abort(c(
+      "{.arg {arg_name}} must be a {.cls draws_df}, not {.cls {class(draws)}}",
+      "i" = "Please provide a {.cls draws_df}, e.g. via {.fn posterior::as_draws_df}"
+    ))
+  }
+}
+#' @param draws_summary is a `draws_summary`object to be checked.
+#' @keywords internal
+#' @rdname error_functions
+
+check_draw_summary <- function(draws_summary, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(draws_summary))
+  }
+
+  if (!(inherits(draws_summary, c("draws_summary")))) {
+    cli::cli_abort(c(
+      "{.arg {arg_name}} must be a {.cls draws_summary}, not {.cls {class(draws)}}",
+      "i" = "Please provide a {.cls draws_summary}, e.g. via {.fn posterior::summarize_draws}"
+    ))
+  }
+}
+
 #' @param list is a `list` to be checked.
 #' @keywords internal
 #' @rdname error_functions
@@ -439,6 +472,158 @@ check_utm <- function(sf, arg_name = NULL) {
 
   invisible(sf)
 }
+
+#' Extract Draws
+#'
+#' These functions allow draws to be extracted from `{posterior}` objects.
+#'
+#' @param summary_draws a `draws_summary` object from `posterior::summarize_draws()`
+#'
+#' @details
+#' `extract_coa()` - extracts median and the 2.5, and 97.5% quantiles for posterior draws of
+#' `sx` and `sy`, which is the estiamted center of activity for a given individual within
+#' a given time bin.
+#'
+#' @return `extract_coa()` - returns a `data.frame` containing
+#' the median and the 2.5, and 97.5% quantiles.
+#'
+#' @keywords internal
+#' @name extract_functions
+
+extract_coa <- function(summary_draws) {
+  check_draw_summary(summary_draws)
+
+  coas_df <- summary_draws |>
+    dplyr::filter(grepl("^s[xy]\\[", variable)) |>
+    dplyr::mutate(
+      coord = regmatches(variable, regexpr("^s[xy]", variable)),
+      ind = as.integer(
+        sub("^s[xy]\\[(\\d+),(\\d+)\\]$", "\\1", variable)
+      ),
+      time = as.integer(
+        sub("^s[xy]\\[(\\d+),(\\d+)\\]$", "\\2", variable)
+      )
+    ) |>
+    dplyr::select(ind, time, coord, median, q2.5, q97.5) |>
+    tidyr::pivot_wider(
+      names_from = coord,
+      values_from = c(median, q2.5, q97.5),
+      names_glue = "{coord}_{.value}"
+    ) |>
+    dplyr::rename(
+      x = sx_median,
+      x_lower = sx_q2.5,
+      x_upper = sx_q97.5,
+      y = sy_median,
+      y_lower = sy_q2.5,
+      y_upper = sy_q97.5
+    ) |>
+    dplyr::select(ind:y, x_lower, x_upper, y_lower, y_upper) |>
+    dplyr::arrange(ind, time)
+
+  return(coas_df)
+}
+
+#' @param draws a `draws_df` object from `posterior::as_draws_df()`
+#' @details
+#' `extract_loc_draws()` - extracts posterior draws for the latent variables `sx` and `sy``
+#' for each fish at each time bin from `draws_df` object and
+#' transforms it so that the fish number, time, and draw are in a `data.frame`.
+#' This can then be further ploted or transformed into a `sf` object.
+#'
+#' @return `extract_loc_draws()` - returns a `data.frame` containing the following columns:
+#' `.chain`, `.iteration`, `.draw`, `lp__`, `fish`, `time`, `x`, and `y`.
+#'
+#' @keywords internal
+#' @name extract_functions
+
+extract_loc_draws <- function(draws) {
+  check_draws(draws)
+
+  loc_draws <- draws |>
+    dplyr::as_tibble() |>
+    dplyr::select(
+      .chain,
+      .iteration,
+      .draw,
+      lp__,
+      dplyr::starts_with("sx["),
+      dplyr::starts_with("sy[")
+    ) |>
+    tidyr::pivot_longer(
+      cols = c(dplyr::starts_with("sx["), dplyr::starts_with("sy[")),
+      names_to = c("coord", "fish", "time"),
+      names_pattern = "(sx|sy)\\[(\\d+),(\\d+)\\]",
+      names_transform = list(fish = as.integer, time = as.integer),
+      values_to = "value"
+    ) |>
+    tidyr::pivot_wider(names_from = coord, values_from = value) |>
+    dplyr::rename(x = sx, y = sy)
+  return(loc_draws)
+}
+
+#' @details
+#' `extract_param_draws()` - extracts posterior draws for the detection intercept (i.e., logit scale; `alpha0`),
+#' the distance-decay coefficient (i.e., `alpha1`), any other coefficents, and the detction probablity at distance 0
+#' (i.e. `p0`) from  `draws_df` object.
+#'
+#' @return `extract_param_draws()` - returns a `data.frame` containing the following columns:
+#' `.chain`, `.iteration`, `.draw`, `lp__` and then posterior draws for the paramaters of
+#' the detection probablity likihood (i.e., `alpha0` and `alpha1`) and generated quantiteies (i.e., `p0`).
+#'
+#' @keywords internal
+#' @name extract_functions
+
+extract_param_draws <- function(draws) {
+  check_draws(draws)
+
+  param_draws <- draws |>
+    dplyr::as_tibble() |>
+    tidyr::pivot_longer(
+      cols = c(dplyr::starts_with("sx["), dplyr::starts_with("sy[")),
+      names_to = c("coord", "fish", "time"),
+      names_pattern = "(sx|sy)\\[(\\d+),(\\d+)\\]",
+      names_transform = list(fish = as.integer, time = as.integer),
+      values_to = "value"
+    ) |>
+    dplyr::select(-coord, -value) |>
+    dplyr::relocate(
+      .chain,
+      .iteration,
+      .draw,
+      lp__,
+      fish,
+      time
+    )
+
+  return(param_draws)
+}
+
+
+#' Summarize Posterior Draws
+#'
+#' @param draws a `draws_df` object from `posterior::as_draws_df()`
+#'
+#' @return returns a summarized dataframe with the median and 2.5% and 97.5% quantitles.
+#'
+#' @keywords internal
+#' @name summarize_functions
+
+summarize_draws <- function(draws) {
+  check_draws(draws)
+
+  sum_draws <- posterior::summarise_draws(
+    draws,
+    median = median,
+    ~ stats::quantile(.x, probs = c(0.025, 0.975))
+  ) |>
+    dplyr::rename(
+      q2.5 = `2.5%`,
+      q97.5 = `97.5%`
+    )
+  return(sum_draws)
+}
+
 
 #' Expected lengths of variables in `standata`
 #'

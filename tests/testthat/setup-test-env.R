@@ -159,6 +159,7 @@ standard_gaussian <- do.call(
     )
   )
 )
+
 standard_logistic <- do.call(
   COA_Standard,
   c(

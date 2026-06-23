@@ -267,7 +267,6 @@ test_that("build_counts when nind is > 1", {
     rec_id = rec_id,
     rec_names = rec_names
   )
-Y
   expect_equal(dimnames(Y)$rec, rec_names)
 
   expect_equal(dimnames(Y)$ind, c("A1", "A2"))

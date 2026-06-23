@@ -10,6 +10,8 @@
 \alias{check_column_type}
 \alias{check_data_frame}
 \alias{check_delay}
+\alias{check_draws}
+\alias{check_draw_summary}
 \alias{check_list}
 \alias{check_nrec}
 \alias{check_numerical}
@@ -40,6 +42,10 @@ check_column_type(df, arg_name = NULL, coords = FALSE)
 check_data_frame(df, arg_name = NULL)
 
 check_delay(vec, type, arg_name = NULL)
+
+check_draws(draws, arg_name = NULL)
+
+check_draw_summary(draws_summary, arg_name = NULL)
 
 check_list(list, arg_name = NULL)
 
@@ -78,6 +84,10 @@ same length as \code{ntest} or the number of tags.}
 \item{df}{is a \code{data.frame} object that needs to be checked.}
 
 \item{type}{is a \code{character} that is the type of delay desired.}
+
+\item{draws}{is a \code{draws_df}object to be checked.}
+
+\item{draws_summary}{is a \code{draws_summary}object to be checked.}
 
 \item{list}{is a \code{list} to be checked.}
 
