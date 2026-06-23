@@ -126,7 +126,8 @@ test_that("check standard_gaussian classes", {
   expect_type(standard_gaussian, "list")
   expect_s4_class(standard_gaussian$model, "stanfit")
   expect_s3_class(standard_gaussian$coas, "data.frame")
-  expect_s3_class(standard_gaussian$all_estimates, "data.frame")
+  expect_s3_class(standard_gaussian$loc_draws, "data.frame")
+  expect_s3_class(standard_gaussian$param_draws, "data.frame")
   expect_type(standard_gaussian$summary, "double")
   expect_true(is.matrix(standard_gaussian$summary))
   expect_true(is.matrix(standard_gaussian$generated_quantities$yrep))
@@ -135,12 +136,160 @@ test_that("check standard_gaussian classes", {
 })
 
 
+# ----- alll draws -----
+test_that("check to see if all_draws returns proper info", {
+  expect_true("all_draws" %in% names(standard_gaussian))
+  expect_equal(
+    colnames(standard_gaussian$all_draws),
+    c(
+      "alpha0",
+      "alpha1",
+      "sx[1,1]",
+      "sx[1,2]",
+      "sy[1,1]",
+      "sy[1,2]",
+      "p0",
+      "sigma",
+      "lp__",
+      ".chain",
+      ".iteration",
+      ".draw"
+    )
+  )
+
+  for (col in colnames(standard_gaussian$all_draws)) {
+    expect_true(
+      typeof(standard_gaussian$all_draws[[col]]) %in% c("double", "integer"),
+      info = paste(
+        "Column",
+        col,
+        "has type",
+        typeof(standard_gaussian$all_draws[[col]])
+      )
+    )
+    expect_true(all(is.finite(standard_logistic$all_draws[[col]])))
+  }
+})
+
+test_that("check to see if all_draws returns proper values", {
+  # ----- check if vals in all draws is correct
+  expected_vals <- c(
+    alpha0 = -0.36,
+    alpha1 = 0.62,
+    `sx[1,1]` = -3.3,
+    `sx[1,2]` = -2.734,
+    `sy[1,1]` = -1.34,
+    `sy[1,2]` = -0.239,
+    p0 = 0.41,
+    sigma = 0.90
+  )
+  row <- standard_gaussian$all_draws[1, ]
+
+  for (col in names(expected_vals)) {
+    expect_equal(
+      row[[col]],
+      expected_vals[[col]],
+      tolerance = 1e-2,
+      label = paste0("row1$", col)
+    )
+  }
+})
+
+# ------ check loc_draws -----
+test_that("check to see if loc_draws returns proper info", {
+  expect_true("loc_draws" %in% names(standard_gaussian))
+  expect_equal(
+    colnames(standard_gaussian$loc_draws),
+    c(
+      ".chain",
+      ".iteration",
+      ".draw",
+      "lp__",
+      "fish",
+      "time",
+      "x",
+      "y"
+    )
+  )
+
+  for (col in colnames(standard_gaussian$loc_draws)) {
+    expect_true(
+      typeof(standard_gaussian$loc_draws[[col]]) %in% c("double", "integer"),
+      info = paste(
+        "Column",
+        col,
+        "has type",
+        typeof(standard_gaussian$loc_draws[[col]])
+      )
+    )
+    expect_true(all(is.finite(standard_logistic$loc_draws[[col]])))
+  }
+})
+
+test_that("check to see if loc_draws returns proper values", {
+  # ----- check if vals in all draws is correct
+  expected_vals <- c(
+    .chain = 1,
+    .iteration = 1,
+    .draw = 1,
+    lp__ = -163.41,
+    fish = 1,
+    time = 1,
+    x = -3.32,
+    y = -1.34
+  )
+  row <- standard_gaussian$loc_draws[1, ]
+
+  for (col in names(expected_vals)) {
+    expect_equal(
+      row[[col]],
+      expected_vals[[col]],
+      tolerance = 1e-2,
+      label = paste0("row$", col)
+    )
+  }
+})
+
+# ------- check param draws -----
+test_that("check to see if param_draws returns proper info", {
+  expect_true("param_draws" %in% names(standard_gaussian))
+  expect_equal(
+    colnames(standard_gaussian$param_draws),
+    c(
+      ".chain",
+      ".iteration",
+      ".draw",
+      "lp__",
+      "fish",
+      "time",
+      "alpha0",
+      "alpha1",
+      "p0",
+      "sigma"
+    )
+  )
+
+  for (col in colnames(standard_gaussian$param_draws)) {
+    expect_true(
+      typeof(standard_gaussian$param_draws[[col]]) %in% c("double", "integer"),
+      info = paste(
+        "Column",
+        col,
+        "has type",
+        typeof(standard_gaussian$param_draws[[col]])
+      )
+    )
+    expect_true(all(is.finite(standard_logistic$param_draws[[col]])))
+  }
+})
+# ------ coa -----
 test_that("check to see if coa returns proper info", {
   expect_true("coas" %in% names(standard_gaussian))
   expect_equal(nrow(standard_gaussian$coas), time_steps)
   expect_equal(
     colnames(standard_gaussian$coas),
     c(
+      "ind",
       "time",
       "x",
       "y",
@@ -152,7 +301,15 @@ test_that("check to see if coa returns proper info", {
   )
 
   for (col in colnames(standard_gaussian$coas)) {
-    expect_type(standard_gaussian$coas[[col]], "double")
+    expect_true(
+      typeof(standard_gaussian$coas[[col]]) %in% c("double", "integer"),
+      info = paste(
+        "Column",
+        col,
+        "has type",
+        typeof(standard_gaussian$coas[[col]])
+      )
+    )
     expect_true(all(is.finite(standard_gaussian$coas[[col]])))
   }
 })
@@ -182,7 +339,8 @@ test_that("check standard_logistic classes", {
   expect_type(standard_logistic, "list")
   expect_s4_class(standard_logistic$model, "stanfit")
   expect_s3_class(standard_logistic$coas, "data.frame")
-  expect_s3_class(standard_logistic$all_estimates, "data.frame")
+  expect_s3_class(standard_gaussian$loc_draws, "data.frame")
+  expect_s3_class(standard_gaussian$param_draws, "data.frame")
   expect_type(standard_logistic$summary, "double")
   expect_true(is.matrix(standard_logistic$summary))
   expect_true(is.matrix(standard_logistic$generated_quantities$yrep))
@@ -196,6 +354,7 @@ test_that("check to see if coa returns proper info", {
   expect_equal(
     colnames(standard_logistic$coas),
     c(
+      "ind",
       "time",
       "x",
       "y",
@@ -207,7 +366,15 @@ test_that("check to see if coa returns proper info", {
   )
 
   for (col in colnames(standard_logistic$coas)) {
-    expect_type(standard_logistic$coas[[col]], "double")
+    expect_true(
+      typeof(standard_logistic$coas[[col]]) %in% c("double", "integer"),
+      info = paste(
+        "Column",
+        col,
+        "has type",
+        typeof(standard_logistic$coas[[col]])
+      )
+    )
     expect_true(all(is.finite(standard_logistic$coas[[col]])))
   }
 })
