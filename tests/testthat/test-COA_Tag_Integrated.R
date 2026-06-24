@@ -248,7 +248,7 @@ test_that("check to see if loc_draws returns proper values", {
     fish = 1,
     time = 1,
     x = -2.14,
-    y = -0.10
+    y = -0.095
   )
   row <- tag_int_gaussian$loc_draws[1, ]
 
