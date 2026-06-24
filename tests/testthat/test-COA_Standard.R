@@ -169,7 +169,7 @@ test_that("check to see if all_estimates returns proper info", {
         typeof(standard_gaussian$all_estimates[[col]])
       )
     )
-    expect_true(all(is.finite(standard_logistic$all_estimates[[col]])))
+    expect_true(all(is.finite(standard_gaussian$all_estimates[[col]])))
   }
 })
 
@@ -342,8 +342,8 @@ test_that("check standard_logistic classes", {
   expect_s4_class(standard_logistic$model, "stanfit")
   expect_s3_class(standard_logistic$coas, "data.frame")
   expect_s3_class(standard_logistic$all_estimates, "data.frame")
-  expect_s3_class(standard_gaussian$loc_draws, "data.frame")
-  expect_s3_class(standard_gaussian$param_draws, "data.frame")
+  expect_s3_class(standard_logistic$loc_draws, "data.frame")
+  expect_s3_class(standard_logistic$param_draws, "data.frame")
   expect_type(standard_logistic$summary, "double")
   expect_true(is.matrix(standard_logistic$summary))
   expect_true(is.matrix(standard_logistic$generated_quantities$yrep))

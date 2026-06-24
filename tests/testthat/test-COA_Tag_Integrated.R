@@ -153,7 +153,7 @@ test_that("check to see if all_estimates returns proper info", {
   expect_equal(
     colnames(tag_int_gaussian$all_estimates),
     c(
-      "alpha0",
+      alpha0_names,
       "alpha1",
       "sx[1,1]",
       "sx[1,2]",
@@ -182,7 +182,7 @@ test_that("check to see if all_estimates returns proper info", {
   }
 })
 
-# ---- this gets messy with p0 -----
+# ---- this gets messy with p0 and alpha0 -----
 # test_that("check to see if all_estimates returns proper values", {
 #   # ----- check if vals in all draws is correct
 #   expected_vals <- c(
@@ -274,7 +274,7 @@ test_that("check to see if param_draws returns proper info", {
       "lp__",
       "fish",
       "time",
-      "alpha0",
+      alpha0_names,
       "alpha1",
       p0_names,
       "sigma"
@@ -378,7 +378,15 @@ test_that("check to see if coa returns proper info", {
   )
 
   for (col in colnames(tag_int_logistic$coas)) {
-    expect_type(tag_int_logistic$coas[[col]], "double")
+    expect_true(
+      typeof(tag_int_logistic$coas[[col]]) %in% c("double", "integer"),
+      info = paste(
+        "Column",
+        col,
+        "has type",
+        typeof(tag_int_logistic$coas[[col]])
+      )
+    )
     expect_true(all(is.finite(tag_int_logistic$coas[[col]])))
   }
 })

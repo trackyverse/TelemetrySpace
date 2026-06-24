@@ -192,6 +192,18 @@ p0_names <- sprintf(
   rep(seq_len(nrec), each = ntime)
 )
 
+# -----alpha ---
+alpha0_names <- outer(seq_len(ntime), seq_len(nrec), FUN = function(i, j) {
+  sprintf("alpha0[%d,%d]", i, j)
+})
+
+# column-major (Stan default): first index varies fastest
+alpha0_names <- sprintf(
+  "alpha0[%d,%d]",
+  rep(seq_len(ntime), times = nrec),
+  rep(seq_len(nrec), each = ntime)
+)
+
 
 # ----- run model
 time_vary_gaussian <- do.call(
