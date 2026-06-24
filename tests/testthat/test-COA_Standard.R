@@ -176,14 +176,14 @@ test_that("check to see if all_estimates returns proper info", {
 test_that("check to see if all_estimates returns proper values", {
   # ----- check if vals in all draws is correct
   expected_vals <- c(
-    alpha0 = -0.50,
-    alpha1 = 0.50,
-    `sx[1,1]` = -2.835,
-    `sx[1,2]` = -2.494,
-    `sy[1,1]` = -0.293,
-    `sy[1,2]` = -0.275,
-    p0 = 0.378,
-    sigma = 0.996
+    alpha0 = -0.528,
+    alpha1 = 0.441,
+    `sx[1,1]` = -2.95,
+    `sx[1,2]` = -2.73,
+    `sy[1,1]` = -0.43,
+    `sy[1,2]` = -0.324,
+    p0 = 0.371,
+    sigma = 1.064
   )
   row <- standard_gaussian$all_estimates[1, ]
 
@@ -237,8 +237,8 @@ test_that("check to see if loc_draws returns proper values", {
     lp__ = -248.912,
     fish = 1,
     time = 1,
-    x = -2.84,
-    y = -0.293
+    x = -2.95,
+    y = -0.43
   )
   row <- standard_gaussian$loc_draws[1, ]
 

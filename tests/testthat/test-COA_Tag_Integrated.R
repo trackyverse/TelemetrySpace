@@ -244,11 +244,11 @@ test_that("check to see if loc_draws returns proper values", {
     .chain = 1,
     .iteration = 1,
     .draw = 1,
-    lp__ = -396.73,
+    lp__ = -391.7,
     fish = 1,
     time = 1,
-    x = -2.42,
-    y = -0.357
+    x = -2.14,
+    y = -0.10
   )
   row <- tag_int_gaussian$loc_draws[1, ]
 
