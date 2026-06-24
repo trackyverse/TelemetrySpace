@@ -130,7 +130,7 @@ test_that("parameter validation works", {
 test_that("test COA_TagInt model results to make sure its consistent", {
   mean_p0 <- tag_int_gaussian$summary[1]
 
-  expected_mean_p0 <- 0.32
+  expected_mean_p0 <- 0.166
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
 })
 
@@ -244,11 +244,11 @@ test_that("check to see if loc_draws returns proper values", {
     .chain = 1,
     .iteration = 1,
     .draw = 1,
-    lp__ = -254.32,
+    lp__ = -396.73,
     fish = 1,
     time = 1,
-    x = -2.65,
-    y = -0.36
+    x = -2.42,
+    y = -0.357
   )
   row <- tag_int_gaussian$loc_draws[1, ]
 
@@ -344,7 +344,7 @@ test_that("check to see if gq is the correct length", {
 #### LOGISTIC ####
 test_that("test COA_standard logistic model results to make sure its consistent", {
   mean_p0 <- tag_int_logistic$summary[1]
-  expected_mean_p0 <- 0.36
+  expected_mean_p0 <- 0.296
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
 })
 

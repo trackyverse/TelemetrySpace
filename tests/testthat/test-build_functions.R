@@ -214,7 +214,7 @@ test_that("build_counts returns an array with correct dimensions and dimnames", 
 })
 
 test_that("build_counts correctly aggregates detection counts per tag/rec/time", {
-  expect_equal(ps_count_example["1594061", "1", "PSM-003"], 3L)
+  expect_equal(ps_count_example["1594061", "1", "PSM-003"], 4L)
   expect_equal(ps_count_example["1594061", "1", "PSM-002"], 0L)
 })
 

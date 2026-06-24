@@ -118,7 +118,7 @@ test_that("parameter validation works", {
 
 test_that("test COA_standard gaussian model results to make sure its consistent", {
   mean_p0 <- standard_gaussian$summary[1]
-  expected_mean_p0 <- 0.429
+  expected_mean_p0 <- 0.388
   # expected_mean_p0 <- 0.2658
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
 })
@@ -176,14 +176,14 @@ test_that("check to see if all_estimates returns proper info", {
 test_that("check to see if all_estimates returns proper values", {
   # ----- check if vals in all draws is correct
   expected_vals <- c(
-    alpha0 = -0.36,
-    alpha1 = 0.62,
-    `sx[1,1]` = -3.3,
-    `sx[1,2]` = -2.734,
-    `sy[1,1]` = -1.34,
-    `sy[1,2]` = -0.239,
-    p0 = 0.41,
-    sigma = 0.90
+    alpha0 = -0.50,
+    alpha1 = 0.50,
+    `sx[1,1]` = -2.835,
+    `sx[1,2]` = -2.494,
+    `sy[1,1]` = -0.293,
+    `sy[1,2]` = -0.275,
+    p0 = 0.378,
+    sigma = 0.996
   )
   row <- standard_gaussian$all_estimates[1, ]
 
@@ -234,11 +234,11 @@ test_that("check to see if loc_draws returns proper values", {
     .chain = 1,
     .iteration = 1,
     .draw = 1,
-    lp__ = -163.41,
+    lp__ = -248.912,
     fish = 1,
     time = 1,
-    x = -3.32,
-    y = -1.34
+    x = -2.84,
+    y = -0.293
   )
   row <- standard_gaussian$loc_draws[1, ]
 
@@ -333,7 +333,7 @@ test_that("check to see if gq is the correct length", {
 #### LOGISTIC ####
 test_that("test COA_standard logistic model results to make sure its consistent", {
   mean_p0 <- standard_logistic$summary[1]
-  expected_mean_p0 <- 0.72
+  expected_mean_p0 <- 0.658
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
 })
 

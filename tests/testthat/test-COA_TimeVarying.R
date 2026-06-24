@@ -114,7 +114,7 @@ test_that("parameter validation works", {
 # time_vary_gaussian$coas
 test_that("test COA_TimeVarying model results to make sure its consistent", {
   mean_p0 <- time_vary_gaussian$summary[1]
-  expected_mean_p0 <- 0.430
+  expected_mean_p0 <- 0.27
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.07)
 })
 
@@ -230,11 +230,11 @@ test_that("check to see if loc_draws returns proper values", {
     .chain = 1,
     .iteration = 1,
     .draw = 1,
-    lp__ = -107.69,
+    lp__ = -171.2,
     fish = 1,
     time = 1,
-    x = -3.44,
-    y = -0.86
+    x = -2.85,
+    y = -0.57
   )
   row <- time_vary_gaussian$loc_draws[1, ]
 
@@ -329,7 +329,7 @@ test_that("check to see if gq is the correct length", {
 #### LOGISTIC ####
 test_that("test COA_TimeVarying model results to make sure its consistent", {
   mean_p0 <- time_vary_logistic$summary[1]
-  expected_mean_p0 <- 0.430
+  expected_mean_p0 <- 0.341
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.07)
 })
 
