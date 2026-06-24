@@ -65,7 +65,7 @@ check_time(df, arg_name = NULL)
 
 check_unit(vec, arg_name = NULL)
 
-check_utm(sf, arg_name = NULL)
+check_utm(sf, error = FALSE, arg_name = NULL)
 }
 \arguments{
 \item{sf}{is a \code{sf} object that needs to be checked.}
@@ -102,6 +102,9 @@ same length as \code{ntest} or the number of tags.}
 \item{label}{is the name of the group of cols e.g., \code{receiver}.}
 
 \item{stan}{is a \code{Stan} object.}
+
+\item{error}{\code{logical} value that dictates whether an error message is
+displayed or a warning message. Default is \code{FALAE}.}
 }
 \description{
 Error functions

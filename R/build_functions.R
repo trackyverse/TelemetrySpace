@@ -326,7 +326,7 @@ build_ntrans <- function(
 
 build_pixel_grid <- function(bnd_sf, res, crs) {
   check_sf_object(bnd_sf)
-  check_utm(bnd_sf)
+  check_utm(bnd_sf, error = TRUE)
   check_aeqd_string(crs)
   check_numerical(res)
 

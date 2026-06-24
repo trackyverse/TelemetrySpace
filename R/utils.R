@@ -436,10 +436,12 @@ check_unit <- function(vec, arg_name = NULL) {
   invisible(vec)
 }
 
+#' @param error `logical` value that dictates whether an error message is
+#' displayed or a warning message. Default is `FALAE`.
 #' @keywords internal
 #' @rdname error_functions
 
-check_utm <- function(sf, arg_name = NULL) {
+check_utm <- function(sf, error = FALSE, arg_name = NULL) {
   if (is.null(arg_name)) {
     arg_name <- rlang::as_label(rlang::enexpr(sf))
   }
@@ -459,11 +461,23 @@ check_utm <- function(sf, arg_name = NULL) {
     ((crs_extract >= 32601L && crs_extract <= 32660L) ||
       (crs_extract >= 32701L && crs_extract <= 32760L))
 
-  if (!is_utm) {
-    cli::cli_alert_warning(
-      c(
-        "{.arg {arg_name}} is currently not in UTMs (EPSG:32601-32660 or EPSG:32701-32760), potentially
+  if (isFALSE(error)) {
+    if (!is_utm) {
+      cli::cli_alert_warning(
+        c(
+          "{.arg {arg_name}} is currently not in UTMs (EPSG:32601-32660 or EPSG:32701-32760), potentially
         making distance calculations inaccurate. Are you sure this is correct? ",
+          "i" = "Current CRS: {.val {crs$input}} ",
+          "i" = "To transform call {.code sf::st_transform({arg_name}, <utm_epsg>)}."
+        )
+      )
+    }
+  }
+  if (isTRUE(error)) {
+    cli::cli_abort(
+      c(
+        "{.arg {arg_name}} is currently not in UTMs (EPSG:32601-32660 or EPSG:32701-32760), making 
+        it not possible to create grid",
         "i" = "Current CRS: {.val {crs$input}} ",
         "i" = "To transform call {.code sf::st_transform({arg_name}, <utm_epsg>)}."
       )
