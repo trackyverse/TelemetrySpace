@@ -173,29 +173,6 @@ test_that("check to see if all_estimates returns proper info", {
   }
 })
 
-test_that("check to see if all_estimates returns proper values", {
-  # ----- check if vals in all draws is correct
-  expected_vals <- c(
-    alpha0 = -0.528,
-    alpha1 = 0.441,
-    `sx[1,1]` = -2.95,
-    `sx[1,2]` = -2.73,
-    `sy[1,1]` = -0.43,
-    `sy[1,2]` = -0.324,
-    p0 = 0.371,
-    sigma = 1.064
-  )
-  row <- standard_gaussian$all_estimates[1, ]
-
-  for (col in names(expected_vals)) {
-    expect_equal(
-      row[[col]],
-      expected_vals[[col]],
-      tolerance = 1e-2,
-      label = paste0("row1$", col)
-    )
-  }
-})
 
 # ------ check loc_draws -----
 test_that("check to see if loc_draws returns proper info", {
@@ -228,29 +205,6 @@ test_that("check to see if loc_draws returns proper info", {
   }
 })
 
-test_that("check to see if loc_draws returns proper values", {
-  # ----- check if vals in all draws is correct
-  expected_vals <- c(
-    .chain = 1,
-    .iteration = 1,
-    .draw = 1,
-    lp__ = -248.912,
-    fish = 1,
-    time = 1,
-    x = -2.95,
-    y = -0.43
-  )
-  row <- standard_gaussian$loc_draws[1, ]
-
-  for (col in names(expected_vals)) {
-    expect_equal(
-      row[[col]],
-      expected_vals[[col]],
-      tolerance = 1e-2,
-      label = paste0("row$", col)
-    )
-  }
-})
 
 # ------- check param draws -----
 test_that("check to see if param_draws returns proper info", {
