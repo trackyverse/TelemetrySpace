@@ -461,8 +461,8 @@ check_utm <- function(sf, error = FALSE, arg_name = NULL) {
     ((crs_extract >= 32601L && crs_extract <= 32660L) ||
       (crs_extract >= 32701L && crs_extract <= 32760L))
 
-  if (isFALSE(error)) {
-    if (!is_utm) {
+  if (!is_utm) {
+    if (isFALSE(error)) {
       cli::cli_alert_warning(
         c(
           "{.arg {arg_name}} is currently not in UTMs (EPSG:32601-32660 or EPSG:32701-32760), potentially
@@ -472,16 +472,16 @@ check_utm <- function(sf, error = FALSE, arg_name = NULL) {
         )
       )
     }
-  }
-  if (isTRUE(error)) {
-    cli::cli_abort(
-      c(
-        "{.arg {arg_name}} is currently not in UTMs (EPSG:32601-32660 or EPSG:32701-32760), making 
+    if (isTRUE(error)) {
+      cli::cli_abort(
+        c(
+          "{.arg {arg_name}} is currently not in UTMs (EPSG:32601-32660 or EPSG:32701-32760), making 
         it not possible to create grid",
-        "i" = "Current CRS: {.val {crs$input}} ",
-        "i" = "To transform call {.code sf::st_transform({arg_name}, <utm_epsg>)}."
+          "i" = "Current CRS: {.val {crs$input}} ",
+          "i" = "To transform call {.code sf::st_transform({arg_name}, <utm_epsg>)}."
+        )
       )
-    )
+    }
   }
 
   invisible(sf)
