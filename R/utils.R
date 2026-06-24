@@ -75,7 +75,7 @@ check_array_tag <- function(array, len, arg_name = NULL) {
 
   if (!is.array(array) || !is.numeric(array) || length(array) != len) {
     cli::cli_abort(
-      "`{arg_name}` must be a numeric array with length equal to 
+      "`{arg_name}` must be a numeric array with length equal to
       {.val {len}} (the number of test tags)."
     )
   }

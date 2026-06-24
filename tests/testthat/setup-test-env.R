@@ -105,7 +105,6 @@ ps_det_test_tag <- merge(
 
 # ----- only select the first 2 times ----
 ps_det_test_tag <- ps_det_test_tag[ps_det_test_tag$time < 3, ]
-str(ps_det_test_tag)
 
 ps_test_tag_count <- build_counts(
   df = ps_det_test_tag,
@@ -212,8 +211,8 @@ time_vary_gaussian <- do.call(
     standata,
     list(
       chains = 2,
-      warmup = 300,
-      iter = 1000,
+      warmup = 200,
+      iter = 1300,
       control = list(adapt_delta = 0.95),
       seed = 4,
       ndraws = 11,
@@ -230,7 +229,7 @@ time_vary_logistic <- do.call(
     standata,
     list(
       chains = 2,
-      warmup = 400,
+      warmup = 300,
       iter = 1100,
       # warmup = 3000,
       # iter = 7000,

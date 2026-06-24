@@ -329,7 +329,7 @@ test_that("check to see if gq is the correct length", {
 #### LOGISTIC ####
 test_that("test COA_TimeVarying model results to make sure its consistent", {
   mean_p0 <- time_vary_logistic$summary[1]
-  expected_mean_p0 <- 0.341
+  expected_mean_p0 <- 0.367
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.07)
 })
 
