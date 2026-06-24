@@ -455,7 +455,9 @@ check_utm <- function(sf, error = FALSE, arg_name = NULL) {
   }
 
   # UTM zones are EPSG:32601-32660 (N) and EPSG:32701-32760 (S)
-  crs_extract <- as.integer(gsub("^EPSG:", "", crs$input))
+  crs_extract <- gsub("^EPSG:", "", crs$input) |>
+    as.integer() |>
+    suppressWarnings()
 
   is_utm <- !is.na(crs_extract) &&
     ((crs_extract >= 32601L && crs_extract <= 32660L) ||
