@@ -138,7 +138,7 @@ test_that("check to see if all_estimates returns proper info", {
   expect_equal(
     colnames(time_vary_gaussian$all_estimates),
     c(
-      "alpha0",
+      alpha0_names,
       "alpha1",
       "sx[1,1]",
       "sx[1,2]",
@@ -260,7 +260,7 @@ test_that("check to see if param_draws returns proper info", {
       "lp__",
       "fish",
       "time",
-      "alpha0",
+      alpha0_names,
       "alpha1",
       p0_names,
       "sigma"
