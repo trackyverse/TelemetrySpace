@@ -230,11 +230,11 @@ test_that("check to see if loc_draws returns proper values", {
     .chain = 1,
     .iteration = 1,
     .draw = 1,
-    lp__ = -171.2,
+    lp__ = -189.7,
     fish = 1,
     time = 1,
-    x = -2.85,
-    y = -0.57
+    x = -3.03,
+    y = -0.24
   )
   row <- time_vary_gaussian$loc_draws[1, ]
 
