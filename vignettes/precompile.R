@@ -40,7 +40,3 @@ knit(
 )
 
 setwd(orig_wd)
-
-# we can move figures using the following code
-fs::dir_copy("figure", "vignettes/figure", overwrite = TRUE)
-fs::dir_delete("figure")
