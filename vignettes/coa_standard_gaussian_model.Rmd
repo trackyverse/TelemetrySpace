@@ -1,8 +1,8 @@
 ---
-title: "Model specification: COA_Standard_gaussian"
+title: "Model specification - Standard Detection Probability"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Model specification: COA_Standard_gaussian}
+  %\VignetteIndexEntry{Model specification - Standard Detection Probability}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
