@@ -11,7 +11,7 @@ ps_det_example
 
 ## Format
 
-A `data.frame` with 5 columns and 592 rows.
+A `data.frame` with 5 columns and 577 rows.
 
 - detection_timestamp_utc:
 

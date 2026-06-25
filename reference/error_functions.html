@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">TelemetrySpace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,7 +18,9 @@
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Estimate_COA_vignette.html">Estimate activity centers from acoustic telemetry data</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/coa_standard_gaussian_model.html">Model specification - Standard Detection Probability</a></li>
+    <li><a class="dropdown-item" href="../articles/Estimate_COA_vignette.html">Estimate activity centers from acoustic telemetry data</a></li>
+    <li><a class="dropdown-item" href="../articles/ps_estimate_coa_vignette.html">Estimate Centers of Activity for Lake Trout Tagged with an Acoustic Transmitter</a></li>
     <li><a class="dropdown-item" href="../articles/stancode.html">Full Stan code</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -34,7 +36,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Error functions</h1>
-      <small class="dont-index">Source: <a href="https://github.com/trackyverse/TelemetrySpace/blob/v1.3.2/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/trackyverse/TelemetrySpace/blob/main/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
       <div class="d-none name"><code>error_functions.Rd</code></div>
     </div>
 
@@ -62,7 +64,13 @@
 <span></span>
 <span><span class="fu">check_delay</span><span class="op">(</span><span class="va">vec</span>, <span class="va">type</span>, arg_name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">check_draws</span><span class="op">(</span><span class="va">draws</span>, arg_name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">check_draw_summary</span><span class="op">(</span><span class="va">draws_summary</span>, arg_name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">check_list</span><span class="op">(</span><span class="va">list</span>, arg_name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">check_lonlat</span><span class="op">(</span><span class="va">sf</span>, error <span class="op">=</span> <span class="cn">FALSE</span>, arg_name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">check_nrec</span><span class="op">(</span><span class="va">df</span>, <span class="va">vec</span>, arg_name_df <span class="op">=</span> <span class="cn">NULL</span>, arg_name_vec <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
@@ -78,9 +86,7 @@
 <span></span>
 <span><span class="fu">check_time</span><span class="op">(</span><span class="va">df</span>, arg_name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">check_unit</span><span class="op">(</span><span class="va">vec</span>, arg_name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">check_utm</span><span class="op">(</span><span class="va">sf</span>, arg_name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">check_unit</span><span class="op">(</span><span class="va">vec</span>, arg_name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -120,8 +126,21 @@ same length as <code>ntest</code> or the number of tags.</p></dd>
 <dd><p>is a <code>character</code> that is the type of delay desired.</p></dd>
 
 
+<dt id="arg-draws">draws<a class="anchor" aria-label="anchor" href="#arg-draws"></a></dt>
+<dd><p>is a <code>draws_df</code>object to be checked.</p></dd>
+
+
+<dt id="arg-draws-summary">draws_summary<a class="anchor" aria-label="anchor" href="#arg-draws-summary"></a></dt>
+<dd><p>is a <code>draws_summary</code>object to be checked.</p></dd>
+
+
 <dt id="arg-list">list<a class="anchor" aria-label="anchor" href="#arg-list"></a></dt>
 <dd><p>is a <code>list</code> to be checked.</p></dd>
+
+
+<dt id="arg-error">error<a class="anchor" aria-label="anchor" href="#arg-error"></a></dt>
+<dd><p><code>logical</code> value that dictates whether an error message is
+displayed or a warning message. Default is <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-arg-name-df">arg_name_df<a class="anchor" aria-label="anchor" href="#arg-arg-name-df"></a></dt>

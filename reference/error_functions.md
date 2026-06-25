@@ -23,7 +23,13 @@ check_data_frame(df, arg_name = NULL)
 
 check_delay(vec, type, arg_name = NULL)
 
+check_draws(draws, arg_name = NULL)
+
+check_draw_summary(draws_summary, arg_name = NULL)
+
 check_list(list, arg_name = NULL)
+
+check_lonlat(sf, error = FALSE, arg_name = NULL)
 
 check_nrec(df, vec, arg_name_df = NULL, arg_name_vec = NULL)
 
@@ -40,8 +46,6 @@ check_stan_object(stan, arg_name = NULL)
 check_time(df, arg_name = NULL)
 
 check_unit(vec, arg_name = NULL)
-
-check_utm(sf, arg_name = NULL)
 ```
 
 ## Arguments
@@ -79,9 +83,22 @@ check_utm(sf, arg_name = NULL)
 
   is a `character` that is the type of delay desired.
 
+- draws:
+
+  is a `draws_df`object to be checked.
+
+- draws_summary:
+
+  is a `draws_summary`object to be checked.
+
 - list:
 
   is a `list` to be checked.
+
+- error:
+
+  `logical` value that dictates whether an error message is displayed or
+  a warning message. Default is `FALSE`.
 
 - arg_name_df:
 

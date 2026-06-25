@@ -12,7 +12,7 @@ ps_det_test_tag
 
 ## Format
 
-A `data.frame` with 7 columns and 214 rows.
+A `data.frame` with 7 columns and 200 rows.
 
 - detection_timestamp_utc:
 
