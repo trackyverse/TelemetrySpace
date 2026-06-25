@@ -283,6 +283,53 @@ check_list <- function(list, arg_name = NULL) {
   }
 }
 
+#' @param error `logical` value that dictates whether an error message is
+#' displayed or a warning message. Default is `FALSE`.
+#' @keywords internal
+#' @rdname error_functions
+
+check_lonlat <- function(sf, error = FALSE, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(sf))
+  }
+  crs <- sf::st_crs(sf)
+
+  if (is.na(crs)) {
+    cli::cli_abort(
+      "{.arg {arg_name}} has no CRS set. Please set CRS using {.fnct {sf::st_crs()}}.",
+      call = NULL
+    )
+  }
+
+  is_longlot <- sf::st_is_longlat(sf)
+
+  if (isFALSE(is_longlot)) {
+    if (isFALSE(error)) {
+      cli::cli_alert_warning(
+        c(
+          "{.arg {arg_name}} is currently in longlat degrees and is not projected, 
+        making distance calculations inaccurate. Are you sure this is correct? ",
+          "i" = "Current CRS: {.val {crs$input}} ",
+          "i" = "To transform call {.code sf::st_transform({arg_name}, <projected_crs>)}."
+        )
+      )
+    }
+
+    if (isTRUE(error)) {
+      cli::cli_abort(
+        c(
+          "{.arg {arg_name}} is currently in longlat degrees and is not projected making it
+           not possible to create grid.",
+          "i" = "Current CRS: {.val {crs$input}} ",
+          "i" = "To transform call {.code sf::st_transform({arg_name}, <projected_crs>)}."
+        )
+      )
+    }
+  }
+
+  invisible(sf)
+}
+
 
 #' @param arg_name_df the name of the argument of df to check.
 #' @param arg_name_vec the name of the argument of vec to check.
@@ -436,58 +483,6 @@ check_unit <- function(vec, arg_name = NULL) {
   invisible(vec)
 }
 
-#' @param error `logical` value that dictates whether an error message is
-#' displayed or a warning message. Default is `FALAE`.
-#' @keywords internal
-#' @rdname error_functions
-
-check_utm <- function(sf, error = FALSE, arg_name = NULL) {
-  if (is.null(arg_name)) {
-    arg_name <- rlang::as_label(rlang::enexpr(sf))
-  }
-  crs <- sf::st_crs(sf)
-
-  if (is.na(crs)) {
-    cli::cli_abort(
-      "{.arg {arg_name}} has no CRS set. Please set CRS using {.fnct {sf::st_crs()}}.",
-      call = NULL
-    )
-  }
-
-  # UTM zones are EPSG:32601-32660 (N) and EPSG:32701-32760 (S)
-  crs_extract <- gsub("^EPSG:", "", crs$input) |>
-    as.integer() |>
-    suppressWarnings()
-
-  is_utm <- !is.na(crs_extract) &&
-    ((crs_extract >= 32601L && crs_extract <= 32660L) ||
-      (crs_extract >= 32701L && crs_extract <= 32760L))
-
-  if (!is_utm) {
-    if (isFALSE(error)) {
-      cli::cli_alert_warning(
-        c(
-          "{.arg {arg_name}} is currently not in UTMs (EPSG:32601-32660 or EPSG:32701-32760), potentially
-        making distance calculations inaccurate. Are you sure this is correct? ",
-          "i" = "Current CRS: {.val {crs$input}} ",
-          "i" = "To transform call {.code sf::st_transform({arg_name}, <utm_epsg>)}."
-        )
-      )
-    }
-    if (isTRUE(error)) {
-      cli::cli_abort(
-        c(
-          "{.arg {arg_name}} is currently not in UTMs (EPSG:32601-32660 or EPSG:32701-32760), making 
-        it not possible to create grid",
-          "i" = "Current CRS: {.val {crs$input}} ",
-          "i" = "To transform call {.code sf::st_transform({arg_name}, <utm_epsg>)}."
-        )
-      )
-    }
-  }
-
-  invisible(sf)
-}
 
 #' Extract Draws
 #'

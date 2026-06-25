@@ -13,6 +13,7 @@
 \alias{check_draws}
 \alias{check_draw_summary}
 \alias{check_list}
+\alias{check_lonlat}
 \alias{check_nrec}
 \alias{check_numerical}
 \alias{check_num_vec_len}
@@ -22,7 +23,6 @@
 \alias{check_stan_object}
 \alias{check_time}
 \alias{check_unit}
-\alias{check_utm}
 \title{Error functions}
 \usage{
 check_aeqd(sf, arg_name = NULL)
@@ -49,6 +49,8 @@ check_draw_summary(draws_summary, arg_name = NULL)
 
 check_list(list, arg_name = NULL)
 
+check_lonlat(sf, error = FALSE, arg_name = NULL)
+
 check_nrec(df, vec, arg_name_df = NULL, arg_name_vec = NULL)
 
 check_numerical(vec, arg_name = NULL)
@@ -64,8 +66,6 @@ check_stan_object(stan, arg_name = NULL)
 check_time(df, arg_name = NULL)
 
 check_unit(vec, arg_name = NULL)
-
-check_utm(sf, error = FALSE, arg_name = NULL)
 }
 \arguments{
 \item{sf}{is a \code{sf} object that needs to be checked.}
@@ -91,6 +91,9 @@ same length as \code{ntest} or the number of tags.}
 
 \item{list}{is a \code{list} to be checked.}
 
+\item{error}{\code{logical} value that dictates whether an error message is
+displayed or a warning message. Default is \code{FALSE}.}
+
 \item{arg_name_df}{the name of the argument of df to check.}
 
 \item{arg_name_vec}{the name of the argument of vec to check.}
@@ -102,9 +105,6 @@ same length as \code{ntest} or the number of tags.}
 \item{label}{is the name of the group of cols e.g., \code{receiver}.}
 
 \item{stan}{is a \code{Stan} object.}
-
-\item{error}{\code{logical} value that dictates whether an error message is
-displayed or a warning message. Default is \code{FALAE}.}
 }
 \description{
 Error functions
