@@ -137,7 +137,7 @@ testdat |>
   labs(x = "Hours since deployment", y = "Number of detections")
 ```
 
-![plot of chunk unnamed-chunk-3](unnamed-chunk-3-1.png)
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
 
 Tally how many time intervals each receiver was operational for - this allows for individual receivers deployed for different periods and/or receivers that were lost.
 
@@ -303,8 +303,8 @@ fit <- COA_Standard(
 ## 
 ## SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 1).
 ## Chain 1: 
-## Chain 1: Gradient evaluation took 0.001052 seconds
-## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 10.52 seconds.
+## Chain 1: Gradient evaluation took 0.00072 seconds
+## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 7.2 seconds.
 ## Chain 1: Adjust your expectations accordingly!
 ## Chain 1: 
 ## Chain 1: 
@@ -321,15 +321,15 @@ fit <- COA_Standard(
 ## Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 ## Chain 1: 
-## Chain 1:  Elapsed Time: 5.95 seconds (Warm-up)
-## Chain 1:                5.837 seconds (Sampling)
-## Chain 1:                11.787 seconds (Total)
+## Chain 1:  Elapsed Time: 6.407 seconds (Warm-up)
+## Chain 1:                5.378 seconds (Sampling)
+## Chain 1:                11.785 seconds (Total)
 ## Chain 1: 
 ## 
 ## SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 2).
 ## Chain 2: 
-## Chain 2: Gradient evaluation took 0.000523 seconds
-## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 5.23 seconds.
+## Chain 2: Gradient evaluation took 0.000546 seconds
+## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 5.46 seconds.
 ## Chain 2: Adjust your expectations accordingly!
 ## Chain 2: 
 ## Chain 2: 
@@ -346,15 +346,15 @@ fit <- COA_Standard(
 ## Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 ## Chain 2: 
-## Chain 2:  Elapsed Time: 6.146 seconds (Warm-up)
-## Chain 2:                7.564 seconds (Sampling)
-## Chain 2:                13.71 seconds (Total)
+## Chain 2:  Elapsed Time: 6.155 seconds (Warm-up)
+## Chain 2:                5.833 seconds (Sampling)
+## Chain 2:                11.988 seconds (Total)
 ## Chain 2: 
 ## 
 ## SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 3).
 ## Chain 3: 
-## Chain 3: Gradient evaluation took 0.000522 seconds
-## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 5.22 seconds.
+## Chain 3: Gradient evaluation took 0.000536 seconds
+## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 5.36 seconds.
 ## Chain 3: Adjust your expectations accordingly!
 ## Chain 3: 
 ## Chain 3: 
@@ -371,15 +371,15 @@ fit <- COA_Standard(
 ## Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 ## Chain 3: 
-## Chain 3:  Elapsed Time: 5.729 seconds (Warm-up)
-## Chain 3:                5.36 seconds (Sampling)
-## Chain 3:                11.089 seconds (Total)
+## Chain 3:  Elapsed Time: 6.129 seconds (Warm-up)
+## Chain 3:                4.866 seconds (Sampling)
+## Chain 3:                10.995 seconds (Total)
 ## Chain 3: 
 ## 
 ## SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 4).
 ## Chain 4: 
-## Chain 4: Gradient evaluation took 0.000554 seconds
-## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 5.54 seconds.
+## Chain 4: Gradient evaluation took 0.000608 seconds
+## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 6.08 seconds.
 ## Chain 4: Adjust your expectations accordingly!
 ## Chain 4: 
 ## Chain 4: 
@@ -396,15 +396,15 @@ fit <- COA_Standard(
 ## Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 ## Chain 4: 
-## Chain 4:  Elapsed Time: 6.301 seconds (Warm-up)
-## Chain 4:                5.29 seconds (Sampling)
-## Chain 4:                11.591 seconds (Total)
+## Chain 4:  Elapsed Time: 6.76 seconds (Warm-up)
+## Chain 4:                8.023 seconds (Sampling)
+## Chain 4:                14.783 seconds (Total)
 ## Chain 4: 
 ##         warmup sample
-## chain:1  5.950  5.837
-## chain:2  6.146  7.564
-## chain:3  5.729  5.360
-## chain:4  6.301  5.290
+## chain:1  6.407  5.378
+## chain:2  6.155  5.833
+## chain:3  6.129  4.866
+## chain:4  6.760  8.023
 ```
 
 The function will automatically spit out the run-time associated with each of the 4 chains used for fitting and returns a list with four objects:
@@ -438,8 +438,8 @@ fit$summary
 
 ```
 ##            mean      se_mean         sd      2.5%       25%       50%       75%     97.5%    n_eff     Rhat
-## p0    0.2653356 0.0004048262 0.02195997 0.2241451 0.2504386 0.2642748 0.2800300 0.3105078 2942.566 1.000919
-## sigma 0.2734087 0.0002901738 0.01443686 0.2467614 0.2636623 0.2729699 0.2827432 0.3029836 2475.306 1.000836
+## p0    0.2649269 0.0003857418 0.02195448 0.2244304 0.2492082 0.2646826 0.2796141 0.3089730 3239.312 1.001716
+## sigma 0.2735005 0.0002615187 0.01445862 0.2459703 0.2636200 0.2733011 0.2830180 0.3018919 3056.668 1.002765
 ```
 
 The third returns the time required to run the model (in minutes). Note that Stan will automatically detect and use multiple cores. If the computer used to run this has multiple cores, the time returned will be longer than the actual run time (because it will sum the time for each core). To return the realized run time, divide `fit$time` by the number of cores.
@@ -450,7 +450,7 @@ fit$time
 ```
 
 ```
-## [1] 0.80295
+## [1] 0.82585
 ```
 
 The fourth returns an array of COA estimates, where each matrix corresponds to one individual, the rows correspond to each time step, and the columns include the median posterior estimate of the east-west (x) and north-south (y) coordinates. The 95% credible interval (Bayesian version of a confidence interval) for each coordinate is also provided.
@@ -462,18 +462,18 @@ fit$coas
 
 ```
 ## # A tibble: 10 × 8
-##      ind  time       x     y x_lower  x_upper y_lower y_upper
-##    <int> <int>   <dbl> <dbl>   <dbl>    <dbl>   <dbl>   <dbl>
-##  1     1     1 -0.0432 0.290  -0.147  0.0613   0.182    0.405
-##  2     1     2 -0.0179 0.362  -0.147  0.106    0.219    0.504
-##  3     1     3 -0.101  0.385  -0.266  0.0609   0.188    0.576
-##  4     1     4 -0.128  0.282  -0.289  0.0293   0.115    0.473
-##  5     1     5 -0.176  0.322  -0.335 -0.00627  0.133    0.519
-##  6     1     6 -0.126  0.684  -0.462  0.185    0.144    0.883
-##  7     1     7 -0.0517 0.366  -0.175  0.0655   0.232    0.501
-##  8     1     8 -0.155  0.405  -0.285 -0.0290   0.255    0.544
-##  9     1     9 -0.0541 0.334  -0.236  0.119    0.127    0.552
-## 10     1    10 -0.108  0.307  -0.305  0.0895   0.0793   0.573
+##      ind  time       x     y x_lower x_upper y_lower y_upper
+##    <int> <int>   <dbl> <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
+##  1     1     1 -0.0424 0.289  -0.149  0.0577  0.179    0.403
+##  2     1     2 -0.0178 0.360  -0.145  0.103   0.215    0.512
+##  3     1     3 -0.101  0.386  -0.267  0.0622  0.192    0.567
+##  4     1     4 -0.129  0.284  -0.291  0.0351  0.0996   0.481
+##  5     1     5 -0.178  0.325  -0.327 -0.0131  0.143    0.515
+##  6     1     6 -0.133  0.685  -0.463  0.181   0.127    0.871
+##  7     1     7 -0.0527 0.364  -0.174  0.0679  0.232    0.501
+##  8     1     8 -0.159  0.403  -0.285 -0.0318  0.259    0.542
+##  9     1     9 -0.0508 0.333  -0.227  0.118   0.128    0.553
+## 10     1    10 -0.108  0.308  -0.310  0.0935  0.0765   0.571
 ```
 
 The last element (`fit$all_estimates`) contains the estimates from each non-warm-up iteration for all 4 chains. (If you're not familiar with Bayesian lingo and this just seems like statistical jargon, all you need to know is that this is what you'll use to plot the uncertainty cloud around COA estimates and/or the distribution of parameter estimates as presented in the paper.) This includes estimates of all latent parameters for each individual in each time step (aka this element contains tons of parameter estimates), so we will need to subset out parameters for plotting.
@@ -573,8 +573,8 @@ fit_vary <- COA_TimeVarying(
 ## 
 ## SAMPLING FOR MODEL 'COA_TimeVarying_gaussian' NOW (CHAIN 1).
 ## Chain 1: 
-## Chain 1: Gradient evaluation took 0.000988 seconds
-## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 9.88 seconds.
+## Chain 1: Gradient evaluation took 0.001052 seconds
+## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 10.52 seconds.
 ## Chain 1: Adjust your expectations accordingly!
 ## Chain 1: 
 ## Chain 1: 
@@ -591,15 +591,15 @@ fit_vary <- COA_TimeVarying(
 ## Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 ## Chain 1: 
-## Chain 1:  Elapsed Time: 72 seconds (Warm-up)
-## Chain 1:                38.473 seconds (Sampling)
-## Chain 1:                110.473 seconds (Total)
+## Chain 1:  Elapsed Time: 72.81 seconds (Warm-up)
+## Chain 1:                33.971 seconds (Sampling)
+## Chain 1:                106.781 seconds (Total)
 ## Chain 1: 
 ## 
 ## SAMPLING FOR MODEL 'COA_TimeVarying_gaussian' NOW (CHAIN 2).
 ## Chain 2: 
-## Chain 2: Gradient evaluation took 0.000742 seconds
-## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 7.42 seconds.
+## Chain 2: Gradient evaluation took 0.000767 seconds
+## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 7.67 seconds.
 ## Chain 2: Adjust your expectations accordingly!
 ## Chain 2: 
 ## Chain 2: 
@@ -616,15 +616,15 @@ fit_vary <- COA_TimeVarying(
 ## Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 ## Chain 2: 
-## Chain 2:  Elapsed Time: 73.474 seconds (Warm-up)
-## Chain 2:                30.277 seconds (Sampling)
-## Chain 2:                103.751 seconds (Total)
+## Chain 2:  Elapsed Time: 74.38 seconds (Warm-up)
+## Chain 2:                41.743 seconds (Sampling)
+## Chain 2:                116.123 seconds (Total)
 ## Chain 2: 
 ## 
 ## SAMPLING FOR MODEL 'COA_TimeVarying_gaussian' NOW (CHAIN 3).
 ## Chain 3: 
-## Chain 3: Gradient evaluation took 0.000725 seconds
-## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 7.25 seconds.
+## Chain 3: Gradient evaluation took 0.000758 seconds
+## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 7.58 seconds.
 ## Chain 3: Adjust your expectations accordingly!
 ## Chain 3: 
 ## Chain 3: 
@@ -641,15 +641,15 @@ fit_vary <- COA_TimeVarying(
 ## Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 ## Chain 3: 
-## Chain 3:  Elapsed Time: 73.07 seconds (Warm-up)
-## Chain 3:                26.263 seconds (Sampling)
-## Chain 3:                99.333 seconds (Total)
+## Chain 3:  Elapsed Time: 71.218 seconds (Warm-up)
+## Chain 3:                26.691 seconds (Sampling)
+## Chain 3:                97.909 seconds (Total)
 ## Chain 3: 
 ## 
 ## SAMPLING FOR MODEL 'COA_TimeVarying_gaussian' NOW (CHAIN 4).
 ## Chain 4: 
-## Chain 4: Gradient evaluation took 0.000722 seconds
-## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 7.22 seconds.
+## Chain 4: Gradient evaluation took 0.000788 seconds
+## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 7.88 seconds.
 ## Chain 4: Adjust your expectations accordingly!
 ## Chain 4: 
 ## Chain 4: 
@@ -666,15 +666,15 @@ fit_vary <- COA_TimeVarying(
 ## Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 ## Chain 4: 
-## Chain 4:  Elapsed Time: 65.434 seconds (Warm-up)
-## Chain 4:                30.132 seconds (Sampling)
-## Chain 4:                95.566 seconds (Total)
+## Chain 4:  Elapsed Time: 73.978 seconds (Warm-up)
+## Chain 4:                34.014 seconds (Sampling)
+## Chain 4:                107.992 seconds (Total)
 ## Chain 4: 
 ##         warmup sample
-## chain:1 72.000 38.473
-## chain:2 73.474 30.277
-## chain:3 73.070 26.263
-## chain:4 65.434 30.132
+## chain:1 72.810 33.971
+## chain:2 74.380 41.743
+## chain:3 71.218 26.691
+## chain:4 73.978 34.014
 ```
 
 ``` r
@@ -700,7 +700,7 @@ fit_vary$time
 ```
 
 ```
-## [1] 6.818717
+## [1] 7.14675
 ```
 
 ``` r
@@ -804,8 +804,8 @@ fit_tag <- COA_TagInt(
 ## 
 ## SAMPLING FOR MODEL 'COA_Tag_Integrated_gaussian' NOW (CHAIN 1).
 ## Chain 1: 
-## Chain 1: Gradient evaluation took 0.001032 seconds
-## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 10.32 seconds.
+## Chain 1: Gradient evaluation took 0.001106 seconds
+## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 11.06 seconds.
 ## Chain 1: Adjust your expectations accordingly!
 ## Chain 1: 
 ## Chain 1: 
@@ -822,15 +822,15 @@ fit_tag <- COA_TagInt(
 ## Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 ## Chain 1: 
-## Chain 1:  Elapsed Time: 64.772 seconds (Warm-up)
-## Chain 1:                31.822 seconds (Sampling)
-## Chain 1:                96.594 seconds (Total)
+## Chain 1:  Elapsed Time: 66.656 seconds (Warm-up)
+## Chain 1:                36.17 seconds (Sampling)
+## Chain 1:                102.826 seconds (Total)
 ## Chain 1: 
 ## 
 ## SAMPLING FOR MODEL 'COA_Tag_Integrated_gaussian' NOW (CHAIN 2).
 ## Chain 2: 
-## Chain 2: Gradient evaluation took 0.001111 seconds
-## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 11.11 seconds.
+## Chain 2: Gradient evaluation took 0.001032 seconds
+## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 10.32 seconds.
 ## Chain 2: Adjust your expectations accordingly!
 ## Chain 2: 
 ## Chain 2: 
@@ -847,15 +847,15 @@ fit_tag <- COA_TagInt(
 ## Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 ## Chain 2: 
-## Chain 2:  Elapsed Time: 65.649 seconds (Warm-up)
-## Chain 2:                34.577 seconds (Sampling)
-## Chain 2:                100.226 seconds (Total)
+## Chain 2:  Elapsed Time: 65.921 seconds (Warm-up)
+## Chain 2:                32.703 seconds (Sampling)
+## Chain 2:                98.624 seconds (Total)
 ## Chain 2: 
 ## 
 ## SAMPLING FOR MODEL 'COA_Tag_Integrated_gaussian' NOW (CHAIN 3).
 ## Chain 3: 
-## Chain 3: Gradient evaluation took 0.001006 seconds
-## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 10.06 seconds.
+## Chain 3: Gradient evaluation took 0.001052 seconds
+## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 10.52 seconds.
 ## Chain 3: Adjust your expectations accordingly!
 ## Chain 3: 
 ## Chain 3: 
@@ -872,15 +872,15 @@ fit_tag <- COA_TagInt(
 ## Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 ## Chain 3: 
-## Chain 3:  Elapsed Time: 64.791 seconds (Warm-up)
-## Chain 3:                34.887 seconds (Sampling)
-## Chain 3:                99.678 seconds (Total)
+## Chain 3:  Elapsed Time: 63.123 seconds (Warm-up)
+## Chain 3:                34.967 seconds (Sampling)
+## Chain 3:                98.09 seconds (Total)
 ## Chain 3: 
 ## 
 ## SAMPLING FOR MODEL 'COA_Tag_Integrated_gaussian' NOW (CHAIN 4).
 ## Chain 4: 
-## Chain 4: Gradient evaluation took 0.001035 seconds
-## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 10.35 seconds.
+## Chain 4: Gradient evaluation took 0.001025 seconds
+## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 10.25 seconds.
 ## Chain 4: Adjust your expectations accordingly!
 ## Chain 4: 
 ## Chain 4: 
@@ -897,15 +897,15 @@ fit_tag <- COA_TagInt(
 ## Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 ## Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 ## Chain 4: 
-## Chain 4:  Elapsed Time: 70.063 seconds (Warm-up)
-## Chain 4:                35.27 seconds (Sampling)
-## Chain 4:                105.333 seconds (Total)
+## Chain 4:  Elapsed Time: 63.2 seconds (Warm-up)
+## Chain 4:                34.995 seconds (Sampling)
+## Chain 4:                98.195 seconds (Total)
 ## Chain 4: 
 ##         warmup sample
-## chain:1 64.772 31.822
-## chain:2 65.649 34.577
-## chain:3 64.791 34.887
-## chain:4 70.063 35.270
+## chain:1 66.656 36.170
+## chain:2 65.921 32.703
+## chain:3 63.123 34.967
+## chain:4 63.200 34.995
 ```
 
 ``` r
@@ -931,7 +931,7 @@ fit_tag$time # See the comment about run time when your computer has multiple co
 ```
 
 ```
-## [1] 6.697183
+## [1] 6.628917
 ```
 
 ``` r
@@ -1022,7 +1022,7 @@ ggarrange(
 )
 ```
 
-![plot of chunk unnamed-chunk-16](unnamed-chunk-16-1.png)
+![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16-1.png)
 
 
 ## References

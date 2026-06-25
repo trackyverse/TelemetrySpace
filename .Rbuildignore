@@ -4,6 +4,7 @@
 ^vignettes/_Estimate_COA_vignette\.Rmd$
 ^vignettes/_ps_estimate_coa_vignette\.Rmd$
 ^vignettes/_coa_standard_gaussian_model\.Rmd$
+^vignettes/figure$
 ^LICENSE\.md$
 ^\.github$
 ^Dockerfile$

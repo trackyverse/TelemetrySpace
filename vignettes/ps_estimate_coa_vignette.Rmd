@@ -13,10 +13,11 @@ vignette: >
 ## Introduction
 
 This vignette will walk you through the analyses presented in [Winton et al. 2018](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13080), who describes the use of spatial point process models to estimate individual centers of activity (COA) from passive acoustic telemetry data. This vignette progresses walks through how to prepare the data, using the model, and interpretating the results. We will be using the simplest case, which assumes that detection probabilities/receiver detection ranges remain constant over time, to a more complex application of a test-tag integrated model, that incorporates detection data from one or more stationary test transmitters to estimate time-varying detection ranges. The models are fitted in a Bayesian framework using the Stan software ([Carpenter et al. 2017](https://www.jstatsoft.org/article/view/v076i01/0)); code was modified from models found in [Royle et al. 2013](https://www.sciencedirect.com/book/monograph/9780124059399/spatial-capture-recapture) for fitting spatial point process models to data from camera traps. We prefer the Bayesian approach for COA estimation due to its treatment of uncertainty, but realize the longer computational time required may be prohibitive for some applications. We'd also like to note that the models described can support varying degrees of complexity - not all applications will require (or have the data to support) the most complex version of the model. The simpler the model, the shorter the run-time.
-
+       
 We have tried to make the instructions outlined in this vignette user-friendly since we are a group of applied biologists with varying degrees of statistical experience. If some of the statistical notation outlined here or in the paper remains unclear, feel free to contact us with questions for clarification. This is a new package, so if you find bugs, places where code efficiency could be improved, or instances where the documentation could be made more user-friendly, please let us know! 
 
 ## Models 
+ 
  
 ## Data preparation
 
@@ -106,24 +107,22 @@ Now that we have the receiver locations in a format that Stan can handle, we are
 
 ``` r
 head(ps_det_example)
-#>   station_no detection_timestamp_utc tag_serial_no min_delay max_delay            time_bin time rec.x rec.y
-#> 1    PSM-001     2024-05-04 02:09:48       1594061       190       290 2024-05-04 02:00:00    6     1     1
-#> 2    PSM-001     2024-05-04 04:05:03       1594061       190       290 2024-05-04 04:00:00    8     1     1
-#> 3    PSM-001     2024-05-04 03:37:50       1594061       190       290 2024-05-04 03:00:00    7     1     1
-#> 4    PSM-002     2024-05-04 03:11:04       1594061       190       290 2024-05-04 03:00:00    7     2     2
-#> 5    PSM-002     2024-05-04 02:40:09       1594061       190       290 2024-05-04 02:00:00    6     2     2
-#> 6    PSM-002     2024-05-03 22:57:37       1594061       190       290 2024-05-03 22:00:00    2     2     2
+#> # A tibble: 6 × 5
+#>   detection_timestamp_utc station_no tag_serial_no min_delay max_delay
+#>   <dttm>                  <chr>      <chr>             <dbl>     <dbl>
+#> 1 2024-05-03 21:01:53     PSM-007    1594061             190       290
+#> 2 2024-05-03 21:01:54     PSM-003    1594061             190       290
+#> 3 2024-05-03 21:05:25     PSM-004    1594061             190       290
+#> 4 2024-05-03 21:05:25     PSM-007    1594061             190       290
+#> 5 2024-05-03 21:05:25     PSM-008    1594061             190       290
+#> 6 2024-05-03 21:05:26     PSM-003    1594061             190       290
 str(ps_det_example)
-#> 'data.frame':	577 obs. of  9 variables:
-#>  $ station_no             : chr  "PSM-001" "PSM-001" "PSM-001" "PSM-002" ...
-#>  $ detection_timestamp_utc: POSIXct, format: "2024-05-04 02:09:48" "2024-05-04 04:05:03" "2024-05-04 03:37:50" "2024-05-04 03:11:04" ...
-#>  $ tag_serial_no          : chr  "1594061" "1594061" "1594061" "1594061" ...
-#>  $ min_delay              : num  190 190 190 190 190 190 190 190 190 190 ...
-#>  $ max_delay              : num  290 290 290 290 290 290 290 290 290 290 ...
-#>  $ time_bin               : POSIXct, format: "2024-05-04 02:00:00" "2024-05-04 04:00:00" "2024-05-04 03:00:00" "2024-05-04 03:00:00" ...
-#>  $ time                   : int  6 8 7 7 6 2 6 3 3 8 ...
-#>  $ rec.x                  : int  1 1 1 2 2 2 2 2 2 2 ...
-#>  $ rec.y                  : int  1 1 1 2 2 2 2 2 2 2 ...
+#> tibble [577 × 5] (S3: tbl_df/tbl/data.frame)
+#>  $ detection_timestamp_utc: POSIXct[1:577], format: "2024-05-03 21:01:53" "2024-05-03 21:01:54" "2024-05-03 21:05:25" "2024-05-03 21:05:25" ...
+#>  $ station_no             : chr [1:577] "PSM-007" "PSM-003" "PSM-004" "PSM-007" ...
+#>  $ tag_serial_no          : chr [1:577] "1594061" "1594061" "1594061" "1594061" ...
+#>  $ min_delay              : num [1:577] 190 190 190 190 190 190 190 190 190 190 ...
+#>  $ max_delay              : num [1:577] 290 290 290 290 290 290 290 290 290 290 ...
 ```
 
 We can notice that this detection data consists of 5 columns with 577 rows. To better understand what each field is you can run `?ps_det_example` to review the full documentation.
@@ -136,13 +135,15 @@ Let's build our time bins
 ``` r
 ps_det_example <- build_time_bin(ps_det_example, unit = "1 hour")
 head(ps_det_example)
-#>   station_no detection_timestamp_utc tag_serial_no min_delay max_delay            time_bin time rec.x rec.y
-#> 1    PSM-007     2024-05-03 21:01:53       1594061       190       290 2024-05-03 21:00:00    1     7     7
-#> 2    PSM-003     2024-05-03 21:01:54       1594061       190       290 2024-05-03 21:00:00    1     3     3
-#> 3    PSM-004     2024-05-03 21:05:25       1594061       190       290 2024-05-03 21:00:00    1     4     4
-#> 4    PSM-007     2024-05-03 21:05:25       1594061       190       290 2024-05-03 21:00:00    1     7     7
-#> 5    PSM-008     2024-05-03 21:05:25       1594061       190       290 2024-05-03 21:00:00    1     8     8
-#> 6    PSM-003     2024-05-03 21:05:26       1594061       190       290 2024-05-03 21:00:00    1     3     3
+#> # A tibble: 6 × 7
+#>   detection_timestamp_utc station_no tag_serial_no min_delay max_delay time_bin             time
+#>   <dttm>                  <chr>      <chr>             <dbl>     <dbl> <dttm>              <int>
+#> 1 2024-05-03 21:01:53     PSM-007    1594061             190       290 2024-05-03 21:00:00     1
+#> 2 2024-05-03 21:01:54     PSM-003    1594061             190       290 2024-05-03 21:00:00     1
+#> 3 2024-05-03 21:05:25     PSM-004    1594061             190       290 2024-05-03 21:00:00     1
+#> 4 2024-05-03 21:05:25     PSM-007    1594061             190       290 2024-05-03 21:00:00     1
+#> 5 2024-05-03 21:05:25     PSM-008    1594061             190       290 2024-05-03 21:00:00     1
+#> 6 2024-05-03 21:05:26     PSM-003    1594061             190       290 2024-05-03 21:00:00     1
 ```
 
 You will notice both a `POSIXct` column that is called `time_bin` and a numerical column called `time`. This `time` column is a numerical index of the time bins. 
@@ -156,13 +157,13 @@ ps_det_example <- merge(
   by = "station_no"
 )
 head(ps_det_example)
-#>   station_no detection_timestamp_utc tag_serial_no min_delay max_delay            time_bin time rec.x rec.y rec
-#> 1    PSM-001     2024-05-04 02:09:48       1594061       190       290 2024-05-04 02:00:00    6     1     1   1
-#> 2    PSM-001     2024-05-04 04:05:03       1594061       190       290 2024-05-04 04:00:00    8     1     1   1
-#> 3    PSM-001     2024-05-04 03:37:50       1594061       190       290 2024-05-04 03:00:00    7     1     1   1
-#> 4    PSM-002     2024-05-04 03:11:04       1594061       190       290 2024-05-04 03:00:00    7     2     2   2
-#> 5    PSM-002     2024-05-04 02:40:09       1594061       190       290 2024-05-04 02:00:00    6     2     2   2
-#> 6    PSM-002     2024-05-03 22:57:37       1594061       190       290 2024-05-03 22:00:00    2     2     2   2
+#>   station_no detection_timestamp_utc tag_serial_no min_delay max_delay            time_bin time rec
+#> 1    PSM-001     2024-05-04 02:09:48       1594061       190       290 2024-05-04 02:00:00    6   1
+#> 2    PSM-001     2024-05-04 04:05:03       1594061       190       290 2024-05-04 04:00:00    8   1
+#> 3    PSM-001     2024-05-04 03:37:50       1594061       190       290 2024-05-04 03:00:00    7   1
+#> 4    PSM-002     2024-05-04 03:11:04       1594061       190       290 2024-05-04 03:00:00    7   2
+#> 5    PSM-002     2024-05-04 02:40:09       1594061       190       290 2024-05-04 02:00:00    6   2
+#> 6    PSM-002     2024-05-03 22:57:37       1594061       190       290 2024-05-03 22:00:00    2   2
 ```
 We are starting to get somewhere, you can see that we now have the time and recevier index values lined up. The last two things we need to do is first determine the numer of individuals, in this case it will be 1 and the expetected number of detections for invidiaul for each receiver for each time bin, and the number of transmissions this is where `min_delay` and `max_delay` come into play. We do suggest running the model for each invidual with modeling large time periods for example 1 year's worth of data being broken down into 7 day chunks.  
 
@@ -246,8 +247,8 @@ m <- COA_Standard(
 #> 
 #> SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 0.001083 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 10.83 seconds.
+#> Chain 1: Gradient evaluation took 0.001044 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 10.44 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -264,15 +265,15 @@ m <- COA_Standard(
 #> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 12.481 seconds (Warm-up)
-#> Chain 1:                14.039 seconds (Sampling)
-#> Chain 1:                26.52 seconds (Total)
+#> Chain 1:  Elapsed Time: 12.552 seconds (Warm-up)
+#> Chain 1:                14.249 seconds (Sampling)
+#> Chain 1:                26.801 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 0.001018 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 10.18 seconds.
+#> Chain 2: Gradient evaluation took 0.001059 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 10.59 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -289,13 +290,16 @@ m <- COA_Standard(
 #> Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 13.17 seconds (Warm-up)
-#> Chain 2:                14.126 seconds (Sampling)
-#> Chain 2:                27.296 seconds (Total)
-#> Chain 2: 
+#> Chain 2:  Elapsed Time: 12.656 seconds (Warm-up)
+#> Chain 2:                8.811 seconds (Sampling)
+#> Chain 2:                21.467 seconds (Total)
+#> Chain 2:
+#> Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#> Running the chains for more iterations may help. See
+#> https://mc-stan.org/misc/warnings.html#bulk-ess
 #>         warmup sample
-#> chain:1 12.481 14.039
-#> chain:2 13.170 14.126
+#> chain:1 12.552 14.249
+#> chain:2 12.656  8.811
 ```
 
 
@@ -322,7 +326,7 @@ Let's look at our trace plots for the model parameters and posterior distrubiton
 stan_trace(m$model, pars = c("alpha0", "alpha1", "p0", "sigma"))
 ```
 
-![plot of chunk trace plots and post dist](trace plots and post dist-1.png)
+![plot of chunk trace plots and post dist](figure/trace plots and post dist-1.png)
 
 ``` r
 
@@ -347,7 +351,7 @@ this way and we recommend inspecting $\hat R$ and ESS.
 stan_trace(m$model, pars = c("sx[1,1]", "sx[1,2]", "sy[1,1]", "sy[1,2]"))
 ```
 
-![plot of chunk trace plots and post dist latent](trace plots and post dist latent-1.png)
+![plot of chunk trace plots and post dist latent](figure/trace plots and post dist latent-1.png)
 
 ``` r
 
@@ -359,7 +363,7 @@ stan_dens(
 )
 ```
 
-![plot of chunk trace plots and post dist latent](trace plots and post dist latent-2.png)
+![plot of chunk trace plots and post dist latent](figure/trace plots and post dist latent-2.png)
 Again we can see that everything looks good and our model has converted. 
 
 Now moving on to the other elements in the outputed object from `COA_*()`. 
@@ -370,8 +374,8 @@ The second element is a table of parameter estimates, `p0` which is the estimate
 ``` r
 m$summary
 #>            mean      se_mean         sd      2.5%       25%       50%       75%     97.5%    n_eff      Rhat
-#> p0    0.5017962 0.0008141849 0.01641961 0.4706865 0.4899284 0.5017741 0.5124778 0.5328783 406.7051 0.9988061
-#> sigma 0.9956858 0.0013891113 0.02758764 0.9492251 0.9735344 0.9946078 1.0132799 1.0547409 394.4163 0.9980837
+#> p0    0.5019460 0.0008856739 0.01633549 0.4723767 0.4899777 0.5012662 0.5133962 0.5319465 340.1860 0.9987742
+#> sigma 0.9949453 0.0014203483 0.02650908 0.9404368 0.9776532 0.9957883 1.0124727 1.0467824 348.3371 1.0023169
 ```
 
 We can see that the mean detection probablity at a distance of 0 m is 0.5 or 50% and that the model converged well for this paramaters. 
@@ -381,7 +385,7 @@ The thrid element returned, is the time required to run the model in minutes. No
 
 ``` r
 m$time
-#> [1] 0.8969333
+#> [1] 0.8044667
 ```
 
 
@@ -393,16 +397,16 @@ m$summary_draws
 #> # A tibble: 21 × 4
 #>    variable   median   q2.5  q97.5
 #>    <chr>       <dbl>  <dbl>  <dbl>
-#>  1 alpha0    0.00710 -0.117  0.132
-#>  2 alpha1    0.505    0.449  0.555
-#>  3 sx[1,1]  -2.97    -3.31  -2.65 
-#>  4 sx[1,2]  -2.97    -3.32  -2.64 
-#>  5 sx[1,3]  -2.12    -2.37  -1.94 
-#>  6 sx[1,4]  -2.27    -2.52  -2.02 
-#>  7 sx[1,5]  -2.79    -3.07  -2.46 
-#>  8 sx[1,6]  -2.30    -2.53  -2.06 
-#>  9 sx[1,7]  -2.29    -2.52  -2.08 
-#> 10 sx[1,8]  -2.99    -3.26  -2.74 
+#>  1 alpha0    0.00506 -0.111  0.128
+#>  2 alpha1    0.504    0.456  0.565
+#>  3 sx[1,1]  -2.97    -3.30  -2.70 
+#>  4 sx[1,2]  -2.95    -3.33  -2.66 
+#>  5 sx[1,3]  -2.13    -2.34  -1.93 
+#>  6 sx[1,4]  -2.26    -2.51  -2.03 
+#>  7 sx[1,5]  -2.77    -3.07  -2.50 
+#>  8 sx[1,6]  -2.30    -2.53  -2.08 
+#>  9 sx[1,7]  -2.29    -2.49  -2.08 
+#> 10 sx[1,8]  -3.01    -3.27  -2.72 
 #> # ℹ 11 more rows
 ```
 
@@ -414,14 +418,14 @@ m$coas
 #> # A tibble: 8 × 8
 #>     ind  time     x       y x_lower x_upper y_lower y_upper
 #>   <int> <int> <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
-#> 1     1     1 -2.97 -0.519    -3.31   -2.65 -0.866  -0.167 
-#> 2     1     2 -2.97 -0.329    -3.32   -2.64 -0.749   0.0615
-#> 3     1     3 -2.12  0.0622   -2.37   -1.94 -0.143   0.269 
-#> 4     1     4 -2.27  0.155    -2.52   -2.02 -0.0977  0.398 
-#> 5     1     5 -2.79 -0.281    -3.07   -2.46 -0.687   0.0842
-#> 6     1     6 -2.30 -0.735    -2.53   -2.06 -1.04   -0.463 
-#> 7     1     7 -2.29 -0.107    -2.52   -2.08 -0.321   0.115 
-#> 8     1     8 -2.99 -0.472    -3.26   -2.74 -0.737  -0.209
+#> 1     1     1 -2.97 -0.510    -3.30   -2.70  -0.832 -0.181 
+#> 2     1     2 -2.95 -0.311    -3.33   -2.66  -0.713  0.107 
+#> 3     1     3 -2.13  0.0464   -2.34   -1.93  -0.174  0.275 
+#> 4     1     4 -2.26  0.152    -2.51   -2.03  -0.101  0.369 
+#> 5     1     5 -2.77 -0.247    -3.07   -2.50  -0.645  0.0998
+#> 6     1     6 -2.30 -0.730    -2.53   -2.08  -1.01  -0.437 
+#> 7     1     7 -2.29 -0.0731   -2.49   -2.08  -0.308  0.144 
+#> 8     1     8 -3.01 -0.474    -3.27   -2.72  -0.760 -0.174
 ```
 
 The fith element (`m$all_estimates`) contains the posterior draws from each non-warm-up iteration from all chains. If you're not familiar with Bayesian terminology all you need to know is that this contains disturbtions for each paramter and latent variable for each individual in each time step. It is unlikely that you will use this object instead we have created futher objects below that you are more likely to use. 
@@ -430,17 +434,17 @@ The fith element (`m$all_estimates`) contains the posterior draws from each non-
 ``` r
 m$all_estimates
 #> # A draws_df: 200 iterations, 2 chains, and 21 variables
-#>     alpha0 alpha1 sx[1,1] sx[1,2] sx[1,3] sx[1,4] sx[1,5] sx[1,6]
-#> 1  -0.0734   0.48    -3.0    -3.0    -2.2    -2.1    -2.8    -2.3
-#> 2   0.0079   0.50    -2.5    -2.8    -2.0    -2.2    -2.8    -2.1
-#> 3   0.0249   0.52    -2.8    -3.1    -2.1    -2.2    -2.6    -2.4
-#> 4  -0.0317   0.49    -3.0    -3.0    -2.1    -2.1    -2.9    -2.3
-#> 5   0.1004   0.51    -2.9    -2.8    -2.2    -2.4    -2.9    -2.3
-#> 6   0.0291   0.49    -3.2    -3.0    -2.2    -2.4    -2.9    -2.4
-#> 7  -0.0358   0.45    -3.1    -3.1    -2.3    -2.3    -2.9    -2.4
-#> 8   0.0476   0.50    -3.1    -3.1    -2.1    -2.2    -2.8    -2.2
-#> 9  -0.0488   0.53    -2.8    -2.7    -2.0    -2.0    -2.5    -2.3
-#> 10 -0.0244   0.55    -2.7    -3.0    -2.1    -2.0    -2.8    -2.0
+#>    alpha0 alpha1 sx[1,1] sx[1,2] sx[1,3] sx[1,4] sx[1,5] sx[1,6]
+#> 1   0.086   0.57    -2.6    -2.7    -2.0    -2.2    -2.6    -2.2
+#> 2  -0.138   0.49    -3.0    -2.9    -2.1    -2.3    -2.6    -2.3
+#> 3  -0.096   0.43    -2.9    -3.1    -2.2    -2.2    -3.0    -2.8
+#> 4  -0.024   0.51    -3.0    -3.0    -2.3    -2.3    -2.8    -2.5
+#> 5   0.032   0.48    -2.9    -2.9    -2.0    -2.1    -2.7    -2.4
+#> 6  -0.056   0.51    -2.9    -2.8    -2.1    -2.1    -2.8    -2.3
+#> 7  -0.077   0.46    -3.0    -3.0    -2.3    -2.2    -2.7    -2.3
+#> 8   0.043   0.55    -2.9    -2.8    -2.2    -2.1    -2.5    -2.2
+#> 9  -0.047   0.51    -3.0    -2.7    -2.2    -2.3    -3.0    -2.1
+#> 10 -0.036   0.47    -3.0    -3.1    -2.0    -2.4    -2.9    -2.3
 #> # ... with 390 more draws, and 13 more variables
 #> # ... hidden reserved variables {'.chain', '.iteration', '.draw'}
 ```
@@ -459,16 +463,16 @@ loc_draws
 #> # A tibble: 3,200 × 8
 #>    .chain .iteration .draw   lp__  fish  time     x       y
 #>     <int>      <int> <int>  <dbl> <int> <int> <dbl>   <dbl>
-#>  1      1          1     1 -1281.     1     1 -3.00 -0.560 
-#>  2      1          1     1 -1281.     1     2 -3.05 -0.552 
-#>  3      1          1     1 -1281.     1     3 -2.18  0.108 
-#>  4      1          1     1 -1281.     1     4 -2.09  0.265 
-#>  5      1          1     1 -1281.     1     5 -2.79 -0.208 
-#>  6      1          1     1 -1281.     1     6 -2.33 -0.388 
-#>  7      1          1     1 -1281.     1     7 -2.28 -0.0152
-#>  8      1          1     1 -1281.     1     8 -3.00 -0.433 
-#>  9      1          2     2 -1291.     1     1 -2.49 -0.771 
-#> 10      1          2     2 -1291.     1     2 -2.78 -0.176 
+#>  1      1          1     1 -1282.     1     1 -2.65 -0.518 
+#>  2      1          1     1 -1282.     1     2 -2.71 -0.0455
+#>  3      1          1     1 -1282.     1     3 -1.97 -0.0654
+#>  4      1          1     1 -1282.     1     4 -2.21  0.0812
+#>  5      1          1     1 -1282.     1     5 -2.63 -0.319 
+#>  6      1          1     1 -1282.     1     6 -2.25 -0.881 
+#>  7      1          1     1 -1282.     1     7 -2.09 -0.0597
+#>  8      1          1     1 -1282.     1     8 -3.00 -0.385 
+#>  9      1          2     2 -1281.     1     1 -2.96 -0.355 
+#> 10      1          2     2 -1281.     1     2 -2.89 -0.489 
 #> # ℹ 3,190 more rows
 ```
 
@@ -506,10 +510,10 @@ p1 <- p +
 p
 ```
 
-![plot of chunk plot posteriors](plot posteriors-1.png)
+![plot of chunk plot posteriors](figure/plot posteriors-1.png)
 
 ``` r
 p1
 ```
 
-![plot of chunk plot posteriors](plot posteriors-2.png)
+![plot of chunk plot posteriors](figure/plot posteriors-2.png)
