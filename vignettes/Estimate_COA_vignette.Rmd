@@ -35,45 +35,66 @@ library(hexbin)
 library(ggpubr)
 
 rlocs # Receiver locations
-#> # A tibble: 30 × 3
-#>    Station   east  north
-#>    <chr>    <dbl>  <dbl>
-#>  1 SB1     -1.33  1.61  
-#>  2 SB2     -0.579 1.91  
-#>  3 SB3      0.219 2.00  
-#>  4 SB4      1.00  1.81  
-#>  5 SB5     -1.69  0.896 
-#>  6 SB6     -0.879 0.950 
-#>  7 SB7     -0.231 1.20  
-#>  8 SB8      0.464 1.21  
-#>  9 SB9      1.28  1.04  
-#> 10 SB10    -1.77  0.0952
-#> # ℹ 20 more rows
+```
+
+```
+## # A tibble: 30 × 3
+##    Station   east  north
+##    <chr>    <dbl>  <dbl>
+##  1 SB1     -1.33  1.61  
+##  2 SB2     -0.579 1.91  
+##  3 SB3      0.219 2.00  
+##  4 SB4      1.00  1.81  
+##  5 SB5     -1.69  0.896 
+##  6 SB6     -0.879 0.950 
+##  7 SB7     -0.231 1.20  
+##  8 SB8      0.464 1.21  
+##  9 SB9      1.28  1.04  
+## 10 SB10    -1.77  0.0952
+## # ℹ 20 more rows
+```
+
+``` r
 testloc # Test tag location
-#> # A tibble: 1 × 2
-#>     east north
-#>    <dbl> <dbl>
-#> 1 -0.329 0.713
+```
+
+```
+## # A tibble: 1 × 2
+##     east north
+##    <dbl> <dbl>
+## 1 -0.329 0.713
+```
+
+``` r
 head(testdat) # Hourly detection data from the test tag
-#> # A tibble: 6 × 5
-#>   Station Transmitter   east north  hour
-#>   <chr>         <dbl>  <dbl> <dbl> <dbl>
-#> 1 SB12           3447 -0.326 0.513     1
-#> 2 SB13           3447  0.125 0.575     1
-#> 3 SB7            3447 -0.231 1.20      1
-#> 4 SB6            3447 -0.879 0.950     1
-#> 5 SB13           3447  0.125 0.575     1
-#> 6 SB6            3447 -0.879 0.950     1
+```
+
+```
+## # A tibble: 6 × 5
+##   Station Transmitter   east north  hour
+##   <chr>         <dbl>  <dbl> <dbl> <dbl>
+## 1 SB12           3447 -0.326 0.513     1
+## 2 SB13           3447  0.125 0.575     1
+## 3 SB7            3447 -0.231 1.20      1
+## 4 SB6            3447 -0.879 0.950     1
+## 5 SB13           3447  0.125 0.575     1
+## 6 SB6            3447 -0.879 0.950     1
+```
+
+``` r
 head(fishdat) # Hourly detection data from a black sea bass
-#> # A tibble: 6 × 5
-#>   Station Transmitter   east north  hour
-#>   <chr>         <dbl>  <dbl> <dbl> <dbl>
-#> 1 SB15           3425  0.190 0.209     1
-#> 2 SB14           3425 -0.261 0.159     1
-#> 3 SB15           3425  0.190 0.209     1
-#> 4 SB14           3425 -0.261 0.159     1
-#> 5 SB12           3425 -0.326 0.513     1
-#> 6 SB14           3425 -0.261 0.159     1
+```
+
+```
+## # A tibble: 6 × 5
+##   Station Transmitter   east north  hour
+##   <chr>         <dbl>  <dbl> <dbl> <dbl>
+## 1 SB15           3425  0.190 0.209     1
+## 2 SB14           3425 -0.261 0.159     1
+## 3 SB15           3425  0.190 0.209     1
+## 4 SB14           3425 -0.261 0.159     1
+## 5 SB12           3425 -0.326 0.513     1
+## 6 SB14           3425 -0.261 0.159     1
 ```
 
 Prior to doing anything else, we need to specify our 'state space' - the spatial extent of interest. This will consist of your receiver array and a 'buffer' area around the array. The buffer needs to be large enough to allow for individuals that may have activity centers outside of the receiver array. There is no general rule of thumb for this, but it should scale with the geographic extent covered by your array. I would suggest selecting a buffer that is large enough to allow you to discriminate between individuals that are detected along the periphery of the array and individuals that are not detected at all - a COA will be estimated for all time steps unless you specify the individual has left the area; time steps with 0 detections will have an estimated COA somewhere outside the detection range of all receivers (note that this could be within the array bounds if your array has non-continuous coverage). If there are many time steps with zeros, you may want to modify your data file to omit time periods with 0 detections or modify the relevant `.stan` code chunk included in the `src/stan_files` folder on your local machine to skip time periods with no detections, which will speed up computing times. As always, it is up to the user to make sure that the results make sense in the context of the species/array of interest.
@@ -116,7 +137,7 @@ testdat |>
   labs(x = "Hours since deployment", y = "Number of detections")
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
+![plot of chunk unnamed-chunk-3](unnamed-chunk-3-1.png)
 
 Tally how many time intervals each receiver was operational for - this allows for individual receivers deployed for different periods and/or receivers that were lost.
 
@@ -137,7 +158,10 @@ rs[, c(4:(max(fishdat$hour) + 3))] <- 1
 # Create vector of the number of sampling occasions for each receiver
 tsteps <- rowSums(rs[, 4:ncol(rs)])
 tsteps # Will all be the same here because all operational over the entire time span
-#>  [1] 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10
+```
+
+```
+##  [1] 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10
 ```
 
 Since detection records only include non-zero events (here assuming we'd like to keep time steps with zeros), we'll need to convert the number of detections to include zeros for all receivers that did not detect the tag during that time period.
@@ -259,20 +283,752 @@ init_fun <- function() {
 After all of that data processing, we're finally ready to fit our model! We'll start by fitting the model assuming that detection probabilities are the same among all receivers and remain constant over time (As we all know, this will pretty much never be the case in 'real-life' but best to start simple). Besides, this model is handy when you don't have test-tag (or other) data available to inform detection probabilities but would like to be able to estimate COAs along the periphery of the array. The only other information you'll need to provide is the expected number of transmissions per tag per time interval (`ntrans` below).
 
 
+``` r
+### Format data for model fitting
+fit <- COA_Standard(
+  nind = nind, # number of individuals
+  nrec = nrec, # number of receivers
+  ntime = tsteps, # number of time steps
+  ntrans = 30, # number of expected transmissions per tag per time interval
+  y = Y, # array of detections
+  recX = as.vector(rlocs$east), # E-W receiver coordinates
+  recY = as.vector(rlocs$north), # N-S receiver coordinates
+  xlim = xlim, # E-W boundary of spatial extent (receiver array + buffer)
+  ylim = ylim, # N-S boundary of spatial extent (receiver array + buffer)
+  init = init_fun # initial values (optional)
+)
+```
+
+```
+## 
+## SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 1).
+## Chain 1: 
+## Chain 1: Gradient evaluation took 0.001052 seconds
+## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 10.52 seconds.
+## Chain 1: Adjust your expectations accordingly!
+## Chain 1: 
+## Chain 1: 
+## Chain 1: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 1: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 1: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 1: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 1: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 1: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 1: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 1: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 1: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 1: 
+## Chain 1:  Elapsed Time: 5.95 seconds (Warm-up)
+## Chain 1:                5.837 seconds (Sampling)
+## Chain 1:                11.787 seconds (Total)
+## Chain 1: 
+## 
+## SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 2).
+## Chain 2: 
+## Chain 2: Gradient evaluation took 0.000523 seconds
+## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 5.23 seconds.
+## Chain 2: Adjust your expectations accordingly!
+## Chain 2: 
+## Chain 2: 
+## Chain 2: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 2: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 2: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 2: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 2: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 2: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 2: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 2: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 2: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 2: 
+## Chain 2:  Elapsed Time: 6.146 seconds (Warm-up)
+## Chain 2:                7.564 seconds (Sampling)
+## Chain 2:                13.71 seconds (Total)
+## Chain 2: 
+## 
+## SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 3).
+## Chain 3: 
+## Chain 3: Gradient evaluation took 0.000522 seconds
+## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 5.22 seconds.
+## Chain 3: Adjust your expectations accordingly!
+## Chain 3: 
+## Chain 3: 
+## Chain 3: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 3: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 3: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 3: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 3: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 3: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 3: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 3: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 3: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 3: 
+## Chain 3:  Elapsed Time: 5.729 seconds (Warm-up)
+## Chain 3:                5.36 seconds (Sampling)
+## Chain 3:                11.089 seconds (Total)
+## Chain 3: 
+## 
+## SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 4).
+## Chain 4: 
+## Chain 4: Gradient evaluation took 0.000554 seconds
+## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 5.54 seconds.
+## Chain 4: Adjust your expectations accordingly!
+## Chain 4: 
+## Chain 4: 
+## Chain 4: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 4: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 4: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 4: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 4: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 4: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 4: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 4: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 4: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 4: 
+## Chain 4:  Elapsed Time: 6.301 seconds (Warm-up)
+## Chain 4:                5.29 seconds (Sampling)
+## Chain 4:                11.591 seconds (Total)
+## Chain 4: 
+##         warmup sample
+## chain:1  5.950  5.837
+## chain:2  6.146  7.564
+## chain:3  5.729  5.360
+## chain:4  6.301  5.290
+```
+
+The function will automatically spit out the run-time associated with each of the 4 chains used for fitting and returns a list with four objects:
 
 
+``` r
+summary(fit)
+```
+
+```
+##                      Length Class         Mode   
+## model                 1     stanfit       S4     
+## summary              20     -none-        numeric
+## time                  1     -none-        numeric
+## summary_draws         4     draws_summary list   
+## coas                  8     tbl_df        list   
+## all_estimates        28     draws_df      list   
+## loc_draws             8     tbl_df        list   
+## param_draws          10     tbl_df        list   
+## generated_quantities  1     -none-        list
+```
+
+The first contains the Stan model object (accessible via `fit$model`, which will allow you to use `rstan` plotting tools and diagnostic plots - see rstan documentation for details).
+
+The second element is a table of parameter estimates and associated quantiles from the posterior distribution. The table also includes the effective sample size and the Rhat statistic (which should be ~1).
 
 
+``` r
+fit$summary
+```
+
+```
+##            mean      se_mean         sd      2.5%       25%       50%       75%     97.5%    n_eff     Rhat
+## p0    0.2653356 0.0004048262 0.02195997 0.2241451 0.2504386 0.2642748 0.2800300 0.3105078 2942.566 1.000919
+## sigma 0.2734087 0.0002901738 0.01443686 0.2467614 0.2636623 0.2729699 0.2827432 0.3029836 2475.306 1.000836
+```
+
+The third returns the time required to run the model (in minutes). Note that Stan will automatically detect and use multiple cores. If the computer used to run this has multiple cores, the time returned will be longer than the actual run time (because it will sum the time for each core). To return the realized run time, divide `fit$time` by the number of cores.
 
 
+``` r
+fit$time
+```
+
+```
+## [1] 0.80295
+```
+
+The fourth returns an array of COA estimates, where each matrix corresponds to one individual, the rows correspond to each time step, and the columns include the median posterior estimate of the east-west (x) and north-south (y) coordinates. The 95% credible interval (Bayesian version of a confidence interval) for each coordinate is also provided.
 
 
+``` r
+fit$coas
+```
+
+```
+## # A tibble: 10 × 8
+##      ind  time       x     y x_lower  x_upper y_lower y_upper
+##    <int> <int>   <dbl> <dbl>   <dbl>    <dbl>   <dbl>   <dbl>
+##  1     1     1 -0.0432 0.290  -0.147  0.0613   0.182    0.405
+##  2     1     2 -0.0179 0.362  -0.147  0.106    0.219    0.504
+##  3     1     3 -0.101  0.385  -0.266  0.0609   0.188    0.576
+##  4     1     4 -0.128  0.282  -0.289  0.0293   0.115    0.473
+##  5     1     5 -0.176  0.322  -0.335 -0.00627  0.133    0.519
+##  6     1     6 -0.126  0.684  -0.462  0.185    0.144    0.883
+##  7     1     7 -0.0517 0.366  -0.175  0.0655   0.232    0.501
+##  8     1     8 -0.155  0.405  -0.285 -0.0290   0.255    0.544
+##  9     1     9 -0.0541 0.334  -0.236  0.119    0.127    0.552
+## 10     1    10 -0.108  0.307  -0.305  0.0895   0.0793   0.573
+```
+
+The last element (`fit$all_estimates`) contains the estimates from each non-warm-up iteration for all 4 chains. (If you're not familiar with Bayesian lingo and this just seems like statistical jargon, all you need to know is that this is what you'll use to plot the uncertainty cloud around COA estimates and/or the distribution of parameter estimates as presented in the paper.) This includes estimates of all latent parameters for each individual in each time step (aka this element contains tons of parameter estimates), so we will need to subset out parameters for plotting.
 
 
+``` r
+# Extract east-west and north-south coordinates of COAs from each iteration of each chain
+# Note that 'sx' and 'sy' are the variable names used to store the coordinates for each individual (rows) in each time step (columns).
+# We'll store them as a list, where each element corresponds to an individual
+EN_fit <- list(NA)
+
+for (i in 1:nind) {
+  EN_fit[[i]] <- bind_cols(
+    # East-West
+    fit$all_estimates |>
+      select(starts_with(paste("sx[", i, ",", sep = ''))) |>
+      pivot_longer(everything(), values_to = "X"),
+    # North-South
+    fit$all_estimates |>
+      select(starts_with(paste("sy[", i, ",", sep = ''))) |>
+      pivot_longer(everything(), values_to = "Y") |>
+      select(Y)
+  ) |>
+    # The ID field corresponds to the time step.
+    mutate(time = as.numeric(gsub(".*,|\\]", "", name)))
+}
+```
+
+```
+## Warning: Dropping 'draws_df' class as required metadata was removed.
+## Warning: Dropping 'draws_df' class as required metadata was removed.
+```
+
+``` r
+## Plot posterior estimates
+# Select individual for plotting
+post_fit <- EN_fit[[1]]
+coa_fit <- as.data.frame(fit$coas[,, 1])
+
+# Plot in ggplot
+plotCOAs <- ggplot(aes(x = X, y = Y), data = post_fit) +
+  geom_hex(alpha = 1, bins = 100) +
+  geom_point(
+    aes(x = x, y = y),
+    data = coa_fit,
+    pch = 25,
+    cex = 1.5,
+    alpha = .8,
+    fill = NA
+  ) +
+  facet_wrap(~time, ncol = 2) +
+  scale_fill_gradientn(
+    colours = c("white", "blue"),
+    name = "Frequency",
+    na.value = NA
+  ) +
+  geom_point(aes(x = east, y = north), data = rlocs, cex = 1) +
+  geom_point(
+    aes(x = east, y = north),
+    data = fish_agg,
+    pch = 21,
+    cex = 1.5,
+    fill = '#00BFC4'
+  ) +
+
+  # Unhash line below to include test tag location
+  #geom_point(aes(x = east, y = north), data = testloc, cex = 1.5, pch = 21, fill = '#F8766D') +
+
+  coord_fixed(xlim = c(-1, 1), ylim = c(-0.5, 1.5)) +
+  scale_x_continuous(breaks = c(-1, 0, 1)) +
+  theme(legend.position = "none") +
+  labs(x = 'East-West (km)', y = 'North-South (km)')
+```
+
+## Fit a COA model that allows for receiver- and time-specific detection probabilities
+
+Now let's fit a model that allows for variation in detection probabilities. This model is a simple extension of the previous model - it just allows the detection probability to vary between time steps and receivers. The only other information you'll need to provide is the expected number of transmissions per tag per time interval (`ntrans`).
 
 
+``` r
+### Format data for model fitting
+fit_vary <- COA_TimeVarying(
+  nind = nind, # number of individuals
+  nrec = nrec, # number of receivers
+  ntime = tsteps, # number of time steps
+  ntrans = 30, # number of expected transmissions per tag per time interval
+  y = Y, # array of detections from tagged fish
+  recX = as.vector(rlocs$east), # E-W receiver coordinates
+  recY = as.vector(rlocs$north), # N-S receiver coordinates
+  xlim = xlim, # E-W boundary of spatial extent (receiver array + buffer)
+  ylim = ylim, # N-S boundary of spatial extent (receiver array + buffer)
+  init = init_fun # initial values (optional)
+)
+```
+
+```
+## 
+## SAMPLING FOR MODEL 'COA_TimeVarying_gaussian' NOW (CHAIN 1).
+## Chain 1: 
+## Chain 1: Gradient evaluation took 0.000988 seconds
+## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 9.88 seconds.
+## Chain 1: Adjust your expectations accordingly!
+## Chain 1: 
+## Chain 1: 
+## Chain 1: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 1: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 1: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 1: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 1: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 1: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 1: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 1: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 1: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 1: 
+## Chain 1:  Elapsed Time: 72 seconds (Warm-up)
+## Chain 1:                38.473 seconds (Sampling)
+## Chain 1:                110.473 seconds (Total)
+## Chain 1: 
+## 
+## SAMPLING FOR MODEL 'COA_TimeVarying_gaussian' NOW (CHAIN 2).
+## Chain 2: 
+## Chain 2: Gradient evaluation took 0.000742 seconds
+## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 7.42 seconds.
+## Chain 2: Adjust your expectations accordingly!
+## Chain 2: 
+## Chain 2: 
+## Chain 2: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 2: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 2: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 2: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 2: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 2: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 2: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 2: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 2: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 2: 
+## Chain 2:  Elapsed Time: 73.474 seconds (Warm-up)
+## Chain 2:                30.277 seconds (Sampling)
+## Chain 2:                103.751 seconds (Total)
+## Chain 2: 
+## 
+## SAMPLING FOR MODEL 'COA_TimeVarying_gaussian' NOW (CHAIN 3).
+## Chain 3: 
+## Chain 3: Gradient evaluation took 0.000725 seconds
+## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 7.25 seconds.
+## Chain 3: Adjust your expectations accordingly!
+## Chain 3: 
+## Chain 3: 
+## Chain 3: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 3: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 3: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 3: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 3: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 3: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 3: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 3: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 3: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 3: 
+## Chain 3:  Elapsed Time: 73.07 seconds (Warm-up)
+## Chain 3:                26.263 seconds (Sampling)
+## Chain 3:                99.333 seconds (Total)
+## Chain 3: 
+## 
+## SAMPLING FOR MODEL 'COA_TimeVarying_gaussian' NOW (CHAIN 4).
+## Chain 4: 
+## Chain 4: Gradient evaluation took 0.000722 seconds
+## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 7.22 seconds.
+## Chain 4: Adjust your expectations accordingly!
+## Chain 4: 
+## Chain 4: 
+## Chain 4: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 4: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 4: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 4: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 4: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 4: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 4: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 4: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 4: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 4: 
+## Chain 4:  Elapsed Time: 65.434 seconds (Warm-up)
+## Chain 4:                30.132 seconds (Sampling)
+## Chain 4:                95.566 seconds (Total)
+## Chain 4: 
+##         warmup sample
+## chain:1 72.000 38.473
+## chain:2 73.474 30.277
+## chain:3 73.070 26.263
+## chain:4 65.434 30.132
+```
+
+``` r
+summary(fit_vary)
+```
+
+```
+##                      Length Class         Mode   
+## model                   1   stanfit       S4     
+## summary              3010   -none-        numeric
+## time                    1   -none-        numeric
+## summary_draws           4   draws_summary list   
+## coas                    8   tbl_df        list   
+## detection_probs         5   draws_summary list   
+## all_estimates         626   draws_df      list   
+## loc_draws               8   tbl_df        list   
+## param_draws           608   tbl_df        list   
+## generated_quantities    1   -none-        list
+```
+
+``` r
+fit_vary$time
+```
+
+```
+## [1] 6.818717
+```
+
+``` r
+# As before, extract east-west and north-south coordinates of COAs from each iteration of each chain
+# Note that 'sx' and 'sy' are the variable names used to store the coordinates for each individual (rows) in each time step (columns).
+# We'll store them as a list, where each element corresponds to an individual
+EN_vary <- list(NA)
+
+for (i in 1:nind) {
+  EN_vary[[i]] <- bind_cols(
+    # East-West
+    fit_vary$all_estimates |>
+      select(starts_with(paste("sx[", i, ",", sep = ''))) |>
+      pivot_longer(everything(), values_to = "X"),
+    # North-South
+    fit_vary$all_estimates |>
+      select(starts_with(paste("sy[", i, ",", sep = ''))) |>
+      pivot_longer(everything(), values_to = "Y") |>
+      select(Y)
+  ) |>
+    # The ID field corresponds to the time step.
+    mutate(time = as.numeric(gsub(".*,|\\]", "", name)))
+}
+```
+
+```
+## Warning: Dropping 'draws_df' class as required metadata was removed.
+## Warning: Dropping 'draws_df' class as required metadata was removed.
+```
+
+``` r
+## Plot posterior estimates
+# Select individual for plotting
+post_vary <- EN_vary[[1]]
+coa_vary <- as.data.frame(fit_vary$coas[,, 1])
+
+# Plot in ggplot
+plotTVary <- ggplot(aes(x = X, y = Y), data = post_vary) +
+  geom_hex(alpha = 1, bins = 100) +
+  geom_point(
+    aes(x = x, y = y),
+    data = coa_vary,
+    pch = 25,
+    cex = 1.5,
+    alpha = .8,
+    fill = NA
+  ) +
+  facet_wrap(~time, ncol = 2) +
+  scale_fill_gradientn(
+    colours = c("white", "blue"),
+    name = "Frequency",
+    na.value = NA
+  ) +
+  geom_point(aes(x = east, y = north), data = rlocs, cex = 1) +
+  geom_point(
+    aes(x = east, y = north),
+    data = fish_agg,
+    pch = 21,
+    cex = 1.5,
+    fill = '#00BFC4'
+  ) +
+
+  # Unhash line below to include test tag location
+  #geom_point(aes(x=east,y=north),data=testloc,cex=1.5,pch=21,fill='#F8766D') +
+
+  coord_fixed(xlim = c(-1, 1), ylim = c(-0.5, 1.5)) +
+  scale_x_continuous(breaks = c(-1, 0, 1)) +
+  theme(legend.position = "none") +
+  labs(x = 'East-West (km)', y = 'North-South (km)')
+```
+
+## Fit a model that uses detections from a moored test tag to inform detection probabilities
+
+Now we'll fit the most exciting model - the model that integrates test tag data to inform detection probabilities. This model is a simple extension of the previous models - it just adds a component that specifies the distance of each test tag from each receiver, and shifts the probability of detection by comparing the number of detections logged at each receiver versus those emitted from the test tag in each time step. In other words, it treats test tags as tagged individuals but with known COAs. The only other information you'll need to provide is the expected number of transmissions per tag per time interval (`ntrans`).
 
 
+``` r
+### Format data for model fitting
+## Specify the number of sentinel tags (this step is necessary because of issues that arise with Stan indexing if you have only 1 test tag)
+nsentinel <- 1
+
+fit_tag <- COA_TagInt(
+  nind = nind, # number of individuals
+  nrec = nrec, # number of receivers
+  ntime = tsteps, # number of time steps
+  ntest = nsentinel, # number of test tags
+  ntrans = 30, # number of expected transmissions per tag per time interval
+  y = Y, # array of detections from tagged fish
+  test = testY, # array of detections from test tags
+  recX = as.vector(rlocs$east), # E-W receiver coordinates
+  recY = as.vector(rlocs$north), # N-S receiver coordinates
+  xlim = xlim, # E-W boundary of spatial extent (receiver array + buffer)
+  ylim = ylim, # N-S boundary of spatial extent (receiver array + buffer)
+  testX = array(testloc$east, dim = c(nsentinel)),
+  testY = array(testloc$north, dim = c(nsentinel)),
+  init = init_fun # initial values (optional)
+)
+```
+
+```
+## 
+## SAMPLING FOR MODEL 'COA_Tag_Integrated_gaussian' NOW (CHAIN 1).
+## Chain 1: 
+## Chain 1: Gradient evaluation took 0.001032 seconds
+## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 10.32 seconds.
+## Chain 1: Adjust your expectations accordingly!
+## Chain 1: 
+## Chain 1: 
+## Chain 1: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 1: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 1: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 1: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 1: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 1: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 1: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 1: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 1: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 1: 
+## Chain 1:  Elapsed Time: 64.772 seconds (Warm-up)
+## Chain 1:                31.822 seconds (Sampling)
+## Chain 1:                96.594 seconds (Total)
+## Chain 1: 
+## 
+## SAMPLING FOR MODEL 'COA_Tag_Integrated_gaussian' NOW (CHAIN 2).
+## Chain 2: 
+## Chain 2: Gradient evaluation took 0.001111 seconds
+## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 11.11 seconds.
+## Chain 2: Adjust your expectations accordingly!
+## Chain 2: 
+## Chain 2: 
+## Chain 2: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 2: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 2: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 2: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 2: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 2: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 2: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 2: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 2: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 2: 
+## Chain 2:  Elapsed Time: 65.649 seconds (Warm-up)
+## Chain 2:                34.577 seconds (Sampling)
+## Chain 2:                100.226 seconds (Total)
+## Chain 2: 
+## 
+## SAMPLING FOR MODEL 'COA_Tag_Integrated_gaussian' NOW (CHAIN 3).
+## Chain 3: 
+## Chain 3: Gradient evaluation took 0.001006 seconds
+## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 10.06 seconds.
+## Chain 3: Adjust your expectations accordingly!
+## Chain 3: 
+## Chain 3: 
+## Chain 3: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 3: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 3: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 3: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 3: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 3: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 3: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 3: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 3: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 3: 
+## Chain 3:  Elapsed Time: 64.791 seconds (Warm-up)
+## Chain 3:                34.887 seconds (Sampling)
+## Chain 3:                99.678 seconds (Total)
+## Chain 3: 
+## 
+## SAMPLING FOR MODEL 'COA_Tag_Integrated_gaussian' NOW (CHAIN 4).
+## Chain 4: 
+## Chain 4: Gradient evaluation took 0.001035 seconds
+## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 10.35 seconds.
+## Chain 4: Adjust your expectations accordingly!
+## Chain 4: 
+## Chain 4: 
+## Chain 4: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 4: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 4: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 4: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 4: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 4: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 4: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 4: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 4: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 4: 
+## Chain 4:  Elapsed Time: 70.063 seconds (Warm-up)
+## Chain 4:                35.27 seconds (Sampling)
+## Chain 4:                105.333 seconds (Total)
+## Chain 4: 
+##         warmup sample
+## chain:1 64.772 31.822
+## chain:2 65.649 34.577
+## chain:3 64.791 34.887
+## chain:4 70.063 35.270
+```
+
+``` r
+summary(fit_tag)
+```
+
+```
+##                      Length Class         Mode   
+## model                   1   stanfit       S4     
+## summary              3010   -none-        numeric
+## time                    1   -none-        numeric
+## summary_draws           4   draws_summary list   
+## coas                    8   tbl_df        list   
+## detection_probs         5   draws_summary list   
+## all_estimates         626   draws_df      list   
+## loc_draws               8   tbl_df        list   
+## param_draws           608   tbl_df        list   
+## generated_quantities    2   -none-        list
+```
+
+``` r
+fit_tag$time # See the comment about run time when your computer has multiple cores above.
+```
+
+```
+## [1] 6.697183
+```
+
+``` r
+# As before, extract east-west and north-south coordinates of COAs from each iteration of each chain
+# Note that 'sx' and 'sy' are the variable names used to store the coordinates for each individual (rows) in each time step (columns).
+# We'll store them as a list, where each element corresponds to an individual
+EN_tag <- list(NA)
+
+for (i in 1:nind) {
+  EN_tag[[i]] <- bind_cols(
+    # East-West
+    fit_tag$all_estimates |>
+      select(starts_with(paste("sx[", i, ",", sep = ''))) |>
+      pivot_longer(everything(), values_to = "X"),
+    # North-South
+    fit_tag$all_estimates |>
+      select(starts_with(paste("sy[", i, ",", sep = ''))) |>
+      pivot_longer(everything(), values_to = "Y") |>
+      select(Y)
+  ) |>
+    # The ID field corresponds to the time step.
+    mutate(time = as.numeric(gsub(".*,|\\]", "", name)))
+}
+```
+
+```
+## Warning: Dropping 'draws_df' class as required metadata was removed.
+## Warning: Dropping 'draws_df' class as required metadata was removed.
+```
+
+``` r
+## Plot posterior estimates
+# Select individual for plotting
+post_tag <- EN_tag[[1]]
+coa_tag <- as.data.frame(fit_tag$coas[,, 1])
+
+# Plot in ggplot
+plotTagInt <- ggplot(aes(x = X, y = Y), data = post_tag) +
+  geom_hex(alpha = 1, bins = 100) +
+  geom_point(
+    aes(x = x, y = y),
+    data = coa_tag,
+    pch = 25,
+    cex = 1.5,
+    alpha = 0.8,
+    fill = NA
+  ) +
+  facet_wrap(~time, ncol = 2) +
+  scale_fill_gradientn(
+    colours = c("white", "blue"),
+    name = "Frequency",
+    na.value = NA
+  ) +
+  geom_point(aes(x = east, y = north), data = rlocs, cex = 1) +
+  geom_point(
+    aes(x = east, y = north),
+    data = fish_agg,
+    pch = 21,
+    cex = 1.5,
+    fill = '#00BFC4'
+  ) +
+
+  # Unhash line below to plot test tag location
+  #geom_point(aes(x=east,y=north),data=testloc,cex=1.5,pch=21,fill='#F8766D') +
+
+  coord_fixed(xlim = c(-1, 1), ylim = c(-0.5, 1.5)) +
+  scale_x_continuous(breaks = c(-1, 0, 1)) +
+  theme(legend.position = "none") +
+  labs(x = 'East-West (km)', y = 'North-South (km)')
+```
+
+## Comparison
+
+Now plot them all up together to see how they compare!
 
 
+``` r
+ggarrange(
+  plotCOAs,
+  plotTVary,
+  plotTagInt,
+  labels = c("Standard", "Time-varying", "Tag-integrated"),
+  ncol = 3,
+  nrow = 1,
+  align = "hv",
+  #widths = c(8,8,8), heights = c(2,2,2),
+  common.legend = F
+)
+```
 
+![plot of chunk unnamed-chunk-16](unnamed-chunk-16-1.png)
+
+
+## References
+
+Carpenter, B., Gelman, A., Hoffman, M. D., Lee, D., Goodrich, B., Betancourt, M., ... & Riddell, A. (2017). Stan: A probabilistic programming language. Journal of statistical software, 76, 1-32.
+
+Royle, J. A., Chandler, R. B., Sollmann, R., & Gardner, B. (2013). Spatial capture-recapture. Academic press.
+
+Winton, M. V., Kneebone, J., Zemeckis, D. R., & Fay, G. (2018). A spatial point process model to estimate individual centres of activity from passive acoustic telemetry data. Methods in Ecology and Evolution, 9(11), 2262-2272.
