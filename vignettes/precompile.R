@@ -27,8 +27,16 @@ setwd(file.path(orig_wd, "vignettes"))
 
 knit(
   "_Estimate_COA_vignette.Rmd",
-  "Estimate_COA_vignette.Rmd",
-  "_ps_estimate_coa_vignette.Rmd"
+  "Estimate_COA_vignette.Rmd"
+)
+
+knit(
+  "_ps_estimate_coa_vignette.Rmd",
+  "ps_estimate_coa_vignette.Rmd"
+)
+knit(
+  "_coa_standard_gaussian_model.Rmd",
+  "coa_standard_gaussian_model.Rmd"
 )
 
 setwd(orig_wd)

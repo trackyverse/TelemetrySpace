@@ -1,0 +1,185 @@
+---
+title: "Model specification - Standard Detection Probability"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Model specification - Standard Detection Probability}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Overview
+
+`COA_Standard_gaussian` is a Bayesian Center of Activity (COA) model that
+estimates the latent spatial position of each individual at each discrete
+time step from binomial detection counts recorded at an array of fixed
+receivers. Detection probability decays with squared distance from the
+individual's activity center, which corresponds to a Gaussian (half-normal)
+detection function in distance-sampling terms. The "Standard" variant holds
+the detection-probability intercept $\alpha_0$ fixed across individuals and
+time steps (i.e., a single shared intercept), distinguishing it from
+hierarchical or covariate-extended variants of the model.
+
+## Data
+
+| Symbol | Stan name | Description |
+|---|---|---|
+| $N$ | `nind` | Number of individuals |
+| $R$ | `nrec` | Number of receivers |
+| $T$ | `ntime` | Number of discrete time steps |
+| $K$ | `ntrans` | Number of expected transmissions per time step |
+| $y_{i,t,r}$ | `y[i, t, r]` | Detections of individual $i$ at receiver $r$ during time step $t$, $y_{i,t,r} \in \{0, 1, \dots, K\}$ |
+| $x_r, y_r$ | `recX[r]`, `recY[r]` | Fixed coordinates of receiver $r$ |
+| $[x_{\min}, x_{\max}]$ | `xlim` | Spatial bounds of the study area (easting) |
+| $[y_{\min}, y_{\max}]$ | `ylim` | Spatial bounds of the study area (northing) |
+
+for $i = 1, \dots, N$, $t = 1, \dots, T$, $r = 1, \dots, R$.
+
+## Parameters
+
+| Symbol | Stan name | Constraint | Description |
+|---|---|---|---|
+| $\alpha_0$ | `alpha0` | $\alpha_0 \in [-5, 5]$ | Detection-probability intercept (logit scale), shared across all individuals and time steps |
+| $\alpha_1$ | `alpha1` | $\alpha_1 > 0$ | Coefficient governing decline in detection probability with squared distance |
+| $s_{x,i,t}$ | `sx[i, t]` | $s_{x,i,t} \in [x_{\min}, x_{\max}]$ | Easting coordinate of individual $i$'s activity center at time $t$ |
+| $s_{y,i,t}$ | `sy[i, t]` | $s_{y,i,t} \in [y_{\min}, y_{\max}]$ | Northing coordinate of individual $i$'s activity center at time $t$ |
+
+The activity center for individual $i$ at time $t$ is the latent point
+$\mathbf{s}_{i,t} = (s_{x,i,t},\, s_{y,i,t})$.
+
+## Distance
+
+For individual $i$ at time $t$, the squared Euclidean distance to receiver
+$r$ is
+
+$$
+d^2_{i,t,r} \;=\; \bigl(x_r - s_{x,i,t}\bigr)^2 \;+\; \bigl(y_r - s_{y,i,t}\bigr)^2 .
+$$
+
+In the Stan code this is the vector `d2`, computed once per individual–time
+combination across all receivers. The `logistic` flag in `transformed data`
+is set to `0` for this model, so the working distance term used in the
+linear predictor is the squared distance itself,
+
+$$
+d_{i,t,r} \;=\; d^2_{i,t,r},
+$$
+
+rather than its square root. (When `logistic = 1`, an alternate model
+variant instead uses $d_{i,t,r} = \sqrt{d^2_{i,t,r}}$; that branch is not
+exercised here.)
+
+## Likelihood
+
+Detections at each receiver are modeled as binomial counts out of $K$ trials,
+with detection probability governed by a logit-linear function of squared
+distance from the activity center:
+
+$$
+y_{i,t,r} \;\sim\; \mathrm{Binomial}\bigl(K,\; p_{i,t,r}\bigr), \qquad
+\mathrm{logit}\bigl(p_{i,t,r}\bigr) \;=\; \alpha_0 - \alpha_1 \, d^2_{i,t,r},
+$$
+
+equivalently
+
+$$
+p_{i,t,r} \;=\; \mathrm{logit}^{-1}\!\bigl(\alpha_0 - \alpha_1\, d^2_{i,t,r}\bigr)
+\;=\; \frac{1}{1 + \exp\!\bigl[-(\alpha_0 - \alpha_1\, d^2_{i,t,r})\bigr]} .
+$$
+
+This is implemented via Stan's `binomial_logit`, which parameterizes the
+binomial directly on the logit scale for numerical stability:
+
+$$
+y_{i,t,r} \;\sim\; \mathrm{BinomialLogit}\bigl(K,\; \alpha_0 - \alpha_1\, d^2_{i,t,r}\bigr).
+$$
+
+The full log-likelihood, summed over all individuals, time steps, and
+receivers, is
+
+$$
+\log L(\alpha_0, \alpha_1, \mathbf{s} \mid \mathbf{y})
+\;=\; \sum_{t=1}^{T} \sum_{i=1}^{N} \sum_{r=1}^{R}
+\log \mathrm{BinomialLogit}\bigl(y_{i,t,r} \mid K,\; \alpha_0 - \alpha_1 d^2_{i,t,r}\bigr).
+$$
+
+## Priors
+
+$$
+\begin{aligned}
+\alpha_0 &\sim \mathrm{Cauchy}(0,\, 2.5), &&\text{truncated to } [-5, 5] \\
+\alpha_1 &\sim \mathrm{Cauchy}(0,\, 2.5), &&\text{truncated to } (0, \infty) \\
+s_{x,i,t} &\sim \mathrm{Uniform}(x_{\min},\, x_{\max}) &&\text{for all } i, t \\
+s_{y,i,t} &\sim \mathrm{Uniform}(y_{\min},\, y_{\max}) &&\text{for all } i, t
+\end{aligned}
+$$
+
+The Cauchy priors on $\alpha_0$ and $\alpha_1$ are weakly informative and
+regularize the intercept and decay-rate parameters toward zero while
+allowing heavy tails. Because both parameters carry explicit `lower`/`upper`
+bounds in the `parameters` block, the priors are implicitly truncated to
+those bounds — Stan automatically renormalizes the density over the
+constrained support, so no separate normalizing constant needs to be added
+by hand. The activity-center coordinates $s_{x,i,t}$ and $s_{y,i,t}$ have no
+explicit sampling statement, so they receive Stan's implicit flat (uniform)
+prior over their bounded support $[x_{\min}, x_{\max}]$ and
+$[y_{\min}, y_{\max}]$, respectively.
+
+## Joint posterior
+
+Combining the likelihood and priors, the (unnormalized) joint posterior
+density is
+
+$$
+\begin{aligned}
+p(\alpha_0, \alpha_1, \mathbf{s} \mid \mathbf{y}) \;\propto\;\;
+& \mathrm{Cauchy}(\alpha_0 \mid 0, 2.5) \cdot \mathrm{Cauchy}(\alpha_1 \mid 0, 2.5) \\[4pt]
+\times\;\; & \prod_{t=1}^{T} \prod_{i=1}^{N} \prod_{r=1}^{R}
+\mathrm{BinomialLogit}\bigl(y_{i,t,r} \mid K,\; \alpha_0 - \alpha_1 d^2_{i,t,r}(\mathbf{s}_{i,t})\bigr),
+\end{aligned}
+$$
+
+subject to $\alpha_0 \in [-5, 5]$, $\alpha_1 > 0$,
+$s_{x,i,t} \in [x_{\min}, x_{\max}]$, and $s_{y,i,t} \in [y_{\min}, y_{\max}]$
+for all $i, t$.
+
+## Generated quantities
+
+Two derived quantities are computed from the posterior draws of $\alpha_0$
+and $\alpha_1$:
+
+**Baseline detection probability.** The detection probability at distance
+zero (i.e., when the activity center coincides exactly with a receiver):
+
+$$
+p_0 \;=\; \mathrm{logit}^{-1}(\alpha_0) \;=\; \frac{1}{1 + e^{-\alpha_0}}.
+$$
+
+**Detection-decay standard deviation.** The squared-distance decay term
+$\alpha_1 d^2$ is the kernel of a Gaussian (half-normal) detection function.
+Writing the decay term in the conventional distance-sampling form
+$d^2 / (2\sigma^2)$ and matching coefficients,
+
+$$
+\alpha_1 \;=\; \frac{1}{2\sigma^2}
+\quad \Longleftrightarrow \quad
+\sigma \;=\; \sqrt{\frac{1}{2\alpha_1}},
+$$
+
+so that the detection function can equivalently be written as
+
+$$
+p_{i,t,r} \;=\; \mathrm{logit}^{-1}\!\left(\alpha_0 - \frac{d^2_{i,t,r}}{2\sigma^2}\right).
+$$
+
+Here $\sigma$ has units of distance and characterizes the effective spatial
+range of detection: it is the standard deviation of the Gaussian decay in
+detection log-odds with distance from the activity center, with larger
+$\sigma$ corresponding to a more slowly-decaying (longer-range) detection
+function.

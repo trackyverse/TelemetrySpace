@@ -23,7 +23,7 @@
 
 build_aeqd <- function(array_sf) {
   check_sf_object(array_sf)
-  check_utm(array_sf)
+  check_lonlat(array_sf)
   center <- sf::st_centroid(sf::st_union(array_sf))
 
   array_crs <- sf::st_crs(array_sf)
@@ -326,7 +326,7 @@ build_ntrans <- function(
 
 build_pixel_grid <- function(bnd_sf, res, crs) {
   check_sf_object(bnd_sf)
-  check_utm(bnd_sf)
+  check_lonlat(bnd_sf, error = TRUE)
   check_aeqd_string(crs)
   check_numerical(res)
 

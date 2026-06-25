@@ -5,7 +5,7 @@
 \alias{ps_det_test_tag}
 \title{Detection \code{data.frame} for a test tag}
 \format{
-A \code{data.frame} with 7 columns and 214 rows.
+A \code{data.frame} with 7 columns and 200 rows.
 \describe{
 \item{detection_timestamp_utc}{The detection timestamp as \code{POSIXct} with a tz of UTC}
 \item{station_no}{The receiver station number the tag was detected on}

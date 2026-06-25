@@ -10,7 +10,10 @@
 \alias{check_column_type}
 \alias{check_data_frame}
 \alias{check_delay}
+\alias{check_draws}
+\alias{check_draw_summary}
 \alias{check_list}
+\alias{check_lonlat}
 \alias{check_nrec}
 \alias{check_numerical}
 \alias{check_num_vec_len}
@@ -20,7 +23,6 @@
 \alias{check_stan_object}
 \alias{check_time}
 \alias{check_unit}
-\alias{check_utm}
 \title{Error functions}
 \usage{
 check_aeqd(sf, arg_name = NULL)
@@ -41,7 +43,13 @@ check_data_frame(df, arg_name = NULL)
 
 check_delay(vec, type, arg_name = NULL)
 
+check_draws(draws, arg_name = NULL)
+
+check_draw_summary(draws_summary, arg_name = NULL)
+
 check_list(list, arg_name = NULL)
+
+check_lonlat(sf, error = FALSE, arg_name = NULL)
 
 check_nrec(df, vec, arg_name_df = NULL, arg_name_vec = NULL)
 
@@ -58,8 +66,6 @@ check_stan_object(stan, arg_name = NULL)
 check_time(df, arg_name = NULL)
 
 check_unit(vec, arg_name = NULL)
-
-check_utm(sf, arg_name = NULL)
 }
 \arguments{
 \item{sf}{is a \code{sf} object that needs to be checked.}
@@ -79,7 +85,14 @@ same length as \code{ntest} or the number of tags.}
 
 \item{type}{is a \code{character} that is the type of delay desired.}
 
+\item{draws}{is a \code{draws_df}object to be checked.}
+
+\item{draws_summary}{is a \code{draws_summary}object to be checked.}
+
 \item{list}{is a \code{list} to be checked.}
+
+\item{error}{\code{logical} value that dictates whether an error message is
+displayed or a warning message. Default is \code{FALSE}.}
 
 \item{arg_name_df}{the name of the argument of df to check.}
 

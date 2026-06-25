@@ -105,7 +105,6 @@ ps_det_test_tag <- merge(
 
 # ----- only select the first 2 times ----
 ps_det_test_tag <- ps_det_test_tag[ps_det_test_tag$time < 3, ]
-str(ps_det_test_tag)
 
 ps_test_tag_count <- build_counts(
   df = ps_det_test_tag,
@@ -159,6 +158,7 @@ standard_gaussian <- do.call(
     )
   )
 )
+
 standard_logistic <- do.call(
   COA_Standard,
   c(
@@ -176,14 +176,43 @@ standard_logistic <- do.call(
   )
 )
 # ----- time integrated -----
+# first make p0 names to test
+ntime <- time_steps
+nrec <- nrow(ps_rec_loc_aeqd)
+
+p0_names <- outer(seq_len(ntime), seq_len(nrec), FUN = function(i, j) {
+  sprintf("p0[%d,%d]", i, j)
+})
+
+# column-major (Stan default): first index varies fastest
+p0_names <- sprintf(
+  "p0[%d,%d]",
+  rep(seq_len(ntime), times = nrec),
+  rep(seq_len(nrec), each = ntime)
+)
+
+# -----alpha ---
+alpha0_names <- outer(seq_len(ntime), seq_len(nrec), FUN = function(i, j) {
+  sprintf("alpha0[%d,%d]", i, j)
+})
+
+# column-major (Stan default): first index varies fastest
+alpha0_names <- sprintf(
+  "alpha0[%d,%d]",
+  rep(seq_len(ntime), times = nrec),
+  rep(seq_len(nrec), each = ntime)
+)
+
+
+# ----- run model
 time_vary_gaussian <- do.call(
   COA_TimeVarying,
   c(
     standata,
     list(
       chains = 2,
-      warmup = 300,
-      iter = 1000,
+      warmup = 200,
+      iter = 1300,
       control = list(adapt_delta = 0.95),
       seed = 4,
       ndraws = 11,
@@ -200,7 +229,7 @@ time_vary_logistic <- do.call(
     standata,
     list(
       chains = 2,
-      warmup = 400,
+      warmup = 300,
       iter = 1100,
       # warmup = 3000,
       # iter = 7000,
