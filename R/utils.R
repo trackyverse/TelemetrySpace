@@ -301,9 +301,9 @@ check_lonlat <- function(sf, error = FALSE, arg_name = NULL) {
     )
   }
 
-  is_longlot <- sf::st_is_longlat(sf)
+  is_longlat <- sf::st_is_longlat(sf)
 
-  if (isFALSE(is_longlot)) {
+  if (isTRUE(is_longlat)) {
     if (isFALSE(error)) {
       cli::cli_alert_warning(
         c(
