@@ -417,8 +417,8 @@ m <- COA_Standard(
 #> 
 #> SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 0.001088 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 10.88 seconds.
+#> Chain 1: Gradient evaluation took 0.000967 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 9.67 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -435,15 +435,15 @@ m <- COA_Standard(
 #> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 13.128 seconds (Warm-up)
-#> Chain 1:                10.399 seconds (Sampling)
-#> Chain 1:                23.527 seconds (Total)
+#> Chain 1:  Elapsed Time: 12.964 seconds (Warm-up)
+#> Chain 1:                12.452 seconds (Sampling)
+#> Chain 1:                25.416 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 0.001036 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 10.36 seconds.
+#> Chain 2: Gradient evaluation took 0.00096 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 9.6 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -460,13 +460,13 @@ m <- COA_Standard(
 #> Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 12.355 seconds (Warm-up)
-#> Chain 2:                12.772 seconds (Sampling)
-#> Chain 2:                25.127 seconds (Total)
+#> Chain 2:  Elapsed Time: 11.924 seconds (Warm-up)
+#> Chain 2:                10.856 seconds (Sampling)
+#> Chain 2:                22.78 seconds (Total)
 #> Chain 2: 
 #>         warmup sample
-#> chain:1 13.128 10.399
-#> chain:2 12.355 12.772
+#> chain:1 12.964 12.452
+#> chain:2 11.924 10.856
 ```
 
 We can inspect the object created with the first object containing the
@@ -505,10 +505,7 @@ model.
 stan_trace(m$model, pars = c("alpha0", "alpha1", "p0", "sigma"))
 ```
 
-![plot of chunk trace plots and post
-dist](figure/trace%20plots%20and%20post%20dist-1.png)
-
-plot of chunk trace plots and post dist
+![](figure/trace%20plots%20and%20post%20dist-1.png)
 
 ``` r
 
@@ -521,10 +518,7 @@ stan_dens(
 )
 ```
 
-![plot of chunk trace plots and post
-dist](figure/trace%20plots%20and%20post%20dist-2.png)
-
-plot of chunk trace plots and post dist
+![](figure/trace%20plots%20and%20post%20dist-2.png)
 
 We can see our trace plots look good and that the posterior
 distributions of our paramaters look good.
@@ -539,10 +533,7 @@ posteriors this way and we recommend inspecting $`\hat R`$ and ESS.
 stan_trace(m$model, pars = c("sx[1,1]", "sx[1,2]", "sy[1,1]", "sy[1,2]"))
 ```
 
-![plot of chunk trace plots and post dist
-latent](figure/trace%20plots%20and%20post%20dist%20latent-1.png)
-
-plot of chunk trace plots and post dist latent
+![](figure/trace%20plots%20and%20post%20dist%20latent-1.png)
 
 ``` r
 
@@ -555,9 +546,8 @@ stan_dens(
 )
 ```
 
-![plot of chunk trace plots and post dist
-latent](figure/trace%20plots%20and%20post%20dist%20latent-2.png) Again,
-we can see that everything looks good and our model has converged.
+![](figure/trace%20plots%20and%20post%20dist%20latent-2.png) Again, we
+can see that everything looks good and our model has converged.
 
 Now moving on to the other elements in the outputted object from
 `COA_*()`.
@@ -576,9 +566,9 @@ $`\hat R`$ statistic (which should be between 0.95 and 1.05).
 ``` r
 
 m$summary
-#>            mean      se_mean         sd      2.5%       25%       50%       75%     97.5%    n_eff     Rhat
-#> p0    0.5021174 0.0009529285 0.01918709 0.4684838 0.4877082 0.5017623 0.5153259 0.5396254 405.4131 1.000994
-#> sigma 0.9952465 0.0014471561 0.02871756 0.9363534 0.9754131 0.9963352 1.0155073 1.0547302 393.7897 1.001954
+#>            mean     se_mean         sd      2.5%       25%       50%       75%     97.5%    n_eff     Rhat
+#> p0    0.5018673 0.000965220 0.01893527 0.4670082 0.4887808 0.5021665 0.5152408 0.5360255 384.8492 1.003026
+#> sigma 0.9926248 0.001377877 0.02835745 0.9404584 0.9723176 0.9916287 1.0118301 1.0472763 423.5588 1.004424
 ```
 
 We can see that the mean detection probability at a distance of 0 m is
@@ -594,7 +584,7 @@ will sum the time for each core. To return the realized run time, divide
 ``` r
 
 m$time
-#> [1] 0.8109
+#> [1] 0.8032667
 ```
 
 The fourth element returned, is a summary of the posterior draws.
@@ -611,16 +601,16 @@ m$summary_draws
 #> # A tibble: 21 × 4
 #>    variable   median   q2.5  q97.5
 #>    <chr>       <dbl>  <dbl>  <dbl>
-#>  1 alpha0    0.00705 -0.126  0.159
-#>  2 alpha1    0.504    0.449  0.570
-#>  3 sx[1,1]  -2.97    -3.23  -2.68 
-#>  4 sx[1,2]  -2.94    -3.32  -2.61 
-#>  5 sx[1,3]  -2.13    -2.35  -1.92 
-#>  6 sx[1,4]  -2.27    -2.50  -2.05 
-#>  7 sx[1,5]  -2.79    -3.15  -2.49 
-#>  8 sx[1,6]  -2.30    -2.53  -2.06 
-#>  9 sx[1,7]  -2.29    -2.50  -2.08 
-#> 10 sx[1,8]  -2.98    -3.26  -2.73 
+#>  1 alpha0    0.00867 -0.132  0.144
+#>  2 alpha1    0.508    0.456  0.565
+#>  3 sx[1,1]  -2.96    -3.28  -2.67 
+#>  4 sx[1,2]  -2.96    -3.30  -2.61 
+#>  5 sx[1,3]  -2.12    -2.30  -1.91 
+#>  6 sx[1,4]  -2.26    -2.48  -2.04 
+#>  7 sx[1,5]  -2.77    -3.09  -2.47 
+#>  8 sx[1,6]  -2.29    -2.52  -2.05 
+#>  9 sx[1,7]  -2.28    -2.48  -2.07 
+#> 10 sx[1,8]  -2.98    -3.25  -2.73 
 #> # ℹ 11 more rows
 ```
 
@@ -642,14 +632,14 @@ m$coas
 #> # A tibble: 8 × 8
 #>     ind  time     x       y x_lower x_upper y_lower y_upper
 #>   <int> <int> <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
-#> 1     1     1 -2.97 -0.515    -3.23   -2.68 -0.903  -0.163 
-#> 2     1     2 -2.94 -0.326    -3.32   -2.61 -0.744   0.0513
-#> 3     1     3 -2.13  0.0554   -2.35   -1.92 -0.192   0.249 
-#> 4     1     4 -2.27  0.145    -2.50   -2.05 -0.0818  0.383 
-#> 5     1     5 -2.79 -0.285    -3.15   -2.49 -0.602   0.0360
-#> 6     1     6 -2.30 -0.728    -2.53   -2.06 -1.06   -0.445 
-#> 7     1     7 -2.29 -0.0921   -2.50   -2.08 -0.295   0.129 
-#> 8     1     8 -2.98 -0.476    -3.26   -2.73 -0.748  -0.160
+#> 1     1     1 -2.96 -0.518    -3.28   -2.67 -0.882  -0.179 
+#> 2     1     2 -2.96 -0.331    -3.30   -2.61 -0.699   0.0925
+#> 3     1     3 -2.12  0.0652   -2.30   -1.91 -0.182   0.249 
+#> 4     1     4 -2.26  0.144    -2.48   -2.04 -0.0993  0.396 
+#> 5     1     5 -2.77 -0.273    -3.09   -2.47 -0.578   0.0535
+#> 6     1     6 -2.29 -0.715    -2.52   -2.05 -0.987  -0.461 
+#> 7     1     7 -2.28 -0.0781   -2.48   -2.07 -0.279   0.125 
+#> 8     1     8 -2.98 -0.473    -3.25   -2.73 -0.766  -0.184
 ```
 
 The sixth element returned, is a `data.frame` containing the posterior
@@ -663,17 +653,17 @@ for specific applications that you are more likely to use.
 
 m$all_estimates
 #> # A draws_df: 200 iterations, 2 chains, and 21 variables
-#>      alpha0 alpha1 sx[1,1] sx[1,2] sx[1,3] sx[1,4] sx[1,5] sx[1,6]
-#> 1  -0.11145   0.45    -3.2    -3.1    -2.2    -2.2    -2.7    -2.4
-#> 2   0.10130   0.49    -2.7    -3.0    -2.1    -2.2    -2.8    -2.3
-#> 3   0.08593   0.53    -3.0    -2.8    -2.2    -2.5    -3.0    -2.4
-#> 4   0.00502   0.48    -2.8    -3.0    -2.0    -2.2    -2.9    -2.0
-#> 5  -0.05169   0.48    -3.1    -3.0    -2.2    -2.5    -2.8    -2.2
-#> 6  -0.00041   0.52    -3.1    -2.8    -2.2    -2.4    -2.7    -2.1
-#> 7  -0.00792   0.48    -3.1    -3.1    -2.2    -2.4    -2.7    -2.2
-#> 8  -0.03658   0.47    -3.4    -3.4    -2.0    -2.4    -3.0    -2.5
-#> 9   0.00985   0.53    -2.9    -3.0    -2.2    -2.4    -2.7    -2.3
-#> 10  0.01182   0.54    -2.7    -2.8    -2.0    -2.2    -3.1    -2.0
+#>     alpha0 alpha1 sx[1,1] sx[1,2] sx[1,3] sx[1,4] sx[1,5] sx[1,6]
+#> 1   0.0491   0.52    -2.9    -2.9    -2.3    -2.2    -2.7    -2.3
+#> 2   0.1010   0.51    -3.1    -2.8    -2.1    -2.1    -2.8    -2.2
+#> 3   0.0498   0.52    -3.2    -2.6    -2.2    -2.1    -2.8    -2.1
+#> 4   0.0020   0.51    -2.8    -3.0    -2.2    -2.1    -2.9    -2.2
+#> 5  -0.0043   0.49    -2.9    -3.1    -2.1    -2.2    -3.0    -2.2
+#> 6  -0.0358   0.47    -2.9    -3.0    -2.1    -2.3    -2.6    -2.3
+#> 7   0.0061   0.53    -2.8    -3.1    -2.1    -2.2    -2.9    -2.2
+#> 8   0.0050   0.50    -2.7    -3.0    -2.2    -2.3    -2.7    -2.3
+#> 9  -0.0139   0.49    -2.9    -3.0    -2.2    -2.1    -2.9    -2.4
+#> 10  0.0076   0.49    -2.9    -3.0    -2.2    -2.0    -2.9    -2.3
 #> # ... with 390 more draws, and 13 more variables
 #> # ... hidden reserved variables {'.chain', '.iteration', '.draw'}
 ```
@@ -696,18 +686,18 @@ Later on we will plot this object.
 loc_draws <- m$loc_draws
 loc_draws
 #> # A tibble: 3,200 × 8
-#>    .chain .iteration .draw   lp__  fish  time     x        y
-#>     <int>      <int> <int>  <dbl> <int> <int> <dbl>    <dbl>
-#>  1      1          1     1 -1281.     1     1 -3.25 -0.609  
-#>  2      1          1     1 -1281.     1     2 -3.08 -0.391  
-#>  3      1          1     1 -1281.     1     3 -2.20  0.00656
-#>  4      1          1     1 -1281.     1     4 -2.23  0.122  
-#>  5      1          1     1 -1281.     1     5 -2.75 -0.342  
-#>  6      1          1     1 -1281.     1     6 -2.43 -0.610  
-#>  7      1          1     1 -1281.     1     7 -2.31 -0.202  
-#>  8      1          1     1 -1281.     1     8 -3.08 -0.503  
-#>  9      1          2     2 -1289.     1     1 -2.75 -0.698  
-#> 10      1          2     2 -1289.     1     2 -2.96 -0.546  
+#>    .chain .iteration .draw   lp__  fish  time     x      y
+#>     <int>      <int> <int>  <dbl> <int> <int> <dbl>  <dbl>
+#>  1      1          1     1 -1279.     1     1 -2.85 -0.723
+#>  2      1          1     1 -1279.     1     2 -2.87 -0.175
+#>  3      1          1     1 -1279.     1     3 -2.27  0.129
+#>  4      1          1     1 -1279.     1     4 -2.20  0.262
+#>  5      1          1     1 -1279.     1     5 -2.75 -0.190
+#>  6      1          1     1 -1279.     1     6 -2.26 -0.518
+#>  7      1          1     1 -1279.     1     7 -2.32 -0.184
+#>  8      1          1     1 -1279.     1     8 -2.95 -0.400
+#>  9      1          2     2 -1281.     1     1 -3.07 -0.440
+#> 10      1          2     2 -1281.     1     2 -2.80 -0.338
 #> # ℹ 3,190 more rows
 ```
 
@@ -730,16 +720,16 @@ param_draws
 #> # A tibble: 6,400 × 10
 #>    .chain .iteration .draw   lp__  fish  time alpha0 alpha1    p0 sigma
 #>     <int>      <int> <int>  <dbl> <int> <int>  <dbl>  <dbl> <dbl> <dbl>
-#>  1      1          1     1 -1281.     1     1 -0.111  0.446 0.472  1.06
-#>  2      1          1     1 -1281.     1     2 -0.111  0.446 0.472  1.06
-#>  3      1          1     1 -1281.     1     3 -0.111  0.446 0.472  1.06
-#>  4      1          1     1 -1281.     1     4 -0.111  0.446 0.472  1.06
-#>  5      1          1     1 -1281.     1     5 -0.111  0.446 0.472  1.06
-#>  6      1          1     1 -1281.     1     6 -0.111  0.446 0.472  1.06
-#>  7      1          1     1 -1281.     1     7 -0.111  0.446 0.472  1.06
-#>  8      1          1     1 -1281.     1     8 -0.111  0.446 0.472  1.06
-#>  9      1          1     1 -1281.     1     1 -0.111  0.446 0.472  1.06
-#> 10      1          1     1 -1281.     1     2 -0.111  0.446 0.472  1.06
+#>  1      1          1     1 -1279.     1     1 0.0491  0.519 0.512 0.982
+#>  2      1          1     1 -1279.     1     2 0.0491  0.519 0.512 0.982
+#>  3      1          1     1 -1279.     1     3 0.0491  0.519 0.512 0.982
+#>  4      1          1     1 -1279.     1     4 0.0491  0.519 0.512 0.982
+#>  5      1          1     1 -1279.     1     5 0.0491  0.519 0.512 0.982
+#>  6      1          1     1 -1279.     1     6 0.0491  0.519 0.512 0.982
+#>  7      1          1     1 -1279.     1     7 0.0491  0.519 0.512 0.982
+#>  8      1          1     1 -1279.     1     8 0.0491  0.519 0.512 0.982
+#>  9      1          1     1 -1279.     1     1 0.0491  0.519 0.512 0.982
+#> 10      1          1     1 -1279.     1     2 0.0491  0.519 0.512 0.982
 #> # ℹ 6,390 more rows
 ```
 
@@ -758,259 +748,12 @@ prior probability with information summarized by the likelihood.
 ``` r
 
 yrep <- m$generated_quantities
-yrep
-#> $yrep
-#>         tag_1_rec_1_time_1 tag_1_rec_2_time_1 tag_1_rec_3_time_1 tag_1_rec_4_time_1 tag_1_rec_5_time_1 tag_1_rec_6_time_1
-#> yrep_1                   0                  3                  3                  9                  3                  8
-#>         tag_1_rec_7_time_1 tag_1_rec_8_time_1 tag_1_rec_9_time_1 tag_1_rec_10_time_1 tag_1_rec_11_time_1 tag_1_rec_12_time_1
-#> yrep_1                  10                  4                  1                   1                   0                   0
-#>         tag_1_rec_13_time_1 tag_1_rec_14_time_1 tag_1_rec_15_time_1 tag_1_rec_16_time_1 tag_1_rec_17_time_1
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_18_time_1 tag_1_rec_19_time_1 tag_1_rec_20_time_1 tag_1_rec_21_time_1 tag_1_rec_22_time_1
-#> yrep_1                    1                   3                   3                   3                   0
-#>         tag_1_rec_23_time_1 tag_1_rec_24_time_1 tag_1_rec_25_time_1 tag_1_rec_26_time_1 tag_1_rec_27_time_1
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_28_time_1 tag_1_rec_29_time_1 tag_1_rec_30_time_1 tag_1_rec_31_time_1 tag_1_rec_32_time_1
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_33_time_1 tag_1_rec_34_time_1 tag_1_rec_35_time_1 tag_1_rec_36_time_1 tag_1_rec_37_time_1
-#> yrep_1                    0                   1                   0                   0                   0
-#>         tag_1_rec_38_time_1 tag_1_rec_39_time_1 tag_1_rec_40_time_1 tag_1_rec_41_time_1 tag_1_rec_42_time_1
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_43_time_1 tag_1_rec_44_time_1 tag_1_rec_45_time_1 tag_1_rec_46_time_1 tag_1_rec_47_time_1
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_48_time_1 tag_1_rec_49_time_1 tag_1_rec_50_time_1 tag_1_rec_51_time_1 tag_1_rec_52_time_1
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_53_time_1 tag_1_rec_54_time_1 tag_1_rec_55_time_1 tag_1_rec_56_time_1 tag_1_rec_57_time_1
-#> yrep_1                    0                   0                   1                   0                   0
-#>         tag_1_rec_58_time_1 tag_1_rec_59_time_1 tag_1_rec_60_time_1 tag_1_rec_61_time_1 tag_1_rec_62_time_1
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_63_time_1 tag_1_rec_64_time_1 tag_1_rec_65_time_1 tag_1_rec_66_time_1 tag_1_rec_67_time_1
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_68_time_1 tag_1_rec_69_time_1 tag_1_rec_70_time_1 tag_1_rec_71_time_1 tag_1_rec_72_time_1
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_73_time_1 tag_1_rec_74_time_1 tag_1_rec_75_time_1 tag_1_rec_76_time_1 tag_1_rec_77_time_1
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_78_time_1 tag_1_rec_79_time_1 tag_1_rec_80_time_1 tag_1_rec_1_time_2 tag_1_rec_2_time_2 tag_1_rec_3_time_2
-#> yrep_1                    0                   0                   0                  0                  0                  5
-#>         tag_1_rec_4_time_2 tag_1_rec_5_time_2 tag_1_rec_6_time_2 tag_1_rec_7_time_2 tag_1_rec_8_time_2 tag_1_rec_9_time_2
-#> yrep_1                   5                  6                  6                 10                  2                  0
-#>         tag_1_rec_10_time_2 tag_1_rec_11_time_2 tag_1_rec_12_time_2 tag_1_rec_13_time_2 tag_1_rec_14_time_2
-#> yrep_1                    1                   0                   0                   0                   0
-#>         tag_1_rec_15_time_2 tag_1_rec_16_time_2 tag_1_rec_17_time_2 tag_1_rec_18_time_2 tag_1_rec_19_time_2
-#> yrep_1                    0                   0                   0                   1                   2
-#>         tag_1_rec_20_time_2 tag_1_rec_21_time_2 tag_1_rec_22_time_2 tag_1_rec_23_time_2 tag_1_rec_24_time_2
-#> yrep_1                    3                   1                   4                   0                   1
-#>         tag_1_rec_25_time_2 tag_1_rec_26_time_2 tag_1_rec_27_time_2 tag_1_rec_28_time_2 tag_1_rec_29_time_2
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_30_time_2 tag_1_rec_31_time_2 tag_1_rec_32_time_2 tag_1_rec_33_time_2 tag_1_rec_34_time_2
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_35_time_2 tag_1_rec_36_time_2 tag_1_rec_37_time_2 tag_1_rec_38_time_2 tag_1_rec_39_time_2
-#> yrep_1                    0                   0                   1                   0                   0
-#>         tag_1_rec_40_time_2 tag_1_rec_41_time_2 tag_1_rec_42_time_2 tag_1_rec_43_time_2 tag_1_rec_44_time_2
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_45_time_2 tag_1_rec_46_time_2 tag_1_rec_47_time_2 tag_1_rec_48_time_2 tag_1_rec_49_time_2
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_50_time_2 tag_1_rec_51_time_2 tag_1_rec_52_time_2 tag_1_rec_53_time_2 tag_1_rec_54_time_2
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_55_time_2 tag_1_rec_56_time_2 tag_1_rec_57_time_2 tag_1_rec_58_time_2 tag_1_rec_59_time_2
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_60_time_2 tag_1_rec_61_time_2 tag_1_rec_62_time_2 tag_1_rec_63_time_2 tag_1_rec_64_time_2
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_65_time_2 tag_1_rec_66_time_2 tag_1_rec_67_time_2 tag_1_rec_68_time_2 tag_1_rec_69_time_2
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_70_time_2 tag_1_rec_71_time_2 tag_1_rec_72_time_2 tag_1_rec_73_time_2 tag_1_rec_74_time_2
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_75_time_2 tag_1_rec_76_time_2 tag_1_rec_77_time_2 tag_1_rec_78_time_2 tag_1_rec_79_time_2
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_80_time_2 tag_1_rec_1_time_3 tag_1_rec_2_time_3 tag_1_rec_3_time_3 tag_1_rec_4_time_3 tag_1_rec_5_time_3
-#> yrep_1                    0                  0                  0                  7                  9                  2
-#>         tag_1_rec_6_time_3 tag_1_rec_7_time_3 tag_1_rec_8_time_3 tag_1_rec_9_time_3 tag_1_rec_10_time_3 tag_1_rec_11_time_3
-#> yrep_1                   2                  5                  7                  7                   1                   0
-#>         tag_1_rec_12_time_3 tag_1_rec_13_time_3 tag_1_rec_14_time_3 tag_1_rec_15_time_3 tag_1_rec_16_time_3
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_17_time_3 tag_1_rec_18_time_3 tag_1_rec_19_time_3 tag_1_rec_20_time_3 tag_1_rec_21_time_3
-#> yrep_1                    1                   4                   4                   8                   2
-#>         tag_1_rec_22_time_3 tag_1_rec_23_time_3 tag_1_rec_24_time_3 tag_1_rec_25_time_3 tag_1_rec_26_time_3
-#> yrep_1                    5                   0                   4                   1                   0
-#>         tag_1_rec_27_time_3 tag_1_rec_28_time_3 tag_1_rec_29_time_3 tag_1_rec_30_time_3 tag_1_rec_31_time_3
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_32_time_3 tag_1_rec_33_time_3 tag_1_rec_34_time_3 tag_1_rec_35_time_3 tag_1_rec_36_time_3
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_37_time_3 tag_1_rec_38_time_3 tag_1_rec_39_time_3 tag_1_rec_40_time_3 tag_1_rec_41_time_3
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_42_time_3 tag_1_rec_43_time_3 tag_1_rec_44_time_3 tag_1_rec_45_time_3 tag_1_rec_46_time_3
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_47_time_3 tag_1_rec_48_time_3 tag_1_rec_49_time_3 tag_1_rec_50_time_3 tag_1_rec_51_time_3
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_52_time_3 tag_1_rec_53_time_3 tag_1_rec_54_time_3 tag_1_rec_55_time_3 tag_1_rec_56_time_3
-#> yrep_1                    0                   0                   3                   2                   1
-#>         tag_1_rec_57_time_3 tag_1_rec_58_time_3 tag_1_rec_59_time_3 tag_1_rec_60_time_3 tag_1_rec_61_time_3
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_62_time_3 tag_1_rec_63_time_3 tag_1_rec_64_time_3 tag_1_rec_65_time_3 tag_1_rec_66_time_3
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_67_time_3 tag_1_rec_68_time_3 tag_1_rec_69_time_3 tag_1_rec_70_time_3 tag_1_rec_71_time_3
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_72_time_3 tag_1_rec_73_time_3 tag_1_rec_74_time_3 tag_1_rec_75_time_3 tag_1_rec_76_time_3
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_77_time_3 tag_1_rec_78_time_3 tag_1_rec_79_time_3 tag_1_rec_80_time_3 tag_1_rec_1_time_4 tag_1_rec_2_time_4
-#> yrep_1                    0                   0                   0                   0                  2                  1
-#>         tag_1_rec_3_time_4 tag_1_rec_4_time_4 tag_1_rec_5_time_4 tag_1_rec_6_time_4 tag_1_rec_7_time_4 tag_1_rec_8_time_4
-#> yrep_1                   6                  4                  1                  3                  3                  9
-#>         tag_1_rec_9_time_4 tag_1_rec_10_time_4 tag_1_rec_11_time_4 tag_1_rec_12_time_4 tag_1_rec_13_time_4
-#> yrep_1                   3                   1                   0                   0                   0
-#>         tag_1_rec_14_time_4 tag_1_rec_15_time_4 tag_1_rec_16_time_4 tag_1_rec_17_time_4 tag_1_rec_18_time_4
-#> yrep_1                    0                   0                   0                   3                   4
-#>         tag_1_rec_19_time_4 tag_1_rec_20_time_4 tag_1_rec_21_time_4 tag_1_rec_22_time_4 tag_1_rec_23_time_4
-#> yrep_1                    6                  10                   2                   1                   3
-#>         tag_1_rec_24_time_4 tag_1_rec_25_time_4 tag_1_rec_26_time_4 tag_1_rec_27_time_4 tag_1_rec_28_time_4
-#> yrep_1                    1                   1                   0                   0                   0
-#>         tag_1_rec_29_time_4 tag_1_rec_30_time_4 tag_1_rec_31_time_4 tag_1_rec_32_time_4 tag_1_rec_33_time_4
-#> yrep_1                    0                   0                   0                   1                   0
-#>         tag_1_rec_34_time_4 tag_1_rec_35_time_4 tag_1_rec_36_time_4 tag_1_rec_37_time_4 tag_1_rec_38_time_4
-#> yrep_1                    1                   1                   0                   0                   0
-#>         tag_1_rec_39_time_4 tag_1_rec_40_time_4 tag_1_rec_41_time_4 tag_1_rec_42_time_4 tag_1_rec_43_time_4
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_44_time_4 tag_1_rec_45_time_4 tag_1_rec_46_time_4 tag_1_rec_47_time_4 tag_1_rec_48_time_4
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_49_time_4 tag_1_rec_50_time_4 tag_1_rec_51_time_4 tag_1_rec_52_time_4 tag_1_rec_53_time_4
-#> yrep_1                    0                   0                   0                   1                   0
-#>         tag_1_rec_54_time_4 tag_1_rec_55_time_4 tag_1_rec_56_time_4 tag_1_rec_57_time_4 tag_1_rec_58_time_4
-#> yrep_1                    1                   0                   0                   0                   0
-#>         tag_1_rec_59_time_4 tag_1_rec_60_time_4 tag_1_rec_61_time_4 tag_1_rec_62_time_4 tag_1_rec_63_time_4
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_64_time_4 tag_1_rec_65_time_4 tag_1_rec_66_time_4 tag_1_rec_67_time_4 tag_1_rec_68_time_4
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_69_time_4 tag_1_rec_70_time_4 tag_1_rec_71_time_4 tag_1_rec_72_time_4 tag_1_rec_73_time_4
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_74_time_4 tag_1_rec_75_time_4 tag_1_rec_76_time_4 tag_1_rec_77_time_4 tag_1_rec_78_time_4
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_79_time_4 tag_1_rec_80_time_4 tag_1_rec_1_time_5 tag_1_rec_2_time_5 tag_1_rec_3_time_5 tag_1_rec_4_time_5
-#> yrep_1                    0                   0                  1                  7                  4                  8
-#>         tag_1_rec_5_time_5 tag_1_rec_6_time_5 tag_1_rec_7_time_5 tag_1_rec_8_time_5 tag_1_rec_9_time_5 tag_1_rec_10_time_5
-#> yrep_1                   3                  3                  8                  5                  1                   0
-#>         tag_1_rec_11_time_5 tag_1_rec_12_time_5 tag_1_rec_13_time_5 tag_1_rec_14_time_5 tag_1_rec_15_time_5
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_16_time_5 tag_1_rec_17_time_5 tag_1_rec_18_time_5 tag_1_rec_19_time_5 tag_1_rec_20_time_5
-#> yrep_1                    0                   0                   2                   1                   3
-#>         tag_1_rec_21_time_5 tag_1_rec_22_time_5 tag_1_rec_23_time_5 tag_1_rec_24_time_5 tag_1_rec_25_time_5
-#> yrep_1                    0                   1                   1                   0                   0
-#>         tag_1_rec_26_time_5 tag_1_rec_27_time_5 tag_1_rec_28_time_5 tag_1_rec_29_time_5 tag_1_rec_30_time_5
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_31_time_5 tag_1_rec_32_time_5 tag_1_rec_33_time_5 tag_1_rec_34_time_5 tag_1_rec_35_time_5
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_36_time_5 tag_1_rec_37_time_5 tag_1_rec_38_time_5 tag_1_rec_39_time_5 tag_1_rec_40_time_5
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_41_time_5 tag_1_rec_42_time_5 tag_1_rec_43_time_5 tag_1_rec_44_time_5 tag_1_rec_45_time_5
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_46_time_5 tag_1_rec_47_time_5 tag_1_rec_48_time_5 tag_1_rec_49_time_5 tag_1_rec_50_time_5
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_51_time_5 tag_1_rec_52_time_5 tag_1_rec_53_time_5 tag_1_rec_54_time_5 tag_1_rec_55_time_5
-#> yrep_1                    0                   1                   0                   2                   0
-#>         tag_1_rec_56_time_5 tag_1_rec_57_time_5 tag_1_rec_58_time_5 tag_1_rec_59_time_5 tag_1_rec_60_time_5
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_61_time_5 tag_1_rec_62_time_5 tag_1_rec_63_time_5 tag_1_rec_64_time_5 tag_1_rec_65_time_5
-#> yrep_1                    0                   0                   0                   0                   1
-#>         tag_1_rec_66_time_5 tag_1_rec_67_time_5 tag_1_rec_68_time_5 tag_1_rec_69_time_5 tag_1_rec_70_time_5
-#> yrep_1                    1                   0                   0                   0                   0
-#>         tag_1_rec_71_time_5 tag_1_rec_72_time_5 tag_1_rec_73_time_5 tag_1_rec_74_time_5 tag_1_rec_75_time_5
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_76_time_5 tag_1_rec_77_time_5 tag_1_rec_78_time_5 tag_1_rec_79_time_5 tag_1_rec_80_time_5
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_1_time_6 tag_1_rec_2_time_6 tag_1_rec_3_time_6 tag_1_rec_4_time_6 tag_1_rec_5_time_6 tag_1_rec_6_time_6
-#> yrep_1                   2                  5                  6                  7                  9                  3
-#>         tag_1_rec_7_time_6 tag_1_rec_8_time_6 tag_1_rec_9_time_6 tag_1_rec_10_time_6 tag_1_rec_11_time_6 tag_1_rec_12_time_6
-#> yrep_1                   5                  6                  2                   0                   1                   0
-#>         tag_1_rec_13_time_6 tag_1_rec_14_time_6 tag_1_rec_15_time_6 tag_1_rec_16_time_6 tag_1_rec_17_time_6
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_18_time_6 tag_1_rec_19_time_6 tag_1_rec_20_time_6 tag_1_rec_21_time_6 tag_1_rec_22_time_6
-#> yrep_1                    2                   2                   3                   0                   0
-#>         tag_1_rec_23_time_6 tag_1_rec_24_time_6 tag_1_rec_25_time_6 tag_1_rec_26_time_6 tag_1_rec_27_time_6
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_28_time_6 tag_1_rec_29_time_6 tag_1_rec_30_time_6 tag_1_rec_31_time_6 tag_1_rec_32_time_6
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_33_time_6 tag_1_rec_34_time_6 tag_1_rec_35_time_6 tag_1_rec_36_time_6 tag_1_rec_37_time_6
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_38_time_6 tag_1_rec_39_time_6 tag_1_rec_40_time_6 tag_1_rec_41_time_6 tag_1_rec_42_time_6
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_43_time_6 tag_1_rec_44_time_6 tag_1_rec_45_time_6 tag_1_rec_46_time_6 tag_1_rec_47_time_6
-#> yrep_1                    1                   1                   0                   0                   0
-#>         tag_1_rec_48_time_6 tag_1_rec_49_time_6 tag_1_rec_50_time_6 tag_1_rec_51_time_6 tag_1_rec_52_time_6
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_53_time_6 tag_1_rec_54_time_6 tag_1_rec_55_time_6 tag_1_rec_56_time_6 tag_1_rec_57_time_6
-#> yrep_1                    0                   2                   0                   0                   0
-#>         tag_1_rec_58_time_6 tag_1_rec_59_time_6 tag_1_rec_60_time_6 tag_1_rec_61_time_6 tag_1_rec_62_time_6
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_63_time_6 tag_1_rec_64_time_6 tag_1_rec_65_time_6 tag_1_rec_66_time_6 tag_1_rec_67_time_6
-#> yrep_1                    0                   0                   0                   0                   1
-#>         tag_1_rec_68_time_6 tag_1_rec_69_time_6 tag_1_rec_70_time_6 tag_1_rec_71_time_6 tag_1_rec_72_time_6
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_73_time_6 tag_1_rec_74_time_6 tag_1_rec_75_time_6 tag_1_rec_76_time_6 tag_1_rec_77_time_6
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_78_time_6 tag_1_rec_79_time_6 tag_1_rec_80_time_6 tag_1_rec_1_time_7 tag_1_rec_2_time_7 tag_1_rec_3_time_7
-#> yrep_1                    0                   0                   0                  2                  6                  6
-#>         tag_1_rec_4_time_7 tag_1_rec_5_time_7 tag_1_rec_6_time_7 tag_1_rec_7_time_7 tag_1_rec_8_time_7 tag_1_rec_9_time_7
-#> yrep_1                   2                  3                  6                 12                  8                  6
-#>         tag_1_rec_10_time_7 tag_1_rec_11_time_7 tag_1_rec_12_time_7 tag_1_rec_13_time_7 tag_1_rec_14_time_7
-#> yrep_1                    1                   0                   0                   0                   0
-#>         tag_1_rec_15_time_7 tag_1_rec_16_time_7 tag_1_rec_17_time_7 tag_1_rec_18_time_7 tag_1_rec_19_time_7
-#> yrep_1                    0                   0                   0                   4                   2
-#>         tag_1_rec_20_time_7 tag_1_rec_21_time_7 tag_1_rec_22_time_7 tag_1_rec_23_time_7 tag_1_rec_24_time_7
-#> yrep_1                    6                   1                   3                   1                   1
-#>         tag_1_rec_25_time_7 tag_1_rec_26_time_7 tag_1_rec_27_time_7 tag_1_rec_28_time_7 tag_1_rec_29_time_7
-#> yrep_1                    0                   1                   0                   0                   0
-#>         tag_1_rec_30_time_7 tag_1_rec_31_time_7 tag_1_rec_32_time_7 tag_1_rec_33_time_7 tag_1_rec_34_time_7
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_35_time_7 tag_1_rec_36_time_7 tag_1_rec_37_time_7 tag_1_rec_38_time_7 tag_1_rec_39_time_7
-#> yrep_1                    1                   0                   0                   0                   0
-#>         tag_1_rec_40_time_7 tag_1_rec_41_time_7 tag_1_rec_42_time_7 tag_1_rec_43_time_7 tag_1_rec_44_time_7
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_45_time_7 tag_1_rec_46_time_7 tag_1_rec_47_time_7 tag_1_rec_48_time_7 tag_1_rec_49_time_7
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_50_time_7 tag_1_rec_51_time_7 tag_1_rec_52_time_7 tag_1_rec_53_time_7 tag_1_rec_54_time_7
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_55_time_7 tag_1_rec_56_time_7 tag_1_rec_57_time_7 tag_1_rec_58_time_7 tag_1_rec_59_time_7
-#> yrep_1                    2                   0                   1                   0                   0
-#>         tag_1_rec_60_time_7 tag_1_rec_61_time_7 tag_1_rec_62_time_7 tag_1_rec_63_time_7 tag_1_rec_64_time_7
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_65_time_7 tag_1_rec_66_time_7 tag_1_rec_67_time_7 tag_1_rec_68_time_7 tag_1_rec_69_time_7
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_70_time_7 tag_1_rec_71_time_7 tag_1_rec_72_time_7 tag_1_rec_73_time_7 tag_1_rec_74_time_7
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_75_time_7 tag_1_rec_76_time_7 tag_1_rec_77_time_7 tag_1_rec_78_time_7 tag_1_rec_79_time_7
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_80_time_7 tag_1_rec_1_time_8 tag_1_rec_2_time_8 tag_1_rec_3_time_8 tag_1_rec_4_time_8 tag_1_rec_5_time_8
-#> yrep_1                    0                  2                  0                  5                  7                 10
-#>         tag_1_rec_6_time_8 tag_1_rec_7_time_8 tag_1_rec_8_time_8 tag_1_rec_9_time_8 tag_1_rec_10_time_8 tag_1_rec_11_time_8
-#> yrep_1                   4                  8                  3                  0                   0                   0
-#>         tag_1_rec_12_time_8 tag_1_rec_13_time_8 tag_1_rec_14_time_8 tag_1_rec_15_time_8 tag_1_rec_16_time_8
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_17_time_8 tag_1_rec_18_time_8 tag_1_rec_19_time_8 tag_1_rec_20_time_8 tag_1_rec_21_time_8
-#> yrep_1                    0                   0                   1                   2                   0
-#>         tag_1_rec_22_time_8 tag_1_rec_23_time_8 tag_1_rec_24_time_8 tag_1_rec_25_time_8 tag_1_rec_26_time_8
-#> yrep_1                    0                   1                   0                   0                   0
-#>         tag_1_rec_27_time_8 tag_1_rec_28_time_8 tag_1_rec_29_time_8 tag_1_rec_30_time_8 tag_1_rec_31_time_8
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_32_time_8 tag_1_rec_33_time_8 tag_1_rec_34_time_8 tag_1_rec_35_time_8 tag_1_rec_36_time_8
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_37_time_8 tag_1_rec_38_time_8 tag_1_rec_39_time_8 tag_1_rec_40_time_8 tag_1_rec_41_time_8
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_42_time_8 tag_1_rec_43_time_8 tag_1_rec_44_time_8 tag_1_rec_45_time_8 tag_1_rec_46_time_8
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_47_time_8 tag_1_rec_48_time_8 tag_1_rec_49_time_8 tag_1_rec_50_time_8 tag_1_rec_51_time_8
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_52_time_8 tag_1_rec_53_time_8 tag_1_rec_54_time_8 tag_1_rec_55_time_8 tag_1_rec_56_time_8
-#> yrep_1                    0                   0                   1                   0                   0
-#>         tag_1_rec_57_time_8 tag_1_rec_58_time_8 tag_1_rec_59_time_8 tag_1_rec_60_time_8 tag_1_rec_61_time_8
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_62_time_8 tag_1_rec_63_time_8 tag_1_rec_64_time_8 tag_1_rec_65_time_8 tag_1_rec_66_time_8
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_67_time_8 tag_1_rec_68_time_8 tag_1_rec_69_time_8 tag_1_rec_70_time_8 tag_1_rec_71_time_8
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_72_time_8 tag_1_rec_73_time_8 tag_1_rec_74_time_8 tag_1_rec_75_time_8 tag_1_rec_76_time_8
-#> yrep_1                    0                   0                   0                   0                   0
-#>         tag_1_rec_77_time_8 tag_1_rec_78_time_8 tag_1_rec_79_time_8 tag_1_rec_80_time_8
-#> yrep_1                    0                   0                   0                   0
-#>  [ reached 'max' / getOption("max.print") -- omitted 9 rows ]
+str(yrep)
+#> List of 1
+#>  $ yrep: int [1:10, 1:640] 1 2 2 0 4 0 0 2 0 1 ...
+#>   ..- attr(*, "dimnames")=List of 2
+#>   .. ..$ : chr [1:10] "yrep_1" "yrep_2" "yrep_3" "yrep_4" ...
+#>   .. ..$ : chr [1:640] "tag_1_rec_1_time_1" "tag_1_rec_2_time_1" "tag_1_rec_3_time_1" "tag_1_rec_4_time_1" ...
 ```
 
 ## Plotting
@@ -1060,10 +803,7 @@ Let’s first look at the posterior densities for each time step
 p1
 ```
 
-![plot of chunk post densities
-timestep](figure/post%20densities%20timestep-1.png)
-
-plot of chunk post densities timestep
+![](figure/post%20densities%20timestep-1.png)
 
 Next let’s look at the densities combined to gather a better
 understanding of the movement over the 8 timesteps.
@@ -1073,10 +813,7 @@ understanding of the movement over the 8 timesteps.
 p
 ```
 
-![plot of chunk post densities
-combined](figure/post%20densities%20combined-1.png)
-
-plot of chunk post densities combined
+![](figure/post%20densities%20combined-1.png)
 
 Next we can plot the posterior distributions for `alpha0`, `alpha1`,
 `p0`, and `sigma`. We need to first make `fish` and `time` a `character`
@@ -1117,10 +854,11 @@ p_param <- ggplot(
 p_param
 ```
 
-![plot of chunk plot param](figure/plot%20param-1.png) We can see that
-they are all quite tightly distributed with `p0` indicating that
-detection probability at a distance of `0` is between 48 - 54 %, while
-the `sigma` is around 1 km.
+![](figure/plot%20param-1.png)
+
+We can see that they are all quite tightly distributed with `p0`
+indicating that detection probability at a distance of `0` is between
+48 - 54 %, while the `sigma` is around 1 km.
 
 Lastly, we can plot the predictive posterior check using
 [tidybayes](https://mjskay.github.io/tidybayes/). First we need to make
@@ -1141,9 +879,7 @@ ppc <- ppc_dens_overlay(y = y_obs, yrep = yrep$yrep)
 ppc
 ```
 
-![plot of chunk ppc dens](figure/ppc%20dens-1.png)
-
-plot of chunk ppc dens
+![](figure/ppc%20dens-1.png)
 
 We can see our predictive posterior check distribution for 10 draws
 closely lines up with our observed detection counts indicating that the
