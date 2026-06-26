@@ -27,6 +27,7 @@ Imports:
     stats,
     tidyr
 Suggests: 
+    bayesplot,
     ggplot2,
     ggpubr,
     hexbin,
