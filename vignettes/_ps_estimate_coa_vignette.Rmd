@@ -235,7 +235,7 @@ summary(m)
 ```
 Let's look at our trace plots for the model parameters and posterior distributions to ensure the model converged properly. Remember the trace plots should look grassy or caterpillar like. A trace plot is the posterior draw for a given iteration plotted with the iteration number on the x axis and the posterior value for a given parameter or latent variable on the y. We evaluate this for both chains and want to see that both chains are converging on a smiler posterior draw for a given parameter or latent variable. We will first look at parameters of the model.  
 
-``` {r trace plots and post dist}
+``` {r trace plots and post dist, fig.cap=""}
 stan_trace(m$model, pars = c("alpha0", "alpha1", "p0", "sigma"))
 
 stan_dens(
@@ -252,7 +252,7 @@ Next let’s look at our latent variables which are `sx` and `sy` or the estimat
 this way and we recommend inspecting $\hat R$ and ESS. 
 
 
-``` {r trace plots and post dist latent}
+``` {r trace plots and post dist latent, fig.cap=""}
 stan_trace(m$model, pars = c("sx[1,1]", "sx[1,2]", "sy[1,1]", "sy[1,2]"))
 
 stan_dens(
@@ -321,7 +321,7 @@ The ninth element returned is a `list` that contains generated quantities for `y
 
 ``` {r yrep}
 yrep <- m$generated_quantities
-yrep
+str(yrep)
 ```
 
 ## Plotting 
@@ -358,13 +358,13 @@ p1 <- p +
 
 Let's first look at the posterior densities for each time step 
 
-```{r post densities timestep}
+```{r post densities timestep, fig.cap=""}
 p1
 ```
 
 Next let's look at the densities combined to gather a better understanding of the movement over the 8 timesteps. 
 
-```{r post densities combined}
+```{r post densities combined, fig.cap=""}
 p
 ```
 
@@ -384,7 +384,7 @@ param_draws_long <- param_draws |>
 
 We can now plot those posterior distributions of the model parameters.    
 
-```{r plot param}
+```{r plot param, fig.cap=""}
 p_param <- ggplot(
   data = param_draws_long,
   aes(x = time, y = est, fill = fish),
@@ -401,16 +401,17 @@ p_param <- ggplot(
 
 p_param
 ```
+
 We can see that they are all quite tightly distributed with `p0` indicating that detection probability at a distance of `0` is between 48 - 54 %, while the `sigma` is around 1 km. 
 
 Lastly, we can plot the predictive posterior check using `{tidybayes}`. First we need to make 
 detection counts as a vector from our `build_count()` object. 
 
-```{r y_obs }
+```{r y_obs}
 y_obs <- as.vector(ps_count_example[!is.na(ps_count_example)])
 ```
 Next we can plot the densities using `ppc_dens_overlay()` from `{bayesplot}`.
-```{r ppc dens}
+```{r ppc dens, fig.cap=""}
 ppc <- ppc_dens_overlay(y = y_obs, yrep = yrep$yrep)
 ppc
 ```

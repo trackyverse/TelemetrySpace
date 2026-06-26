@@ -50,7 +50,7 @@ ylim <- c(min(rlocs$north - buffer), max(rlocs$north + buffer))
 
 Next, we need to prepare our test tag data. First, calculate the distance between the test tag's location and each receiver. This can be done using the included 'distf' function.
 
-```{r, echo=T, message = F, fig.width=6, fig.height=6}
+```{r, echo=T, message = F, fig.width=6, fig.height=6, fig.cap=""}
 # Set up a blank vector for storage
 D <- NULL
 # Loop over each hour
@@ -497,7 +497,7 @@ plotTagInt <- ggplot(aes(x = X, y = Y), data = post_tag) +
 
 Now plot them all up together to see how they compare!
 
-```{r, echo=T, message = F, fig.width=8, fig.height=8}
+```{r, echo=T, message = F, fig.width=8, fig.height=8,fig.cap=""}
 ggarrange(
   plotCOAs,
   plotTVary,
