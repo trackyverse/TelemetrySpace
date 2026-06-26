@@ -1,7 +1,7 @@
 ---
 title: "Estimate activity centers from acoustic telemetry data"
 author: "Megan Winton"
-date: "2018-06-06, updated 2026-06-25"
+date: "2018-06-06, updated 2026-06-26"
 output: rmarkdown::github_document
 vignette: >
   %\VignetteIndexEntry{Estimate activity centers from acoustic telemetry data}
@@ -35,66 +35,45 @@ library(hexbin)
 library(ggpubr)
 
 rlocs # Receiver locations
-```
-
-```
-## # A tibble: 30 × 3
-##    Station   east  north
-##    <chr>    <dbl>  <dbl>
-##  1 SB1     -1.33  1.61  
-##  2 SB2     -0.579 1.91  
-##  3 SB3      0.219 2.00  
-##  4 SB4      1.00  1.81  
-##  5 SB5     -1.69  0.896 
-##  6 SB6     -0.879 0.950 
-##  7 SB7     -0.231 1.20  
-##  8 SB8      0.464 1.21  
-##  9 SB9      1.28  1.04  
-## 10 SB10    -1.77  0.0952
-## # ℹ 20 more rows
-```
-
-``` r
+#> # A tibble: 30 × 3
+#>    Station   east  north
+#>    <chr>    <dbl>  <dbl>
+#>  1 SB1     -1.33  1.61  
+#>  2 SB2     -0.579 1.91  
+#>  3 SB3      0.219 2.00  
+#>  4 SB4      1.00  1.81  
+#>  5 SB5     -1.69  0.896 
+#>  6 SB6     -0.879 0.950 
+#>  7 SB7     -0.231 1.20  
+#>  8 SB8      0.464 1.21  
+#>  9 SB9      1.28  1.04  
+#> 10 SB10    -1.77  0.0952
+#> # ℹ 20 more rows
 testloc # Test tag location
-```
-
-```
-## # A tibble: 1 × 2
-##     east north
-##    <dbl> <dbl>
-## 1 -0.329 0.713
-```
-
-``` r
+#> # A tibble: 1 × 2
+#>     east north
+#>    <dbl> <dbl>
+#> 1 -0.329 0.713
 head(testdat) # Hourly detection data from the test tag
-```
-
-```
-## # A tibble: 6 × 5
-##   Station Transmitter   east north  hour
-##   <chr>         <dbl>  <dbl> <dbl> <dbl>
-## 1 SB12           3447 -0.326 0.513     1
-## 2 SB13           3447  0.125 0.575     1
-## 3 SB7            3447 -0.231 1.20      1
-## 4 SB6            3447 -0.879 0.950     1
-## 5 SB13           3447  0.125 0.575     1
-## 6 SB6            3447 -0.879 0.950     1
-```
-
-``` r
+#> # A tibble: 6 × 5
+#>   Station Transmitter   east north  hour
+#>   <chr>         <dbl>  <dbl> <dbl> <dbl>
+#> 1 SB12           3447 -0.326 0.513     1
+#> 2 SB13           3447  0.125 0.575     1
+#> 3 SB7            3447 -0.231 1.20      1
+#> 4 SB6            3447 -0.879 0.950     1
+#> 5 SB13           3447  0.125 0.575     1
+#> 6 SB6            3447 -0.879 0.950     1
 head(fishdat) # Hourly detection data from a black sea bass
-```
-
-```
-## # A tibble: 6 × 5
-##   Station Transmitter   east north  hour
-##   <chr>         <dbl>  <dbl> <dbl> <dbl>
-## 1 SB15           3425  0.190 0.209     1
-## 2 SB14           3425 -0.261 0.159     1
-## 3 SB15           3425  0.190 0.209     1
-## 4 SB14           3425 -0.261 0.159     1
-## 5 SB12           3425 -0.326 0.513     1
-## 6 SB14           3425 -0.261 0.159     1
+#> # A tibble: 6 × 5
+#>   Station Transmitter   east north  hour
+#>   <chr>         <dbl>  <dbl> <dbl> <dbl>
+#> 1 SB15           3425  0.190 0.209     1
+#> 2 SB14           3425 -0.261 0.159     1
+#> 3 SB15           3425  0.190 0.209     1
+#> 4 SB14           3425 -0.261 0.159     1
+#> 5 SB12           3425 -0.326 0.513     1
+#> 6 SB14           3425 -0.261 0.159     1
 ```
 
 Prior to doing anything else, we need to specify our 'state space' - the spatial extent of interest. This will consist of your receiver array and a 'buffer' area around the array. The buffer needs to be large enough to allow for individuals that may have activity centers outside of the receiver array. There is no general rule of thumb for this, but it should scale with the geographic extent covered by your array. I would suggest selecting a buffer that is large enough to allow you to discriminate between individuals that are detected along the periphery of the array and individuals that are not detected at all - a COA will be estimated for all time steps unless you specify the individual has left the area; time steps with 0 detections will have an estimated COA somewhere outside the detection range of all receivers (note that this could be within the array bounds if your array has non-continuous coverage). If there are many time steps with zeros, you may want to modify your data file to omit time periods with 0 detections or modify the relevant `.stan` code chunk included in the `src/stan_files` folder on your local machine to skip time periods with no detections, which will speed up computing times. As always, it is up to the user to make sure that the results make sense in the context of the species/array of interest.
@@ -137,7 +116,7 @@ testdat |>
   labs(x = "Hours since deployment", y = "Number of detections")
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
+![](figure/unnamed-chunk-3-1.png)
 
 Tally how many time intervals each receiver was operational for - this allows for individual receivers deployed for different periods and/or receivers that were lost.
 
@@ -158,10 +137,7 @@ rs[, c(4:(max(fishdat$hour) + 3))] <- 1
 # Create vector of the number of sampling occasions for each receiver
 tsteps <- rowSums(rs[, 4:ncol(rs)])
 tsteps # Will all be the same here because all operational over the entire time span
-```
-
-```
-##  [1] 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10
+#>  [1] 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10
 ```
 
 Since detection records only include non-zero events (here assuming we'd like to keep time steps with zeros), we'll need to convert the number of detections to include zeros for all receivers that did not detect the tag during that time period.
@@ -297,114 +273,111 @@ fit <- COA_Standard(
   ylim = ylim, # N-S boundary of spatial extent (receiver array + buffer)
   init = init_fun # initial values (optional)
 )
-```
-
-```
-## 
-## SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 1).
-## Chain 1: 
-## Chain 1: Gradient evaluation took 0.00072 seconds
-## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 7.2 seconds.
-## Chain 1: Adjust your expectations accordingly!
-## Chain 1: 
-## Chain 1: 
-## Chain 1: Iteration:    1 / 2000 [  0%]  (Warmup)
-## Chain 1: Iteration:  200 / 2000 [ 10%]  (Warmup)
-## Chain 1: Iteration:  400 / 2000 [ 20%]  (Warmup)
-## Chain 1: Iteration:  600 / 2000 [ 30%]  (Warmup)
-## Chain 1: Iteration:  800 / 2000 [ 40%]  (Warmup)
-## Chain 1: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-## Chain 1: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-## Chain 1: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-## Chain 1: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-## Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-## Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-## Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
-## Chain 1: 
-## Chain 1:  Elapsed Time: 6.407 seconds (Warm-up)
-## Chain 1:                5.378 seconds (Sampling)
-## Chain 1:                11.785 seconds (Total)
-## Chain 1: 
-## 
-## SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 2).
-## Chain 2: 
-## Chain 2: Gradient evaluation took 0.000546 seconds
-## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 5.46 seconds.
-## Chain 2: Adjust your expectations accordingly!
-## Chain 2: 
-## Chain 2: 
-## Chain 2: Iteration:    1 / 2000 [  0%]  (Warmup)
-## Chain 2: Iteration:  200 / 2000 [ 10%]  (Warmup)
-## Chain 2: Iteration:  400 / 2000 [ 20%]  (Warmup)
-## Chain 2: Iteration:  600 / 2000 [ 30%]  (Warmup)
-## Chain 2: Iteration:  800 / 2000 [ 40%]  (Warmup)
-## Chain 2: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-## Chain 2: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-## Chain 2: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-## Chain 2: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-## Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-## Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-## Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
-## Chain 2: 
-## Chain 2:  Elapsed Time: 6.155 seconds (Warm-up)
-## Chain 2:                5.833 seconds (Sampling)
-## Chain 2:                11.988 seconds (Total)
-## Chain 2: 
-## 
-## SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 3).
-## Chain 3: 
-## Chain 3: Gradient evaluation took 0.000536 seconds
-## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 5.36 seconds.
-## Chain 3: Adjust your expectations accordingly!
-## Chain 3: 
-## Chain 3: 
-## Chain 3: Iteration:    1 / 2000 [  0%]  (Warmup)
-## Chain 3: Iteration:  200 / 2000 [ 10%]  (Warmup)
-## Chain 3: Iteration:  400 / 2000 [ 20%]  (Warmup)
-## Chain 3: Iteration:  600 / 2000 [ 30%]  (Warmup)
-## Chain 3: Iteration:  800 / 2000 [ 40%]  (Warmup)
-## Chain 3: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-## Chain 3: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-## Chain 3: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-## Chain 3: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-## Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-## Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-## Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
-## Chain 3: 
-## Chain 3:  Elapsed Time: 6.129 seconds (Warm-up)
-## Chain 3:                4.866 seconds (Sampling)
-## Chain 3:                10.995 seconds (Total)
-## Chain 3: 
-## 
-## SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 4).
-## Chain 4: 
-## Chain 4: Gradient evaluation took 0.000608 seconds
-## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 6.08 seconds.
-## Chain 4: Adjust your expectations accordingly!
-## Chain 4: 
-## Chain 4: 
-## Chain 4: Iteration:    1 / 2000 [  0%]  (Warmup)
-## Chain 4: Iteration:  200 / 2000 [ 10%]  (Warmup)
-## Chain 4: Iteration:  400 / 2000 [ 20%]  (Warmup)
-## Chain 4: Iteration:  600 / 2000 [ 30%]  (Warmup)
-## Chain 4: Iteration:  800 / 2000 [ 40%]  (Warmup)
-## Chain 4: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-## Chain 4: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-## Chain 4: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-## Chain 4: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-## Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-## Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-## Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
-## Chain 4: 
-## Chain 4:  Elapsed Time: 6.76 seconds (Warm-up)
-## Chain 4:                8.023 seconds (Sampling)
-## Chain 4:                14.783 seconds (Total)
-## Chain 4: 
-##         warmup sample
-## chain:1  6.407  5.378
-## chain:2  6.155  5.833
-## chain:3  6.129  4.866
-## chain:4  6.760  8.023
+#> 
+#> SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 1).
+#> Chain 1: 
+#> Chain 1: Gradient evaluation took 0.000665 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 6.65 seconds.
+#> Chain 1: Adjust your expectations accordingly!
+#> Chain 1: 
+#> Chain 1: 
+#> Chain 1: Iteration:    1 / 2000 [  0%]  (Warmup)
+#> Chain 1: Iteration:  200 / 2000 [ 10%]  (Warmup)
+#> Chain 1: Iteration:  400 / 2000 [ 20%]  (Warmup)
+#> Chain 1: Iteration:  600 / 2000 [ 30%]  (Warmup)
+#> Chain 1: Iteration:  800 / 2000 [ 40%]  (Warmup)
+#> Chain 1: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#> Chain 1: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#> Chain 1: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#> Chain 1: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#> Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
+#> Chain 1: 
+#> Chain 1:  Elapsed Time: 5.911 seconds (Warm-up)
+#> Chain 1:                4.889 seconds (Sampling)
+#> Chain 1:                10.8 seconds (Total)
+#> Chain 1: 
+#> 
+#> SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 2).
+#> Chain 2: 
+#> Chain 2: Gradient evaluation took 0.000611 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 6.11 seconds.
+#> Chain 2: Adjust your expectations accordingly!
+#> Chain 2: 
+#> Chain 2: 
+#> Chain 2: Iteration:    1 / 2000 [  0%]  (Warmup)
+#> Chain 2: Iteration:  200 / 2000 [ 10%]  (Warmup)
+#> Chain 2: Iteration:  400 / 2000 [ 20%]  (Warmup)
+#> Chain 2: Iteration:  600 / 2000 [ 30%]  (Warmup)
+#> Chain 2: Iteration:  800 / 2000 [ 40%]  (Warmup)
+#> Chain 2: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#> Chain 2: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#> Chain 2: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#> Chain 2: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#> Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#> Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
+#> Chain 2: 
+#> Chain 2:  Elapsed Time: 6.485 seconds (Warm-up)
+#> Chain 2:                5.096 seconds (Sampling)
+#> Chain 2:                11.581 seconds (Total)
+#> Chain 2: 
+#> 
+#> SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 3).
+#> Chain 3: 
+#> Chain 3: Gradient evaluation took 0.000527 seconds
+#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 5.27 seconds.
+#> Chain 3: Adjust your expectations accordingly!
+#> Chain 3: 
+#> Chain 3: 
+#> Chain 3: Iteration:    1 / 2000 [  0%]  (Warmup)
+#> Chain 3: Iteration:  200 / 2000 [ 10%]  (Warmup)
+#> Chain 3: Iteration:  400 / 2000 [ 20%]  (Warmup)
+#> Chain 3: Iteration:  600 / 2000 [ 30%]  (Warmup)
+#> Chain 3: Iteration:  800 / 2000 [ 40%]  (Warmup)
+#> Chain 3: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#> Chain 3: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#> Chain 3: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#> Chain 3: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#> Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
+#> Chain 3: 
+#> Chain 3:  Elapsed Time: 6.557 seconds (Warm-up)
+#> Chain 3:                7.947 seconds (Sampling)
+#> Chain 3:                14.504 seconds (Total)
+#> Chain 3: 
+#> 
+#> SAMPLING FOR MODEL 'COA_Standard_gaussian' NOW (CHAIN 4).
+#> Chain 4: 
+#> Chain 4: Gradient evaluation took 0.000534 seconds
+#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 5.34 seconds.
+#> Chain 4: Adjust your expectations accordingly!
+#> Chain 4: 
+#> Chain 4: 
+#> Chain 4: Iteration:    1 / 2000 [  0%]  (Warmup)
+#> Chain 4: Iteration:  200 / 2000 [ 10%]  (Warmup)
+#> Chain 4: Iteration:  400 / 2000 [ 20%]  (Warmup)
+#> Chain 4: Iteration:  600 / 2000 [ 30%]  (Warmup)
+#> Chain 4: Iteration:  800 / 2000 [ 40%]  (Warmup)
+#> Chain 4: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#> Chain 4: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#> Chain 4: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#> Chain 4: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#> Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
+#> Chain 4: 
+#> Chain 4:  Elapsed Time: 6.435 seconds (Warm-up)
+#> Chain 4:                7.027 seconds (Sampling)
+#> Chain 4:                13.462 seconds (Total)
+#> Chain 4: 
+#>         warmup sample
+#> chain:1  5.911  4.889
+#> chain:2  6.485  5.096
+#> chain:3  6.557  7.947
+#> chain:4  6.435  7.027
 ```
 
 The function will automatically spit out the run-time associated with each of the 4 chains used for fitting and returns a list with four objects:
@@ -412,19 +385,16 @@ The function will automatically spit out the run-time associated with each of th
 
 ``` r
 summary(fit)
-```
-
-```
-##                      Length Class         Mode   
-## model                 1     stanfit       S4     
-## summary              20     -none-        numeric
-## time                  1     -none-        numeric
-## summary_draws         4     draws_summary list   
-## coas                  8     tbl_df        list   
-## all_estimates        28     draws_df      list   
-## loc_draws             8     tbl_df        list   
-## param_draws          10     tbl_df        list   
-## generated_quantities  1     -none-        list
+#>                      Length Class         Mode   
+#> model                 1     stanfit       S4     
+#> summary              20     -none-        numeric
+#> time                  1     -none-        numeric
+#> summary_draws         4     draws_summary list   
+#> coas                  8     tbl_df        list   
+#> all_estimates        28     draws_df      list   
+#> loc_draws             8     tbl_df        list   
+#> param_draws          10     tbl_df        list   
+#> generated_quantities  1     -none-        list
 ```
 
 The first contains the Stan model object (accessible via `fit$model`, which will allow you to use `rstan` plotting tools and diagnostic plots - see rstan documentation for details).
@@ -434,12 +404,9 @@ The second element is a table of parameter estimates and associated quantiles fr
 
 ``` r
 fit$summary
-```
-
-```
-##            mean      se_mean         sd      2.5%       25%       50%       75%     97.5%    n_eff     Rhat
-## p0    0.2649269 0.0003857418 0.02195448 0.2244304 0.2492082 0.2646826 0.2796141 0.3089730 3239.312 1.001716
-## sigma 0.2735005 0.0002615187 0.01445862 0.2459703 0.2636200 0.2733011 0.2830180 0.3018919 3056.668 1.002765
+#>            mean      se_mean         sd      2.5%       25%       50%       75%     97.5%    n_eff      Rhat
+#> p0    0.2654382 0.0003688420 0.02189836 0.2243499 0.2505072 0.2647295 0.2798553 0.3110876 3524.867 0.9997398
+#> sigma 0.2732326 0.0002651498 0.01443172 0.2452476 0.2636036 0.2731982 0.2827502 0.3023710 2962.468 0.9995877
 ```
 
 The third returns the time required to run the model (in minutes). Note that Stan will automatically detect and use multiple cores. If the computer used to run this has multiple cores, the time returned will be longer than the actual run time (because it will sum the time for each core). To return the realized run time, divide `fit$time` by the number of cores.
@@ -447,10 +414,7 @@ The third returns the time required to run the model (in minutes). Note that Sta
 
 ``` r
 fit$time
-```
-
-```
-## [1] 0.82585
+#> [1] 0.8391167
 ```
 
 The fourth returns an array of COA estimates, where each matrix corresponds to one individual, the rows correspond to each time step, and the columns include the median posterior estimate of the east-west (x) and north-south (y) coordinates. The 95% credible interval (Bayesian version of a confidence interval) for each coordinate is also provided.
@@ -458,22 +422,19 @@ The fourth returns an array of COA estimates, where each matrix corresponds to o
 
 ``` r
 fit$coas
-```
-
-```
-## # A tibble: 10 × 8
-##      ind  time       x     y x_lower x_upper y_lower y_upper
-##    <int> <int>   <dbl> <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
-##  1     1     1 -0.0424 0.289  -0.149  0.0577  0.179    0.403
-##  2     1     2 -0.0178 0.360  -0.145  0.103   0.215    0.512
-##  3     1     3 -0.101  0.386  -0.267  0.0622  0.192    0.567
-##  4     1     4 -0.129  0.284  -0.291  0.0351  0.0996   0.481
-##  5     1     5 -0.178  0.325  -0.327 -0.0131  0.143    0.515
-##  6     1     6 -0.133  0.685  -0.463  0.181   0.127    0.871
-##  7     1     7 -0.0527 0.364  -0.174  0.0679  0.232    0.501
-##  8     1     8 -0.159  0.403  -0.285 -0.0318  0.259    0.542
-##  9     1     9 -0.0508 0.333  -0.227  0.118   0.128    0.553
-## 10     1    10 -0.108  0.308  -0.310  0.0935  0.0765   0.571
+#> # A tibble: 10 × 8
+#>      ind  time       x     y x_lower x_upper y_lower y_upper
+#>    <int> <int>   <dbl> <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
+#>  1     1     1 -0.0417 0.291  -0.147  0.0601  0.183    0.407
+#>  2     1     2 -0.0186 0.360  -0.147  0.114   0.217    0.499
+#>  3     1     3 -0.100  0.383  -0.262  0.0610  0.182    0.577
+#>  4     1     4 -0.127  0.280  -0.288  0.0327  0.106    0.481
+#>  5     1     5 -0.177  0.326  -0.340 -0.0201  0.142    0.524
+#>  6     1     6 -0.131  0.681  -0.470  0.181   0.0955   0.880
+#>  7     1     7 -0.0527 0.365  -0.174  0.0749  0.230    0.501
+#>  8     1     8 -0.159  0.405  -0.287 -0.0310  0.264    0.539
+#>  9     1     9 -0.0502 0.337  -0.224  0.123   0.118    0.551
+#> 10     1    10 -0.108  0.306  -0.309  0.0921  0.0856   0.573
 ```
 
 The last element (`fit$all_estimates`) contains the estimates from each non-warm-up iteration for all 4 chains. (If you're not familiar with Bayesian lingo and this just seems like statistical jargon, all you need to know is that this is what you'll use to plot the uncertainty cloud around COA estimates and/or the distribution of parameter estimates as presented in the paper.) This includes estimates of all latent parameters for each individual in each time step (aka this element contains tons of parameter estimates), so we will need to subset out parameters for plotting.
@@ -500,14 +461,9 @@ for (i in 1:nind) {
     # The ID field corresponds to the time step.
     mutate(time = as.numeric(gsub(".*,|\\]", "", name)))
 }
-```
+#> Warning: Dropping 'draws_df' class as required metadata was removed.
+#> Warning: Dropping 'draws_df' class as required metadata was removed.
 
-```
-## Warning: Dropping 'draws_df' class as required metadata was removed.
-## Warning: Dropping 'draws_df' class as required metadata was removed.
-```
-
-``` r
 ## Plot posterior estimates
 # Select individual for plotting
 post_fit <- EN_fit[[1]]
@@ -567,143 +523,128 @@ fit_vary <- COA_TimeVarying(
   ylim = ylim, # N-S boundary of spatial extent (receiver array + buffer)
   init = init_fun # initial values (optional)
 )
-```
+#> 
+#> SAMPLING FOR MODEL 'COA_TimeVarying_gaussian' NOW (CHAIN 1).
+#> Chain 1: 
+#> Chain 1: Gradient evaluation took 0.000852 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 8.52 seconds.
+#> Chain 1: Adjust your expectations accordingly!
+#> Chain 1: 
+#> Chain 1: 
+#> Chain 1: Iteration:    1 / 2000 [  0%]  (Warmup)
+#> Chain 1: Iteration:  200 / 2000 [ 10%]  (Warmup)
+#> Chain 1: Iteration:  400 / 2000 [ 20%]  (Warmup)
+#> Chain 1: Iteration:  600 / 2000 [ 30%]  (Warmup)
+#> Chain 1: Iteration:  800 / 2000 [ 40%]  (Warmup)
+#> Chain 1: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#> Chain 1: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#> Chain 1: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#> Chain 1: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#> Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
+#> Chain 1: 
+#> Chain 1:  Elapsed Time: 70.703 seconds (Warm-up)
+#> Chain 1:                26.146 seconds (Sampling)
+#> Chain 1:                96.849 seconds (Total)
+#> Chain 1: 
+#> 
+#> SAMPLING FOR MODEL 'COA_TimeVarying_gaussian' NOW (CHAIN 2).
+#> Chain 2: 
+#> Chain 2: Gradient evaluation took 0.000745 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 7.45 seconds.
+#> Chain 2: Adjust your expectations accordingly!
+#> Chain 2: 
+#> Chain 2: 
+#> Chain 2: Iteration:    1 / 2000 [  0%]  (Warmup)
+#> Chain 2: Iteration:  200 / 2000 [ 10%]  (Warmup)
+#> Chain 2: Iteration:  400 / 2000 [ 20%]  (Warmup)
+#> Chain 2: Iteration:  600 / 2000 [ 30%]  (Warmup)
+#> Chain 2: Iteration:  800 / 2000 [ 40%]  (Warmup)
+#> Chain 2: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#> Chain 2: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#> Chain 2: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#> Chain 2: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#> Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#> Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
+#> Chain 2: 
+#> Chain 2:  Elapsed Time: 71.902 seconds (Warm-up)
+#> Chain 2:                30.07 seconds (Sampling)
+#> Chain 2:                101.972 seconds (Total)
+#> Chain 2: 
+#> 
+#> SAMPLING FOR MODEL 'COA_TimeVarying_gaussian' NOW (CHAIN 3).
+#> Chain 3: 
+#> Chain 3: Gradient evaluation took 0.000741 seconds
+#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 7.41 seconds.
+#> Chain 3: Adjust your expectations accordingly!
+#> Chain 3: 
+#> Chain 3: 
+#> Chain 3: Iteration:    1 / 2000 [  0%]  (Warmup)
+#> Chain 3: Iteration:  200 / 2000 [ 10%]  (Warmup)
+#> Chain 3: Iteration:  400 / 2000 [ 20%]  (Warmup)
+#> Chain 3: Iteration:  600 / 2000 [ 30%]  (Warmup)
+#> Chain 3: Iteration:  800 / 2000 [ 40%]  (Warmup)
+#> Chain 3: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#> Chain 3: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#> Chain 3: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#> Chain 3: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#> Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
+#> Chain 3: 
+#> Chain 3:  Elapsed Time: 71.009 seconds (Warm-up)
+#> Chain 3:                29.33 seconds (Sampling)
+#> Chain 3:                100.339 seconds (Total)
+#> Chain 3: 
+#> 
+#> SAMPLING FOR MODEL 'COA_TimeVarying_gaussian' NOW (CHAIN 4).
+#> Chain 4: 
+#> Chain 4: Gradient evaluation took 0.000734 seconds
+#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 7.34 seconds.
+#> Chain 4: Adjust your expectations accordingly!
+#> Chain 4: 
+#> Chain 4: 
+#> Chain 4: Iteration:    1 / 2000 [  0%]  (Warmup)
+#> Chain 4: Iteration:  200 / 2000 [ 10%]  (Warmup)
+#> Chain 4: Iteration:  400 / 2000 [ 20%]  (Warmup)
+#> Chain 4: Iteration:  600 / 2000 [ 30%]  (Warmup)
+#> Chain 4: Iteration:  800 / 2000 [ 40%]  (Warmup)
+#> Chain 4: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#> Chain 4: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#> Chain 4: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#> Chain 4: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#> Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
+#> Chain 4: 
+#> Chain 4:  Elapsed Time: 71.187 seconds (Warm-up)
+#> Chain 4:                36.17 seconds (Sampling)
+#> Chain 4:                107.357 seconds (Total)
+#> Chain 4: 
+#>         warmup sample
+#> chain:1 70.703 26.146
+#> chain:2 71.902 30.070
+#> chain:3 71.009 29.330
+#> chain:4 71.187 36.170
 
-```
-## 
-## SAMPLING FOR MODEL 'COA_TimeVarying_gaussian' NOW (CHAIN 1).
-## Chain 1: 
-## Chain 1: Gradient evaluation took 0.001052 seconds
-## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 10.52 seconds.
-## Chain 1: Adjust your expectations accordingly!
-## Chain 1: 
-## Chain 1: 
-## Chain 1: Iteration:    1 / 2000 [  0%]  (Warmup)
-## Chain 1: Iteration:  200 / 2000 [ 10%]  (Warmup)
-## Chain 1: Iteration:  400 / 2000 [ 20%]  (Warmup)
-## Chain 1: Iteration:  600 / 2000 [ 30%]  (Warmup)
-## Chain 1: Iteration:  800 / 2000 [ 40%]  (Warmup)
-## Chain 1: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-## Chain 1: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-## Chain 1: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-## Chain 1: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-## Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-## Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-## Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
-## Chain 1: 
-## Chain 1:  Elapsed Time: 72.81 seconds (Warm-up)
-## Chain 1:                33.971 seconds (Sampling)
-## Chain 1:                106.781 seconds (Total)
-## Chain 1: 
-## 
-## SAMPLING FOR MODEL 'COA_TimeVarying_gaussian' NOW (CHAIN 2).
-## Chain 2: 
-## Chain 2: Gradient evaluation took 0.000767 seconds
-## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 7.67 seconds.
-## Chain 2: Adjust your expectations accordingly!
-## Chain 2: 
-## Chain 2: 
-## Chain 2: Iteration:    1 / 2000 [  0%]  (Warmup)
-## Chain 2: Iteration:  200 / 2000 [ 10%]  (Warmup)
-## Chain 2: Iteration:  400 / 2000 [ 20%]  (Warmup)
-## Chain 2: Iteration:  600 / 2000 [ 30%]  (Warmup)
-## Chain 2: Iteration:  800 / 2000 [ 40%]  (Warmup)
-## Chain 2: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-## Chain 2: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-## Chain 2: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-## Chain 2: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-## Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-## Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-## Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
-## Chain 2: 
-## Chain 2:  Elapsed Time: 74.38 seconds (Warm-up)
-## Chain 2:                41.743 seconds (Sampling)
-## Chain 2:                116.123 seconds (Total)
-## Chain 2: 
-## 
-## SAMPLING FOR MODEL 'COA_TimeVarying_gaussian' NOW (CHAIN 3).
-## Chain 3: 
-## Chain 3: Gradient evaluation took 0.000758 seconds
-## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 7.58 seconds.
-## Chain 3: Adjust your expectations accordingly!
-## Chain 3: 
-## Chain 3: 
-## Chain 3: Iteration:    1 / 2000 [  0%]  (Warmup)
-## Chain 3: Iteration:  200 / 2000 [ 10%]  (Warmup)
-## Chain 3: Iteration:  400 / 2000 [ 20%]  (Warmup)
-## Chain 3: Iteration:  600 / 2000 [ 30%]  (Warmup)
-## Chain 3: Iteration:  800 / 2000 [ 40%]  (Warmup)
-## Chain 3: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-## Chain 3: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-## Chain 3: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-## Chain 3: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-## Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-## Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-## Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
-## Chain 3: 
-## Chain 3:  Elapsed Time: 71.218 seconds (Warm-up)
-## Chain 3:                26.691 seconds (Sampling)
-## Chain 3:                97.909 seconds (Total)
-## Chain 3: 
-## 
-## SAMPLING FOR MODEL 'COA_TimeVarying_gaussian' NOW (CHAIN 4).
-## Chain 4: 
-## Chain 4: Gradient evaluation took 0.000788 seconds
-## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 7.88 seconds.
-## Chain 4: Adjust your expectations accordingly!
-## Chain 4: 
-## Chain 4: 
-## Chain 4: Iteration:    1 / 2000 [  0%]  (Warmup)
-## Chain 4: Iteration:  200 / 2000 [ 10%]  (Warmup)
-## Chain 4: Iteration:  400 / 2000 [ 20%]  (Warmup)
-## Chain 4: Iteration:  600 / 2000 [ 30%]  (Warmup)
-## Chain 4: Iteration:  800 / 2000 [ 40%]  (Warmup)
-## Chain 4: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-## Chain 4: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-## Chain 4: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-## Chain 4: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-## Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-## Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-## Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
-## Chain 4: 
-## Chain 4:  Elapsed Time: 73.978 seconds (Warm-up)
-## Chain 4:                34.014 seconds (Sampling)
-## Chain 4:                107.992 seconds (Total)
-## Chain 4: 
-##         warmup sample
-## chain:1 72.810 33.971
-## chain:2 74.380 41.743
-## chain:3 71.218 26.691
-## chain:4 73.978 34.014
-```
-
-``` r
 summary(fit_vary)
-```
+#>                      Length Class         Mode   
+#> model                   1   stanfit       S4     
+#> summary              3010   -none-        numeric
+#> time                    1   -none-        numeric
+#> summary_draws           4   draws_summary list   
+#> coas                    8   tbl_df        list   
+#> detection_probs         5   draws_summary list   
+#> all_estimates         626   draws_df      list   
+#> loc_draws               8   tbl_df        list   
+#> param_draws           608   tbl_df        list   
+#> generated_quantities    1   -none-        list
 
-```
-##                      Length Class         Mode   
-## model                   1   stanfit       S4     
-## summary              3010   -none-        numeric
-## time                    1   -none-        numeric
-## summary_draws           4   draws_summary list   
-## coas                    8   tbl_df        list   
-## detection_probs         5   draws_summary list   
-## all_estimates         626   draws_df      list   
-## loc_draws               8   tbl_df        list   
-## param_draws           608   tbl_df        list   
-## generated_quantities    1   -none-        list
-```
-
-``` r
 fit_vary$time
-```
+#> [1] 6.775283
 
-```
-## [1] 7.14675
-```
-
-``` r
 # As before, extract east-west and north-south coordinates of COAs from each iteration of each chain
 # Note that 'sx' and 'sy' are the variable names used to store the coordinates for each individual (rows) in each time step (columns).
 # We'll store them as a list, where each element corresponds to an individual
@@ -724,14 +665,9 @@ for (i in 1:nind) {
     # The ID field corresponds to the time step.
     mutate(time = as.numeric(gsub(".*,|\\]", "", name)))
 }
-```
+#> Warning: Dropping 'draws_df' class as required metadata was removed.
+#> Warning: Dropping 'draws_df' class as required metadata was removed.
 
-```
-## Warning: Dropping 'draws_df' class as required metadata was removed.
-## Warning: Dropping 'draws_df' class as required metadata was removed.
-```
-
-``` r
 ## Plot posterior estimates
 # Select individual for plotting
 post_vary <- EN_vary[[1]]
@@ -798,143 +734,128 @@ fit_tag <- COA_TagInt(
   testY = array(testloc$north, dim = c(nsentinel)),
   init = init_fun # initial values (optional)
 )
-```
+#> 
+#> SAMPLING FOR MODEL 'COA_Tag_Integrated_gaussian' NOW (CHAIN 1).
+#> Chain 1: 
+#> Chain 1: Gradient evaluation took 0.001124 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 11.24 seconds.
+#> Chain 1: Adjust your expectations accordingly!
+#> Chain 1: 
+#> Chain 1: 
+#> Chain 1: Iteration:    1 / 2000 [  0%]  (Warmup)
+#> Chain 1: Iteration:  200 / 2000 [ 10%]  (Warmup)
+#> Chain 1: Iteration:  400 / 2000 [ 20%]  (Warmup)
+#> Chain 1: Iteration:  600 / 2000 [ 30%]  (Warmup)
+#> Chain 1: Iteration:  800 / 2000 [ 40%]  (Warmup)
+#> Chain 1: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#> Chain 1: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#> Chain 1: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#> Chain 1: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#> Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
+#> Chain 1: 
+#> Chain 1:  Elapsed Time: 66.441 seconds (Warm-up)
+#> Chain 1:                27.627 seconds (Sampling)
+#> Chain 1:                94.068 seconds (Total)
+#> Chain 1: 
+#> 
+#> SAMPLING FOR MODEL 'COA_Tag_Integrated_gaussian' NOW (CHAIN 2).
+#> Chain 2: 
+#> Chain 2: Gradient evaluation took 0.00103 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 10.3 seconds.
+#> Chain 2: Adjust your expectations accordingly!
+#> Chain 2: 
+#> Chain 2: 
+#> Chain 2: Iteration:    1 / 2000 [  0%]  (Warmup)
+#> Chain 2: Iteration:  200 / 2000 [ 10%]  (Warmup)
+#> Chain 2: Iteration:  400 / 2000 [ 20%]  (Warmup)
+#> Chain 2: Iteration:  600 / 2000 [ 30%]  (Warmup)
+#> Chain 2: Iteration:  800 / 2000 [ 40%]  (Warmup)
+#> Chain 2: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#> Chain 2: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#> Chain 2: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#> Chain 2: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#> Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#> Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
+#> Chain 2: 
+#> Chain 2:  Elapsed Time: 64.252 seconds (Warm-up)
+#> Chain 2:                34.917 seconds (Sampling)
+#> Chain 2:                99.169 seconds (Total)
+#> Chain 2: 
+#> 
+#> SAMPLING FOR MODEL 'COA_Tag_Integrated_gaussian' NOW (CHAIN 3).
+#> Chain 3: 
+#> Chain 3: Gradient evaluation took 0.001032 seconds
+#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 10.32 seconds.
+#> Chain 3: Adjust your expectations accordingly!
+#> Chain 3: 
+#> Chain 3: 
+#> Chain 3: Iteration:    1 / 2000 [  0%]  (Warmup)
+#> Chain 3: Iteration:  200 / 2000 [ 10%]  (Warmup)
+#> Chain 3: Iteration:  400 / 2000 [ 20%]  (Warmup)
+#> Chain 3: Iteration:  600 / 2000 [ 30%]  (Warmup)
+#> Chain 3: Iteration:  800 / 2000 [ 40%]  (Warmup)
+#> Chain 3: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#> Chain 3: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#> Chain 3: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#> Chain 3: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#> Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
+#> Chain 3: 
+#> Chain 3:  Elapsed Time: 65.148 seconds (Warm-up)
+#> Chain 3:                31.545 seconds (Sampling)
+#> Chain 3:                96.693 seconds (Total)
+#> Chain 3: 
+#> 
+#> SAMPLING FOR MODEL 'COA_Tag_Integrated_gaussian' NOW (CHAIN 4).
+#> Chain 4: 
+#> Chain 4: Gradient evaluation took 0.001026 seconds
+#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 10.26 seconds.
+#> Chain 4: Adjust your expectations accordingly!
+#> Chain 4: 
+#> Chain 4: 
+#> Chain 4: Iteration:    1 / 2000 [  0%]  (Warmup)
+#> Chain 4: Iteration:  200 / 2000 [ 10%]  (Warmup)
+#> Chain 4: Iteration:  400 / 2000 [ 20%]  (Warmup)
+#> Chain 4: Iteration:  600 / 2000 [ 30%]  (Warmup)
+#> Chain 4: Iteration:  800 / 2000 [ 40%]  (Warmup)
+#> Chain 4: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#> Chain 4: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#> Chain 4: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#> Chain 4: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#> Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
+#> Chain 4: 
+#> Chain 4:  Elapsed Time: 66.824 seconds (Warm-up)
+#> Chain 4:                35.706 seconds (Sampling)
+#> Chain 4:                102.53 seconds (Total)
+#> Chain 4: 
+#>         warmup sample
+#> chain:1 66.441 27.627
+#> chain:2 64.252 34.917
+#> chain:3 65.148 31.545
+#> chain:4 66.824 35.706
 
-```
-## 
-## SAMPLING FOR MODEL 'COA_Tag_Integrated_gaussian' NOW (CHAIN 1).
-## Chain 1: 
-## Chain 1: Gradient evaluation took 0.001106 seconds
-## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 11.06 seconds.
-## Chain 1: Adjust your expectations accordingly!
-## Chain 1: 
-## Chain 1: 
-## Chain 1: Iteration:    1 / 2000 [  0%]  (Warmup)
-## Chain 1: Iteration:  200 / 2000 [ 10%]  (Warmup)
-## Chain 1: Iteration:  400 / 2000 [ 20%]  (Warmup)
-## Chain 1: Iteration:  600 / 2000 [ 30%]  (Warmup)
-## Chain 1: Iteration:  800 / 2000 [ 40%]  (Warmup)
-## Chain 1: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-## Chain 1: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-## Chain 1: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-## Chain 1: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-## Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-## Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-## Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
-## Chain 1: 
-## Chain 1:  Elapsed Time: 66.656 seconds (Warm-up)
-## Chain 1:                36.17 seconds (Sampling)
-## Chain 1:                102.826 seconds (Total)
-## Chain 1: 
-## 
-## SAMPLING FOR MODEL 'COA_Tag_Integrated_gaussian' NOW (CHAIN 2).
-## Chain 2: 
-## Chain 2: Gradient evaluation took 0.001032 seconds
-## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 10.32 seconds.
-## Chain 2: Adjust your expectations accordingly!
-## Chain 2: 
-## Chain 2: 
-## Chain 2: Iteration:    1 / 2000 [  0%]  (Warmup)
-## Chain 2: Iteration:  200 / 2000 [ 10%]  (Warmup)
-## Chain 2: Iteration:  400 / 2000 [ 20%]  (Warmup)
-## Chain 2: Iteration:  600 / 2000 [ 30%]  (Warmup)
-## Chain 2: Iteration:  800 / 2000 [ 40%]  (Warmup)
-## Chain 2: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-## Chain 2: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-## Chain 2: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-## Chain 2: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-## Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-## Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-## Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
-## Chain 2: 
-## Chain 2:  Elapsed Time: 65.921 seconds (Warm-up)
-## Chain 2:                32.703 seconds (Sampling)
-## Chain 2:                98.624 seconds (Total)
-## Chain 2: 
-## 
-## SAMPLING FOR MODEL 'COA_Tag_Integrated_gaussian' NOW (CHAIN 3).
-## Chain 3: 
-## Chain 3: Gradient evaluation took 0.001052 seconds
-## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 10.52 seconds.
-## Chain 3: Adjust your expectations accordingly!
-## Chain 3: 
-## Chain 3: 
-## Chain 3: Iteration:    1 / 2000 [  0%]  (Warmup)
-## Chain 3: Iteration:  200 / 2000 [ 10%]  (Warmup)
-## Chain 3: Iteration:  400 / 2000 [ 20%]  (Warmup)
-## Chain 3: Iteration:  600 / 2000 [ 30%]  (Warmup)
-## Chain 3: Iteration:  800 / 2000 [ 40%]  (Warmup)
-## Chain 3: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-## Chain 3: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-## Chain 3: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-## Chain 3: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-## Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-## Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-## Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
-## Chain 3: 
-## Chain 3:  Elapsed Time: 63.123 seconds (Warm-up)
-## Chain 3:                34.967 seconds (Sampling)
-## Chain 3:                98.09 seconds (Total)
-## Chain 3: 
-## 
-## SAMPLING FOR MODEL 'COA_Tag_Integrated_gaussian' NOW (CHAIN 4).
-## Chain 4: 
-## Chain 4: Gradient evaluation took 0.001025 seconds
-## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 10.25 seconds.
-## Chain 4: Adjust your expectations accordingly!
-## Chain 4: 
-## Chain 4: 
-## Chain 4: Iteration:    1 / 2000 [  0%]  (Warmup)
-## Chain 4: Iteration:  200 / 2000 [ 10%]  (Warmup)
-## Chain 4: Iteration:  400 / 2000 [ 20%]  (Warmup)
-## Chain 4: Iteration:  600 / 2000 [ 30%]  (Warmup)
-## Chain 4: Iteration:  800 / 2000 [ 40%]  (Warmup)
-## Chain 4: Iteration: 1000 / 2000 [ 50%]  (Warmup)
-## Chain 4: Iteration: 1001 / 2000 [ 50%]  (Sampling)
-## Chain 4: Iteration: 1200 / 2000 [ 60%]  (Sampling)
-## Chain 4: Iteration: 1400 / 2000 [ 70%]  (Sampling)
-## Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
-## Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
-## Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
-## Chain 4: 
-## Chain 4:  Elapsed Time: 63.2 seconds (Warm-up)
-## Chain 4:                34.995 seconds (Sampling)
-## Chain 4:                98.195 seconds (Total)
-## Chain 4: 
-##         warmup sample
-## chain:1 66.656 36.170
-## chain:2 65.921 32.703
-## chain:3 63.123 34.967
-## chain:4 63.200 34.995
-```
-
-``` r
 summary(fit_tag)
-```
+#>                      Length Class         Mode   
+#> model                   1   stanfit       S4     
+#> summary              3010   -none-        numeric
+#> time                    1   -none-        numeric
+#> summary_draws           4   draws_summary list   
+#> coas                    8   tbl_df        list   
+#> detection_probs         5   draws_summary list   
+#> all_estimates         626   draws_df      list   
+#> loc_draws               8   tbl_df        list   
+#> param_draws           608   tbl_df        list   
+#> generated_quantities    2   -none-        list
 
-```
-##                      Length Class         Mode   
-## model                   1   stanfit       S4     
-## summary              3010   -none-        numeric
-## time                    1   -none-        numeric
-## summary_draws           4   draws_summary list   
-## coas                    8   tbl_df        list   
-## detection_probs         5   draws_summary list   
-## all_estimates         626   draws_df      list   
-## loc_draws               8   tbl_df        list   
-## param_draws           608   tbl_df        list   
-## generated_quantities    2   -none-        list
-```
-
-``` r
 fit_tag$time # See the comment about run time when your computer has multiple cores above.
-```
+#> [1] 6.541
 
-```
-## [1] 6.628917
-```
-
-``` r
 # As before, extract east-west and north-south coordinates of COAs from each iteration of each chain
 # Note that 'sx' and 'sy' are the variable names used to store the coordinates for each individual (rows) in each time step (columns).
 # We'll store them as a list, where each element corresponds to an individual
@@ -955,14 +876,9 @@ for (i in 1:nind) {
     # The ID field corresponds to the time step.
     mutate(time = as.numeric(gsub(".*,|\\]", "", name)))
 }
-```
+#> Warning: Dropping 'draws_df' class as required metadata was removed.
+#> Warning: Dropping 'draws_df' class as required metadata was removed.
 
-```
-## Warning: Dropping 'draws_df' class as required metadata was removed.
-## Warning: Dropping 'draws_df' class as required metadata was removed.
-```
-
-``` r
 ## Plot posterior estimates
 # Select individual for plotting
 post_tag <- EN_tag[[1]]
@@ -1022,7 +938,7 @@ ggarrange(
 )
 ```
 
-![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16-1.png)
+![](figure/unnamed-chunk-16-1.png)
 
 
 ## References
