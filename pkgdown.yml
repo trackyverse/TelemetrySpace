@@ -2,11 +2,11 @@ pandoc: 3.8.3
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
-  coa_standard_gaussian_model: coa_standard_gaussian_model.html
   Estimate_COA_vignette: Estimate_COA_vignette.html
-  ps_estimate_coa_vignette: ps_estimate_coa_vignette.html
+  estimate_ps_coa_vignette: estimate_ps_coa_vignette.html
+  articles/model_specifications_standard_detection_prob: model_specifications_standard_detection_prob.html
   stancode: stancode.html
-last_built: 2026-06-26T16:40Z
+last_built: 2026-06-29T14:50Z
 urls:
   reference: https://trackyverse.github.io/TelemetrySpace/reference
   article: https://trackyverse.github.io/TelemetrySpace/articles
