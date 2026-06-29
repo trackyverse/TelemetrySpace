@@ -2,8 +2,8 @@
 ^\.Rproj\.user$
 ^vignettes/precompile\.R$
 ^vignettes/_Estimate_COA_vignette\.Rmd$
-^vignettes/_ps_estimate_coa_vignette\.Rmd$
-^vignettes/_coa_standard_gaussian_model\.Rmd$
+^vignettes/_estimate_ps_coa_vignette\.Rmd$
+^vignettes/model_specifications_standard_detection_prob\.Rmd$
 ^vignettes/figure$
 ^LICENSE\.md$
 ^\.github$
