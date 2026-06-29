@@ -31,8 +31,8 @@ knit(
 )
 
 knit(
-  "_ps_estimate_coa_vignette.Rmd",
-  "ps_estimate_coa_vignette.Rmd"
+  "_estimate_ps_coa_vignette.Rmd",
+  "estimate_ps_coa_vignette.Rmd"
 )
 knit(
   "_coa_standard_gaussian_model.Rmd",
