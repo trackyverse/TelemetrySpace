@@ -49,15 +49,18 @@ check_aeqd_string <- function(vec, arg_name = NULL) {
 }
 
 #' @param array is a `array` that needs to be checked.
+#' @param dim `numeric` that is the diminesions to bchecked
 #' @keywords internal
 #' @rdname error_functions
 
-check_array <- function(array, arg_name = NULL) {
+check_array <- function(array, dim = c(2, 3), arg_name = NULL) {
   if (is.null(arg_name)) {
     arg_name <- rlang::as_label(rlang::enexpr(array))
   }
 
-  if (!is.array(array) || !is.numeric(array) || length(dim(array)) != 3) {
+  if (
+    !is.array(array) || !is.numeric(array) || !(length(dim(array)) %in% dim)
+  ) {
     cli::cli_abort("`{arg_name}` must be a 3-dimensional numeric array.")
   }
 }
