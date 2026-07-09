@@ -60,8 +60,6 @@ COA_Standard <- function(
 
   validate_standata(standata, exp_len)
 
-  options(mc.cores = parallel::detectCores())
-
   # fit model
   if (decay == "gaussian") {
     fit_model <- rstan::sampling(
@@ -76,11 +74,13 @@ COA_Standard <- function(
       ...
     )
   } else {
-    stop("decay parameter must be one of \"gaussian\" or \"logistic\".")
+    cli::cli_abort(
+      "{.arg decay} must be one of {.code 'gaussian' or 'logistic'}."
+    )
   }
 
   # Save chains after discarding warmup
-  fit_estimates <- as.data.frame(fit_model)
+  fit_draws <- posterior::as_draws_df(fit_model)
   # Note this returns parameters and latent states/derived values
 
   # Summary statistics and convergence diagnostics
@@ -102,53 +102,36 @@ COA_Standard <- function(
   # transform gq into matrix
   tran_fit_gq <- transform_gq(fit_generated_quantities)
   # Extract COA estimates
-  coas <- array(NA, dim = c(ntime, 7, nind))
-  dimnames(coas)[[2]] <- c(
-    'time',
-    'x',
-    'y',
-    'x_lower',
-    'x_upper',
-    'y_lower',
-    'y_upper'
-  )
-  ew <- NULL
-  ns <- NULL
+  summary_draws <- summarize_draws(fit_draws)
 
-  for (i in 1:nind) {
-    coas[, 1, i] <- seq(1, ntime, 1)
-    ew <- dplyr::select(
-      fit_estimates,
-      dplyr::starts_with(paste("sx[", i, ",", sep = ''))
-    )
-    ns <- dplyr::select(
-      fit_estimates,
-      dplyr::starts_with(paste("sy[", i, ",", sep = ''))
-    )
-    coas[, 2, i] <- apply(ew, 2, stats::median)
-    coas[, 3, i] <- apply(ns, 2, stats::median)
-    coas[, 4, i] <- apply(ew, 2, stats::quantile, probs = 0.025)
-    coas[, 5, i] <- apply(ew, 2, stats::quantile, probs = 0.975)
-    coas[, 6, i] <- apply(ns, 2, stats::quantile, probs = 0.025)
-    coas[, 7, i] <- apply(ns, 2, stats::quantile, probs = 0.975)
-  }
+  coas <- extract_coa(summary_draws)
 
-  coas <- as.data.frame(coas[,, 1])
+  # extract location and paramater draws
+  loc_draws <- extract_loc_draws(fit_draws)
+
+  param_draws <- extract_param_draws(fit_draws)
+
   # Report results
   model_results <- list(
     fit_model,
     fit_summary,
     fit_time,
+    summary_draws,
     coas,
-    fit_estimates,
+    fit_draws,
+    loc_draws,
+    param_draws,
     tran_fit_gq
   )
   names(model_results) <- c(
     'model',
     'summary',
     'time',
+    "summary_draws",
     'coas',
     'all_estimates',
+    'loc_draws',
+    'param_draws',
     'generated_quantities'
   )
   return(model_results)

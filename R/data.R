@@ -87,7 +87,7 @@
 #' Parry Sound which is a large embayment on Georgian Bay, Lake Huron
 #'
 #'
-#' @format A `data.frame` with 5 columns and 592 rows.
+#' @format A `data.frame` with 5 columns and 577 rows.
 #'  \describe{
 #'    \item{detection_timestamp_utc}{The detection timestamp as `POSIXct` with a tz of UTC}
 #'    \item{station_no}{The receiver station number}
@@ -104,7 +104,7 @@
 #' of a VR2AR deployed in Parry Sound which is a large embayment on Georgian Bay, Lake Huron
 #'
 #'
-#' @format A `data.frame` with 7 columns and 214 rows.
+#' @format A `data.frame` with 7 columns and 200 rows.
 #'  \describe{
 #'    \item{detection_timestamp_utc}{The detection timestamp as `POSIXct` with a tz of UTC}
 #'    \item{station_no}{The receiver station number the tag was detected on}

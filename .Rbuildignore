@@ -2,6 +2,9 @@
 ^\.Rproj\.user$
 ^vignettes/precompile\.R$
 ^vignettes/_Estimate_COA_vignette\.Rmd$
+^vignettes/_estimate_ps_coa_vignette\.Rmd$
+^vignettes/model_specifications_standard_detection_prob\.Rmd$
+^vignettes/figure$
 ^LICENSE\.md$
 ^\.github$
 ^Dockerfile$

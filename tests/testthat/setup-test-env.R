@@ -1,7 +1,6 @@
 # ----- lets setup using new data -----
-# transform to utms
 
-ps_rec_loc
+# transform to utms
 
 ps_rec_loc <- ps_rec_loc |>
   sf::st_as_sf(coords = c("deploy_long", "deploy_lat"), crs = 4326)
@@ -15,22 +14,28 @@ aeqd_crs <- build_aeqd(ps_rec_loc_utm)
 ps_rec_loc_aeqd <- ps_rec_loc |>
   sf::st_transform(aeqd_crs) |>
   (\(.) .[order(.$station_no), ])()
+
+# ---- build pixel grid ----
+ps_utm <- ps |>
+  sf::st_transform(32617)
+
+
+ps_pixel_grid <- build_pixel_grid(ps_utm, res = 500, crs = aeqd_crs)
 # ---- index the receivers -----
 
-ps_rec_loc_aeqd
 ps_rec_loc_aeqd$rec <- 1:nrow(ps_rec_loc_aeqd)
 
 # build receiver vectors
 rec_loc_vec <- build_rec_coords(ps_rec_loc_aeqd)
 
 # build receiver limits
-rec_limits <- build_rec_limits(rec_loc_vec)
+rec_limits <- build_bbox(rec_loc_vec)
 
 # ----- build time bins -----
 ps_det_example_clean <- ps_det_example
 ps_det_example <- build_time_bin(ps_det_example, unit = "1 hour")
 ps_det_example_t <- build_time_bin(ps_det_example, unit = "1 hour")
-ps_det_example
+
 ps_det_example <- ps_det_example[ps_det_example$time < 3, ]
 
 
@@ -41,6 +46,8 @@ ps_det_example <- merge(
   sf::st_drop_geometry(ps_rec_loc_aeqd),
   by = "station_no"
 )
+unique(ps_det_example$station_no)
+
 # ----- build counts ------
 ps_count_example <- build_counts(
   df = ps_det_example,
@@ -78,10 +85,10 @@ ps_test_tag_loc_sf <- ps_test_tag_loc |>
 
 ps_test_tag_loc_aeqd <- ps_test_tag_loc_sf |>
   sf::st_transform(aeqd_crs)
-ps_test_tag_loc_aeqd
+
 
 test_tag_locs <- build_rec_coords(ps_test_tag_loc_aeqd)
-test_tag_locs
+
 # ----- build test data ----
 # ---- build time bins -----
 
@@ -94,12 +101,10 @@ ps_det_test_tag <- merge(
   by = "station_no"
 ) |>
   (\(.) .[order(.$time_bin), ])()
-ps_det_test_tag
 
 
 # ----- only select the first 2 times ----
 ps_det_test_tag <- ps_det_test_tag[ps_det_test_tag$time < 3, ]
-str(ps_det_test_tag)
 
 ps_test_tag_count <- build_counts(
   df = ps_det_test_tag,
@@ -107,7 +112,6 @@ ps_test_tag_count <- build_counts(
   rec_id = ps_rec_loc_aeqd$rec,
   rec_names = ps_rec_loc_aeqd$station_no
 )
-ps_test_tag_count
 
 
 # ---- nsent ----
@@ -134,24 +138,8 @@ standata_testtag <- list(
 # ----- intiatal value functions
 
 init_fun <- function() {
-  list(
-    sx = matrix(
-      mean(rec_loc_vec$recX),
-      nrow = nind,
-      # ncol = 2
-      ncol = time_steps
-    ),
-    sy = matrix(
-      mean(rec_loc_vec$recY),
-      nrow = nind,
-      # nrow = model_param_ex$nind,
-      # ncol = 2
-      # ncol = 2
-      ncol = time_steps
-    )
-  )
+  build_init(rec_loc_vec, nind = nind, tstep = time_steps)
 }
-
 # ----- run each model ------
 # ----- standard coa ------
 standard_gaussian <- do.call(
@@ -160,7 +148,7 @@ standard_gaussian <- do.call(
     standata,
     list(
       chains = 2,
-      warmup = 100,
+      warmup = 300,
       iter = 1000,
       control = list(adapt_delta = 0.95),
       seed = 4,
@@ -170,13 +158,14 @@ standard_gaussian <- do.call(
     )
   )
 )
+
 standard_logistic <- do.call(
   COA_Standard,
   c(
     standata,
     list(
       chains = 2,
-      warmup = 200,
+      warmup = 400,
       iter = 1200,
       control = list(adapt_delta = 0.95),
       seed = 4,
@@ -187,16 +176,43 @@ standard_logistic <- do.call(
   )
 )
 # ----- time integrated -----
+# first make p0 names to test
+ntime <- time_steps
+nrec <- nrow(ps_rec_loc_aeqd)
+
+p0_names <- outer(seq_len(ntime), seq_len(nrec), FUN = function(i, j) {
+  sprintf("p0[%d,%d]", i, j)
+})
+
+# column-major (Stan default): first index varies fastest
+p0_names <- sprintf(
+  "p0[%d,%d]",
+  rep(seq_len(ntime), times = nrec),
+  rep(seq_len(nrec), each = ntime)
+)
+
+# -----alpha ---
+alpha0_names <- outer(seq_len(ntime), seq_len(nrec), FUN = function(i, j) {
+  sprintf("alpha0[%d,%d]", i, j)
+})
+
+# column-major (Stan default): first index varies fastest
+alpha0_names <- sprintf(
+  "alpha0[%d,%d]",
+  rep(seq_len(ntime), times = nrec),
+  rep(seq_len(nrec), each = ntime)
+)
+
+
+# ----- run model
 time_vary_gaussian <- do.call(
   COA_TimeVarying,
   c(
     standata,
     list(
       chains = 2,
-      warmup = 100,
-      iter = 700,
-      # warmup = 3000,
-      # iter = 7000,
+      warmup = 200,
+      iter = 1300,
       control = list(adapt_delta = 0.95),
       seed = 4,
       ndraws = 11,
@@ -205,14 +221,16 @@ time_vary_gaussian <- do.call(
     )
   )
 )
+
+
 time_vary_logistic <- do.call(
   COA_TimeVarying,
   c(
     standata,
     list(
       chains = 2,
-      warmup = 100,
-      iter = 700,
+      warmup = 300,
+      iter = 1100,
       # warmup = 3000,
       # iter = 7000,
       control = list(adapt_delta = 0.95),
@@ -231,8 +249,8 @@ tag_int_gaussian <- do.call(
     standata_testtag,
     list(
       chains = 2,
-      warmup = 4000,
-      iter = 8000,
+      warmup = 400,
+      iter = 1000,
       control = list(adapt_delta = 0.95),
       seed = 4,
       ndraws = 11,
@@ -247,8 +265,8 @@ tag_int_logistic <- do.call(
     standata_testtag,
     list(
       chains = 2,
-      warmup = 4000,
-      iter = 8000,
+      warmup = 400,
+      iter = 1000,
       control = list(adapt_delta = 0.95),
       seed = 4,
       ndraws = 11,

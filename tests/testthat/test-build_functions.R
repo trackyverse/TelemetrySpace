@@ -48,7 +48,6 @@ test_that("build_aeqd errors on non-sf input", {
 
 test_that("build_rec_coords returns correct coordinate data frame", {
   rec_loc_vec_f <- rec_loc_vec[1:2, ]
-  rec_loc_vec_f
 
   expect_s3_class(rec_loc_vec_f, "data.frame")
   expect_named(rec_loc_vec_f, c("recX", "recY"))
@@ -87,20 +86,20 @@ test_that("default buffer of 1 is applied correctly", {
 
 test_that("custom buffer is applied correctly", {
   df <- data.frame(recX = c(0, 10), recY = c(0, 20))
-  rec_limits_b <- build_rec_limits(rec_loc_vec, 2)
+  rec_limits_b <- build_bbox(rec_loc_vec, 2)
   expect_equal(rec_limits_b$xlim, c(-5.49618, 4.10701), tolerance = 0.0001)
   expect_equal(rec_limits_b$ylim, c(-4.28273, 5.18936), tolerance = 0.0001)
 })
 
 test_that("errors on non-data.frame input", {
-  expect_error(build_rec_limits(matrix(1:4, 2, 2)))
-  expect_error(build_rec_limits(list(recX = 1:3, recY = 1:3)))
+  expect_error(build_bbox(matrix(1:4, 2, 2)))
+  expect_error(build_bbox(list(recX = 1:3, recY = 1:3)))
 })
 
 test_that("errors on non-numeric buffer", {
   df <- data.frame(recX = 1:3, recY = 1:3)
-  expect_error(build_rec_limits(df, buffer = "large"))
-  expect_error(build_rec_limits(df, buffer = TRUE)) #
+  expect_error(build_bbox(df, buffer = "large"))
+  expect_error(build_bbox(df, buffer = TRUE)) #
 })
 
 # ------ build_time_bin -----
@@ -215,7 +214,7 @@ test_that("build_counts returns an array with correct dimensions and dimnames", 
 })
 
 test_that("build_counts correctly aggregates detection counts per tag/rec/time", {
-  expect_equal(ps_count_example["1594061", "1", "PSM-003"], 3L)
+  expect_equal(ps_count_example["1594061", "1", "PSM-003"], 4L)
   expect_equal(ps_count_example["1594061", "1", "PSM-002"], 0L)
 })
 
@@ -250,10 +249,36 @@ test_that("build_counts uses rec_names for dimnames when provided", {
     rec_id = rec_id,
     rec_names = rec_names
   )
-
   expect_equal(dimnames(Y)$rec, rec_names)
-  # underlying rec_id is still used for matching, not rec_names
+})
+
+test_that("build_counts when nind is > 1", {
+  df <- data.frame(
+    tag_serial_no = c("A1", "A2", "A1", "A1"),
+    rec = c(101, 102, 101, 101),
+    time = c(1, 1, 2, 2)
+  )
+
+  rec_id <- c(101, 102)
+  rec_names <- c("station_a", "station_b")
+
+  Y <- build_counts(
+    df = df,
+    nrec = 2,
+    rec_id = rec_id,
+    rec_names = rec_names
+  )
+  expect_equal(dimnames(Y)$rec, rec_names)
+
+  expect_equal(dimnames(Y)$ind, c("A1", "A2"))
+
   expect_equal(Y["A1", "1", "station_a"], 1L)
+  expect_equal(Y["A1", "2", "station_a"], 2L)
+  expect_equal(Y["A1", "1", "station_b"], 0L)
+  expect_equal(Y["A1", "2", "station_b"], 0L)
+  expect_equal(Y["A2", "1", "station_a"], 0L)
+  expect_equal(Y["A2", "2", "station_a"], 0L)
+  expect_equal(Y["A2", "2", "station_b"], 0L)
 })
 
 test_that("build_counts errors when rec_names length does not match nrec", {
@@ -347,6 +372,192 @@ test_that("build_counts preserves integer type in the output array", {
   Y <- build_counts(df = df, nrec = 1, rec_id = c(101))
 
   expect_type(Y, "integer")
+})
+
+# ------ build init -----
+
+test_that("build_init returns a list with sx and sy matrices & have correct dimensions", {
+  out <- build_init(rec_loc_vec, nind = nind, tstep = time_steps)
+
+  nind_t <- nind
+  tstep <- time_steps
+  expect_type(out, "list")
+  expect_named(out, c("sx", "sy"))
+  expect_true(is.matrix(out$sx))
+  expect_true(is.matrix(out$sy))
+  expect_equal(dim(out$sx), c(nind_t, tstep))
+  expect_equal(dim(out$sy), c(nind_t, tstep))
+})
+
+
+test_that("build_init fills matrices with the mean of recX and recY", {
+  out <- build_init(rec_loc_vec, nind = nind, tstep = time_steps)
+
+  expect_true(all(out$sx == mean(rec_loc_vec$recX)))
+  expect_true(all(out$sy == mean(rec_loc_vec$recY)))
+})
+
+test_that("build_init handles nind = 3 and tstep = 1", {
+  coord_df <- data.frame(recX = c(1, 2, 3), recY = c(4, 5, 6))
+
+  out <- build_init(coord_df, nind = 3, tstep = 1)
+
+  expect_equal(dim(out$sx), c(3, 1))
+  expect_equal(dim(out$sy), c(3, 1))
+  expect_equal(out$sx[3, 1], mean(coord_df$recX))
+  expect_equal(out$sy[3, 1], mean(coord_df$recY))
+})
+
+test_that("build_init handles a single-row coord_df", {
+  coord_df <- data.frame(recX = 15, recY = 30)
+
+  out <- build_init(coord_df, nind = 2, tstep = 2)
+
+  expect_true(all(out$sx == 15))
+  expect_true(all(out$sy == 30))
+})
+
+test_that("build_init errors when coord_df is not a data frame", {
+  expect_error(build_init(list(recX = 1, recY = 2), nind = 2, tstep = 2))
+  expect_error(build_init(matrix(1:4, 2, 2), nind = 2, tstep = 2))
+  expect_error(build_init("not a df", nind = 2, tstep = 2))
+})
+
+test_that("build_init errors when nind is not numeric", {
+  coord_df <- data.frame(recX = c(0, 10), recY = c(0, 5))
+
+  expect_error(build_init(coord_df, nind = "3", tstep = 2))
+  expect_error(build_init(coord_df, nind = TRUE, tstep = 2))
+  expect_error(build_init(coord_df, nind = NULL, tstep = 2))
+})
+
+test_that("build_init errors when tstep is not numeric", {
+  coord_df <- data.frame(recX = c(0, 10), recY = c(0, 5))
+
+  expect_error(build_init(coord_df, nind = 2, tstep = "4"))
+  expect_error(build_init(coord_df, nind = 2, tstep = FALSE))
+  expect_error(build_init(coord_df, nind = 2, tstep = NULL))
+})
+
+test_that("build_init errors when coord_df is missing recX or recY columns", {
+  missing_recX <- data.frame(recY = c(0, 5, 10))
+  missing_recY <- data.frame(recX = c(0, 5, 10))
+
+  expect_error(build_init(missing_recX, nind = 2, tstep = 2))
+  expect_error(build_init(missing_recY, nind = 2, tstep = 2))
+})
+
+test_that("build_init propagates NA when recX or recY contain NA", {
+  coord_df <- data.frame(recX = c(0, NA, 20), recY = c(0, 5, 10))
+
+  out <- build_init(coord_df, nind = 2, tstep = 2)
+
+  expect_true(all(is.na(out$sx)))
+  expect_false(any(is.na(out$sy)))
+})
+
+test_that("build_init works with non-integer nind/tstep by truncating via matrix()", {
+  coord_df <- data.frame(recX = c(0, 10), recY = c(0, 10))
+
+  # matrix() truncates non-integer nrow/ncol silently; document current behavior
+  out <- build_init(coord_df, nind = 2.7, tstep = 3.2)
+
+  expect_equal(dim(out$sx), c(2, 3))
+  expect_equal(dim(out$sy), c(2, 3))
+})
+
+
+# ------ build pkixel_grid --------
+
+ps_utm <- ps |>
+  sf::st_transform(32617)
+
+
+test_that("build_pixel_grid() returns a list with the documented elements", {
+  out <- build_pixel_grid(ps_utm, res = 500, crs = aeqd_crs)
+
+  expect_type(out, "list")
+  expect_named(out, c("n_pixels", "pix_x", "pix_y"))
+})
+
+test_that("build_pixel_grid() n_pixels matches length of pix_x/pix_y", {
+  out <- build_pixel_grid(ps_utm, res = 500, crs = aeqd_crs)
+
+  expect_equal(out$n_pixels, length(out$pix_x))
+  expect_equal(out$n_pixels, length(out$pix_y))
+  expect_type(out$pix_x, "double")
+  expect_type(out$pix_y, "double")
+})
+
+test_that("build_pixel_grid() produces at least one pixel for a reasonable res", {
+  out <- build_pixel_grid(ps_utm, res = 500, crs = aeqd_crs)
+  expect_gt(out$n_pixels, 0)
+})
+
+
+test_that("smaller res produces a denser (>=) grid than larger res", {
+  out_coarse <- build_pixel_grid(ps_utm, res = 1000, crs = aeqd_crs)
+  out_fine <- build_pixel_grid(ps_utm, res = 250, crs = aeqd_crs)
+
+  expect_gt(out_fine$n_pixels, out_coarse$n_pixels)
+})
+
+
+test_that("returned pixel coordinates are expressed in the target (aeqd) crs, not the input UTM crs", {
+  out <- build_pixel_grid(ps_utm, res = 500, crs = aeqd_crs)
+
+  utm_coords <- ps_utm |>
+    sf::st_bbox() |>
+    sf::st_make_grid(cellsize = 500, what = "centers") |>
+    sf::st_as_sf() |>
+    sf::st_filter(ps_utm) |>
+    sf::st_coordinates()
+
+  expect_equal(out$n_pixels, nrow(utm_coords))
+
+  expect_false(isTRUE(all.equal(out$pix_x, utm_coords[, "X"])))
+})
+
+test_that("filtering happens in the input crs before transforming to the target crs", {
+  out <- build_pixel_grid(ps_utm, res = 500, crs = aeqd_crs)
+
+  manual_n <- ps_utm |>
+    sf::st_bbox() |>
+    sf::st_make_grid(cellsize = 500, what = "centers") |>
+    sf::st_as_sf() |>
+    sf::st_filter(ps_utm) |>
+    nrow()
+
+  expect_equal(out$n_pixels, manual_n)
+})
+
+## ---- input validation -
+
+test_that("build_pixel_grid() rejects non-sf bnd_sf input", {
+  expect_error(
+    build_pixel_grid(data.frame(x = 1, y = 1), res = 500, crs = aeqd_crs)
+  )
+})
+
+test_that("build_pixel_grid() rejects a WGS84 (non-UTM) boundary", {
+  expect_error(
+    build_pixel_grid(ps, res = 500, crs = aeqd_crs)
+  )
+})
+
+
+test_that("build_pixel_grid() rejects non-numeric res", {
+  expect_error(
+    build_pixel_grid(ps_utm, res = "500", crs = aeqd_crs)
+  )
+})
+
+test_that("build_pixel_grid() rejects missing arguments with an informative error", {
+  expect_error(build_pixel_grid(bnd_sf = ps_utm, res = 500))
+})
+
+test_that("build_pixel_grid() rejects imporper crs", {
+  expect_error(build_pixel_grid(bnd_sf = ps_utm, res = 500, crs = 32617))
 })
 
 

@@ -3,33 +3,42 @@
 \name{build_functions}
 \alias{build_functions}
 \alias{build_aeqd}
+\alias{build_bbox}
 \alias{build_counts}
+\alias{build_init}
 \alias{build_ntrans}
 \alias{build_pixel_grid}
 \alias{build_rec_coords}
-\alias{build_rec_limits}
 \alias{build_time_bin}
 \alias{build_tstep}
 \title{Build Functions}
 \usage{
 build_aeqd(array_sf)
 
+build_bbox(coord_df, buffer = NULL)
+
 build_counts(df, nrec, rec_id, rec_names = NULL)
+
+build_init(coord_df, nind, tstep)
 
 build_ntrans(df, type = c("mean", "min", "max", "custom"), custom_delay = NULL)
 
-build_pixel_grid(bnd_sf, res)
+build_pixel_grid(bnd_sf, res, crs)
 
 build_rec_coords(obj_sf)
 
-build_rec_limits(coord_df, buffer = NULL)
-
-build_time_bin(df, unit = NULL)
+build_time_bin(df, unit = "1 hour")
 
 build_tstep(x)
 }
 \arguments{
 \item{array_sf}{the receiver array as an \code{sf} object.}
+
+\item{coord_df}{a \code{data.frame} that contains two columns named \code{recX} and \code{recY}
+created by \code{build_rec_coords()}.}
+
+\item{buffer}{a \code{numerical} value to set the buffer. Defaults to \code{1}. Considering the
+default Azimuthal Equidistant projection is km, 1 represents a 1 km buffer.}
 
 \item{df}{a \code{data.frame} that contains the following column names
 \code{tag_serial_no}}
@@ -41,6 +50,10 @@ receivers in the telemetry array.}
 
 \item{rec_names}{an optional \code{vector} that contains the station names of the receivers. If not
 supplied it will default to using \code{rec_id}}
+
+\item{nind}{a \code{numerical} value to the number of individuals.}
+
+\item{tstep}{a \code{numerical} value to the number of time steps.}
 
 \item{type}{can either be \code{mean}, \code{min}, \code{max}, or \code{custom}. This will change how the number of
 transmissions that are expected within a time bin are calculated. When set to \code{mean} (the deafult), the
@@ -58,14 +71,11 @@ a \code{numeric} will allow a custom value to be used for the tag delays.}
 
 \item{res}{the resolution desired.}
 
+\item{crs}{the Azimuthal Equidistant projection desired. If the supplied
+projection string does not contain \code{"+proj=aeqd"}. The function will error.}
+
 \item{obj_sf}{a \code{sf} object that the receiver locations as \code{POINT} geometry.
 The \code{sf} object has to be in Azimuthal Equidistant projection.}
-
-\item{coord_df}{a \code{data.frame} that contains two columns named \code{recX} and \code{recY}
-created by \code{build_rec_coords()}.}
-
-\item{buffer}{a \code{numerical} value to set the buffer. Defaults to \code{1}. Considering the
-default Azimuthal Equidistant projection is km, 1 represents a 1 km buffer.}
 
 \item{unit}{a \code{character} that is the unit desired to bin. Default is \code{"1 hour"}.
 See \code{lubridate::floor_date()}'s \code{unit} argument for more details.}
@@ -73,33 +83,37 @@ See \code{lubridate::floor_date()}'s \code{unit} argument for more details.}
 \item{x}{a 3-dimensional count array.}
 }
 \value{
-a \code{vector} containing the site specific projection string for
+\code{build_aeqd()}- retruns a \code{vector} containing the site specific projection string for
 the array to be able to transform the crs.
 
-a 3-dimensional \code{array} containing the number of detections for the following dimensions,
-the number of invividuals, by the number of time bins, by the number of receivers.
-
-a single value vector.
-
-a \code{list} contain the the number of pixels \code{n_pixel}, the pixel x coordinates
-(\code{pix_x}) and the pixel y coordinates (\code{pix_y}).
-
-a \code{data.frame} containing two \code{columns} named \code{recX} and \code{recY} which are the
-receiver locations transformed into Azimuthal Equidistant projection.
-
-a \code{data.frame} containing two two columns named \code{xlim} and \code{ylim} which are the
+\code{build_bbox()}- returns a \code{data.frame} containing two columns named \code{xlim} and \code{ylim} which are the
 minimum and maximum values +/- a buffer for x and y.
 
-a \code{data.frame} that has had the columns \code{time_bin} and \code{time}added. \code{time} is an
+\code{build_counts()} - returns a 3-dimensional \code{array} containing the number of detections for the following dimensions,
+the number of invividuals, by the number of time bins, by the number of receivers.
+
+\code{build_init()}- returns a \code{list} containing  two matrices named \code{sx} and \code{sy}. Each
+matrix is the mean of either \code{recX} or \code{recY} produced by \code{build_rec_coords()} by the
+number of individuals by the number of timesteps.
+
+\code{build_ntrans()} - retruns a single value vector.
+
+\code{build_pixel_grid()} - returns a \code{list} contain the the number of pixels \code{n_pixel}, the pixel x coordinates
+(\code{pix_x}) and the pixel y coordinates (\code{pix_y}).
+
+\code{build_rec_coords()} - a \code{data.frame} containing two \code{columns} named \code{recX} and \code{recY} which are the
+receiver locations transformed into Azimuthal Equidistant projection.
+
+\code{build_time_bin()}- returns a \code{data.frame} that has had the columns \code{time_bin} and \code{time}added. \code{time} is an
 index value of \code{time_bin} and is needed by the model. This will further be used by \code{build_counts()}.
 
-a numerical value that is the number of timesteps
+\code{build_tstep()} - a numerical value that is the number of timesteps.
 }
 \description{
-These functions structure and build data compoents that are needed by
+These functions structure and build data components that are needed by
 the model. Each function will either return an object that
-is properly built and structured for Stan or will produce an object
-to be latter used in the pre-process phase of analysis
+is properly built and structured for `Stan`` or will produce an object
+to be latter used in the pre-process phase of analysis.
 }
 \details{
 \code{build_aeqd()}- Azimuthal Equidistant projection is needed by the model
@@ -107,27 +121,30 @@ which relies on creating a centroid and creating equal distances from the
 centroid. This function quickly creates the project string
 needed to transform an exisiting crs to Azimuthal Equidistant projection.
 
-\code{build_counts()} builds a 3-dimensional count \code{array}. The models need the
-counts at each recevier for each time bin for each individual structure in  3-dimensional \verb{array``. This functions takes in a detection }data.frame\verb{, creates a count }data.frame\verb{and then transforms it into a 3-dimensional}array\verb{that will be pased to the}Stan` model.
+\code{build_bbox()}- builds the boundary box of receiver array needed by the model.
 
-\code{build_ntrans()} builds the nubmer of transmissions to be expected within a given time bin.
+\code{build_counts()} - builds a 3-dimensional count \code{array}. The models need the
+counts at each recevier for each time bin for each individual structure in 3-dimensional \code{array}.
+This functions takes in a detection \code{data.frame}, creates a count \code{data.frame} and then transforms it
+into a 3-dimensional \code{array} that will be pased to the \code{Stan} model.
 
-\code{build_pixel_grid()} builds a barrier for the model,
-we need to convert the boundary into pixels that can be used to recongize where to estimate
-detection probablity. The boundary that is supplied needs to match the crs of the receivers.
-An azimuth eqaul distance projection is used with this
-projection being in kilometer (km). To build this
-project see \code{build_aeqd()} function. When supplying the desired resolution
-remember that this is in km so a value of \verb{1`` would be quite large while a value of }0.1` is 100 m which makes a much more dense grid.
+\code{build_init()}- builds the initial values to supply to the model. Supplying these values
+can helps the model know where to intially start.
 
-\code{build_rec_coords()} builds receiver coordinates as the models need the
+\code{build_ntrans()} - builds the nubmer of transmissions to be expected within a given time bin.
+
+\code{build_pixel_grid()} - builds barrier grid for the model.
+We need to convert the boundary into pixels that can be used to recongize where to estimate
+detection probablity. The boundary that is supplied needs to be in UTMs, with the returned
+values being in Azimuthal Equidistant projection. To build this projection see \code{build_aeqd()}.
+When supplying the desired resolution remember that this is in m so
+a value of \code{1} would be quite small while of \code{1000} is 1 km which makes a less dense grid.
+
+\code{build_rec_coords()} - builds receiver coordinates as the models need the
 easting and northing (i.e., x and y) coordinates of the receivers.
 
-\code{build_rec_limits()} The models need the limits of easting and northing
-(i.e., x and y) coordinates of the receiver array. This can viewed as the boundary box.
+\code{build_time_bin()}- builds and adds time bins to the detection \code{data.frame}.
 
-\code{build_time_bin()} builds and adds time bins to the detection \code{data.frame}.
-
-\code{build_tstep()} builds the number of total time steps that exist whithin the
+\code{build_tstep()} - builds the number of total time steps that exist whithin the
 supplied 3-dimensional count array.
 }

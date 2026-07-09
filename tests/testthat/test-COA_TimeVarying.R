@@ -114,7 +114,7 @@ test_that("parameter validation works", {
 # time_vary_gaussian$coas
 test_that("test COA_TimeVarying model results to make sure its consistent", {
   mean_p0 <- time_vary_gaussian$summary[1]
-  expected_mean_p0 <- 0.430
+  expected_mean_p0 <- 0.27
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.07)
 })
 
@@ -132,12 +132,115 @@ test_that("check time_vary_gaussian classes", {
 })
 
 
+# ----- alll draws -----
+test_that("check to see if all_estimates returns proper info", {
+  expect_true("all_estimates" %in% names(time_vary_gaussian))
+  expect_equal(
+    colnames(time_vary_gaussian$all_estimates),
+    c(
+      alpha0_names,
+      "alpha1",
+      "sx[1,1]",
+      "sx[1,2]",
+      "sy[1,1]",
+      "sy[1,2]",
+      p0_names,
+      "sigma",
+      "lp__",
+      ".chain",
+      ".iteration",
+      ".draw"
+    )
+  )
+
+  for (col in colnames(time_vary_gaussian$all_estimates)) {
+    expect_true(
+      typeof(time_vary_gaussian$all_estimates[[col]]) %in%
+        c("double", "integer"),
+      info = paste(
+        "Column",
+        col,
+        "has type",
+        typeof(time_vary_gaussian$all_estimates[[col]])
+      )
+    )
+    expect_true(all(is.finite(time_vary_gaussian$all_estimates[[col]])))
+  }
+})
+
+
+# ------ check loc_draws -----
+test_that("check to see if loc_draws returns proper info", {
+  expect_true("loc_draws" %in% names(time_vary_gaussian))
+  expect_equal(
+    colnames(time_vary_gaussian$loc_draws),
+    c(
+      ".chain",
+      ".iteration",
+      ".draw",
+      "lp__",
+      "fish",
+      "time",
+      "x",
+      "y"
+    )
+  )
+
+  for (col in colnames(time_vary_gaussian$loc_draws)) {
+    expect_true(
+      typeof(time_vary_gaussian$loc_draws[[col]]) %in% c("double", "integer"),
+      info = paste(
+        "Column",
+        col,
+        "has type",
+        typeof(time_vary_gaussian$loc_draws[[col]])
+      )
+    )
+    expect_true(all(is.finite(time_vary_gaussian$loc_draws[[col]])))
+  }
+})
+
+
+# ------- check param draws -----
+test_that("check to see if param_draws returns proper info", {
+  expect_true("param_draws" %in% names(time_vary_gaussian))
+  expect_equal(
+    colnames(time_vary_gaussian$param_draws),
+    c(
+      ".chain",
+      ".iteration",
+      ".draw",
+      "lp__",
+      "fish",
+      "time",
+      alpha0_names,
+      "alpha1",
+      p0_names,
+      "sigma"
+    )
+  )
+
+  for (col in colnames(time_vary_gaussian$param_draws)) {
+    expect_true(
+      typeof(time_vary_gaussian$param_draws[[col]]) %in% c("double", "integer"),
+      info = paste(
+        "Column",
+        col,
+        "has type",
+        typeof(time_vary_gaussian$param_draws[[col]])
+      )
+    )
+    expect_true(all(is.finite(time_vary_gaussian$param_draws[[col]])))
+  }
+})
+# ------ coa -----
 test_that("check to see if coa returns proper info", {
   expect_true("coas" %in% names(time_vary_gaussian))
   expect_equal(nrow(time_vary_gaussian$coas), time_steps)
   expect_equal(
     colnames(time_vary_gaussian$coas),
     c(
+      "ind",
       "time",
       "x",
       "y",
@@ -149,10 +252,19 @@ test_that("check to see if coa returns proper info", {
   )
 
   for (col in colnames(time_vary_gaussian$coas)) {
-    expect_type(time_vary_gaussian$coas[[col]], "double")
+    expect_true(
+      typeof(time_vary_gaussian$coas[[col]]) %in% c("double", "integer"),
+      info = paste(
+        "Column",
+        col,
+        "has type",
+        typeof(time_vary_gaussian$coas[[col]])
+      )
+    )
     expect_true(all(is.finite(time_vary_gaussian$coas[[col]])))
   }
 })
+
 
 test_that("check to see model converged and has a good rhat", {
   rhat <- time_vary_gaussian$summary[, "Rhat"]
@@ -170,7 +282,7 @@ test_that("check to see if gq is the correct length", {
 #### LOGISTIC ####
 test_that("test COA_TimeVarying model results to make sure its consistent", {
   mean_p0 <- time_vary_logistic$summary[1]
-  expected_mean_p0 <- 0.430
+  expected_mean_p0 <- 0.367
   expect_equal(mean_p0, expected_mean_p0, tolerance = 0.07)
 })
 
@@ -194,6 +306,7 @@ test_that("check to see if coa returns proper info", {
   expect_equal(
     colnames(time_vary_logistic$coas),
     c(
+      "ind",
       "time",
       "x",
       "y",
@@ -205,7 +318,15 @@ test_that("check to see if coa returns proper info", {
   )
 
   for (col in colnames(time_vary_logistic$coas)) {
-    expect_type(time_vary_logistic$coas[[col]], "double")
+    expect_true(
+      typeof(time_vary_logistic$coas[[col]]) %in% c("double", "integer"),
+      info = paste(
+        "Column",
+        col,
+        "has type",
+        typeof(time_vary_logistic$coas[[col]])
+      )
+    )
     expect_true(all(is.finite(time_vary_logistic$coas[[col]])))
   }
 })

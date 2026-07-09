@@ -1,5 +1,5 @@
 Package: TelemetrySpace
-Version: 1.3.2
+Version: 1.3.3
 Title: Spatial point process and random field models for electronic tagging data
 Description: A collection of tools to fit spatial models to several types of telemetry data. Models are provided to account for the detection process when estimating individual centers of activity from acoustic telemetry data and to incorporate data from stationary test transmitters when available. Bayesian versions of models are fitted using Stan (http://mc-stan.org/). Maximum likelihood versions are fitted using Template Model Builder (https://kaskr.github.io/adcomp/index.html).
 Authors@R: c(
@@ -18,20 +18,22 @@ Imports:
     dplyr,
     lubridate,
     methods,
+    posterior,
     RcppParallel (>= 5.0.1),
     rlang,
     rstan (>= 2.18.1),
     rstantools (>= 2.4.0),
     sf,
-    stats
+    stats,
+    tidyr
 Suggests: 
+    bayesplot,
     ggplot2,
     ggpubr,
     hexbin,
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0),
-    tidyr
+    testthat (>= 3.0.0)
 LinkingTo: 
     BH (>= 1.66.0-1),
     Rcpp (>= 0.12.17),
