@@ -203,6 +203,23 @@ check_column_type <- function(df, arg_name = NULL, coords = FALSE) {
   }
 }
 
+#' @keywords internal
+#' @rdname error_functions
+check_cov_type <- function(vec, arg_name = NULL) {
+  if (is.null(arg_name)) {
+    arg_name <- rlang::as_label(rlang::enexpr(vec))
+  }
+  valid_types <- cli::cli_vec(
+    c("delta_temp", "depth", "temp"),
+    style = list("vec-last" = ", or ")
+  )
+  if (!all(vec %in% valid_types)) {
+    cli::cli_abort(c(
+      "`{arg_name}` must be one of the following {.val {valid_types}}",
+      "i" = "Please provide {.val {valid_types}}"
+    ))
+  }
+}
 
 #' @keywords internal
 #' @rdname error_functions
@@ -704,15 +721,21 @@ expected_lengths <- function(recX = NULL, recY = NULL, ntest_len = NULL) {
 #' @name vaidate_standata
 
 validate_standata <- function(standata, lengths) {
-  array_vars <- intersect(c("y", "test", "testX", "testY"), names(standata))
+  array_vars <- intersect(
+    c("y", "test", "testX", "testY", "cov_data"),
+    names(standata)
+  )
 
   for (var in array_vars) {
     # check station locations
     if (var %in% c("testX", "testY")) {
       check_array_tag(standata[[var]], len = lengths[[var]], arg_name = var)
+    } else if (var %in% c("cov_data")) {
+      # Check 2d array used for cov_data
+      check_array(standata[[var]], dim = 2, arg_name = var)
     } else {
       # Check 3d array used for counts
-      check_array(standata[[var]], arg_name = var)
+      check_array(standata[[var]], dim = 3, arg_name = var)
     }
   }
 
