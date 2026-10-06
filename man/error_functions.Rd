@@ -8,6 +8,7 @@
 \alias{check_char_vec_len}
 \alias{check_column_names}
 \alias{check_column_type}
+\alias{check_cov_type}
 \alias{check_data_frame}
 \alias{check_delay}
 \alias{check_draws}
@@ -29,7 +30,7 @@ check_aeqd(sf, arg_name = NULL)
 
 check_aeqd_string(vec, arg_name = NULL)
 
-check_array(array, arg_name = NULL)
+check_array(array, dim = c(2, 3), arg_name = NULL)
 
 check_array_tag(array, len, arg_name = NULL)
 
@@ -38,6 +39,8 @@ check_char_vec_len(vec, vec_length = NULL, arg_name = NULL)
 check_column_names(df, arg_name = NULL, coords = FALSE)
 
 check_column_type(df, arg_name = NULL, coords = FALSE)
+
+check_cov_type(vec, arg_name = NULL)
 
 check_data_frame(df, arg_name = NULL)
 
@@ -75,6 +78,8 @@ check_unit(vec, arg_name = NULL)
 \item{vec}{is a \code{vector} that needs to be checked.}
 
 \item{array}{is a \code{array} that needs to be checked.}
+
+\item{dim}{\code{numeric} that is the diminesions to bchecked}
 
 \item{len}{is the length to make the array. This needs to be the
 same length as \code{ntest} or the number of tags.}

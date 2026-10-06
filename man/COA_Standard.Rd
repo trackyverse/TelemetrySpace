@@ -14,6 +14,8 @@ COA_Standard(
   recY,
   xlim,
   ylim,
+  cov_type = NULL,
+  cov_data = NULL,
   decay = "gaussian",
   ndraws = NULL,
   ...
@@ -37,6 +39,10 @@ COA_Standard(
 \item{xlim}{East-west boundaries of spatial extent (receiver array + buffer)}
 
 \item{ylim}{North-south boundaries of spatial extent (receiver array + buffer).}
+
+\item{cov_type}{The name of the covariate being supplied e.g., \code{delta_temp}, \code{depth}, or \code{temp}. Default is \code{NULL}.`}
+
+\item{cov_data}{The data to be supplied for the covariate}
 
 \item{decay}{desired decay function. Currently one of "gaussian" or "logistic". Default is "gaussian".}
 
