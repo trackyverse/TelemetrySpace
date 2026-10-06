@@ -12,20 +12,24 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 
+RcppExport SEXP _rcpp_module_boot_stan_fit4COA_Standard_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4COA_Standard_gaussian_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4COA_Standard_gaussian_delta_temp_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4COA_Standard_logistic_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4COA_Tag_Integrated_gaussian_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4COA_Tag_Integrated_logistic_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4COA_TimeVarying_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4COA_TimeVarying_gaussian_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4COA_TimeVarying_logistic_mod();
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_rcpp_module_boot_stan_fit4COA_Standard_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4COA_Standard_mod, 0},
     {"_rcpp_module_boot_stan_fit4COA_Standard_gaussian_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4COA_Standard_gaussian_mod, 0},
     {"_rcpp_module_boot_stan_fit4COA_Standard_gaussian_delta_temp_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4COA_Standard_gaussian_delta_temp_mod, 0},
     {"_rcpp_module_boot_stan_fit4COA_Standard_logistic_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4COA_Standard_logistic_mod, 0},
     {"_rcpp_module_boot_stan_fit4COA_Tag_Integrated_gaussian_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4COA_Tag_Integrated_gaussian_mod, 0},
     {"_rcpp_module_boot_stan_fit4COA_Tag_Integrated_logistic_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4COA_Tag_Integrated_logistic_mod, 0},
+    {"_rcpp_module_boot_stan_fit4COA_TimeVarying_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4COA_TimeVarying_mod, 0},
     {"_rcpp_module_boot_stan_fit4COA_TimeVarying_gaussian_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4COA_TimeVarying_gaussian_mod, 0},
     {"_rcpp_module_boot_stan_fit4COA_TimeVarying_logistic_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4COA_TimeVarying_logistic_mod, 0},
     {NULL, NULL, 0}
