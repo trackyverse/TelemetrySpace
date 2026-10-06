@@ -234,7 +234,7 @@ build_init <- function(coord_df, nind, tstep) {
 #'
 #' `build_ntrans()` - builds the nubmer of transmissions to be expected within a given time bin.
 #'
-#' @return `build_ntrans()` - retruns a single value vector.
+#' @return `build_ntrans()` - returns a single value vector.
 #'
 #' @name build_functions
 #' @export
@@ -269,10 +269,11 @@ build_ntrans <- function(
         bin_secs %% 86400 == 0 ~ paste(bin_secs / 86400, "day(s)"),
         bin_secs %% 3600 == 0 ~ paste(bin_secs / 3600, "hour(s)"),
         bin_secs %% 60 == 0 ~ paste(bin_secs / 60, "minute(s)"),
-        TRUE ~ paste(bin_secs, "second(s)")
-      )
+        .default = paste(bin_secs, "second(s)"),
+      ),
+      first_bin_label = dplyr::first(bin_label)
     ) |>
-    dplyr::pull(bin_label) |>
+    dplyr::pull(first_bin_label) |>
     unique()
 
   delay_col <- switch(
@@ -289,9 +290,10 @@ build_ntrans <- function(
     dplyr::mutate(
       mean_delay = (min_delay + max_delay) / 2,
       custom_delay = custom_delay,
-      ntrans = floor(bin_secs / .data[[delay_col]])
+      ntrans = floor(bin_secs / .data[[delay_col]]),
+      first_ntrans = dplyr::first(ntrans)
     ) |>
-    dplyr::pull(ntrans) |>
+    dplyr::pull(first_ntrans) |>
     unique()
 
   cli::cli_alert_success(
