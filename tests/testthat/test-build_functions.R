@@ -658,7 +658,8 @@ test_that("build_ntrans errors when df is not a data frame", {
 })
 
 test_that("build_ntrans errors when time_bin column is missing", {
-  df <- ps_det_example |> dplyr::select(-time_bin)
+  df <- ps_det_example |>
+    dplyr::select(-time_bin_unit)
   expect_error(build_ntrans(df))
 })
 
