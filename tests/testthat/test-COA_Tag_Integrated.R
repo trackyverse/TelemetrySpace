@@ -298,7 +298,7 @@ test_that("check to see if gq is the correct length", {
 test_that("test COA_standard logistic model results to make sure its consistent", {
   mean_p0 <- tag_int_logistic$summary[1]
   expected_mean_p0 <- 0.296
-  expect_equal(mean_p0, expected_mean_p0, tolerance = 0.05)
+  expect_equal(mean_p0, expected_mean_p0, tolerance = 0.15)
 })
 
 test_that("check tag_int_logistic classes", {

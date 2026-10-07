@@ -26,7 +26,6 @@ utils::globalVariables(
     "geometry",
     "ind",
     "lp__",
-
     "max_delay",
     "median",
     "min_delay",
@@ -54,6 +53,7 @@ utils::globalVariables(
     "testY",
     "time",
     "time_bin",
+    "time_bin_unit",
     "value",
     "variable",
     "x_lower",
