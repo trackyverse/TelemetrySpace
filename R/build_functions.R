@@ -251,31 +251,13 @@ build_ntrans <- function(
     check_numerical(custom_delay)
   }
 
+  # ---- check if type matches ----
   type <- match.arg(type)
 
+  # ----- check if coustom delay is supplied correctly -----
   check_delay(vec = custom_delay, type = type, arg_name = "custom_delay")
 
-  bin_secs <- df |>
-    dplyr::distinct(time_bin) |>
-    dplyr::arrange(time_bin) |>
-    dplyr::mutate(
-      bin_secs = as.numeric(dplyr::lead(time_bin) - time_bin, units = "secs")
-    ) |>
-    tidyr::fill(bin_secs, .direction = "down")
-
-  bin_label <- bin_secs |>
-    dplyr::mutate(
-      bin_label = dplyr::case_when(
-        bin_secs %% 86400 == 0 ~ paste(bin_secs / 86400, "day(s)"),
-        bin_secs %% 3600 == 0 ~ paste(bin_secs / 3600, "hour(s)"),
-        bin_secs %% 60 == 0 ~ paste(bin_secs / 60, "minute(s)"),
-        .default = paste(bin_secs, "second(s)"),
-      ),
-      first_bin_label = dplyr::first(bin_label)
-    ) |>
-    dplyr::pull(first_bin_label) |>
-    unique()
-
+  # ----- have delay switch based on on type -----
   delay_col <- switch(
     type,
     mean = "mean_delay",
@@ -283,17 +265,33 @@ build_ntrans <- function(
     max = "max_delay",
     custom = "custom_delay"
   )
-  # check_delay(custom_delay)
 
+  # ----- create bin seconds -----
+  bin_secs <- df |>
+    dplyr::distinct(time_bin_unit) |>
+    dplyr::mutate(
+      bin_secs = lubridate::duration(time_bin_unit) |>
+        as.numeric()
+    )
+
+  # ----- create bin label -----
+
+  bin_label <- bin_secs |>
+    dplyr::mutate(
+      bin_label = paste0(time_bin_unit, "(s)"),
+    ) |>
+    dplyr::pull(bin_label) |>
+    unique()
+
+  # ----- create ntrans using bin secs -----
   ntrans <- df |>
-    dplyr::left_join(bin_secs, by = "time_bin") |>
+    dplyr::left_join(bin_secs, by = "time_bin_unit") |>
     dplyr::mutate(
       mean_delay = (min_delay + max_delay) / 2,
       custom_delay = custom_delay,
-      ntrans = floor(bin_secs / .data[[delay_col]]),
-      first_ntrans = dplyr::first(ntrans)
+      ntrans = floor(bin_secs / .data[[delay_col]])
     ) |>
-    dplyr::pull(first_ntrans) |>
+    dplyr::pull(ntrans) |>
     unique()
 
   cli::cli_alert_success(
