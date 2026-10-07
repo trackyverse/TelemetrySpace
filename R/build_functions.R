@@ -404,6 +404,7 @@ build_time_bin <- function(df, unit = "1 hour") {
     dplyr::arrange(detection_timestamp_utc) |>
     dplyr::mutate(
       time_bin = lubridate::floor_date(detection_timestamp_utc, unit = unit),
+      time_bin_unit = unit,
       time = dplyr::dense_rank(time_bin)
     )
 
