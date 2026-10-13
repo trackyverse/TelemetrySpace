@@ -96,7 +96,7 @@ the number of invividuals, by the number of time bins, by the number of receiver
 matrix is the mean of either \code{recX} or \code{recY} produced by \code{build_rec_coords()} by the
 number of individuals by the number of timesteps.
 
-\code{build_ntrans()} - retruns a single value vector.
+\code{build_ntrans()} - returns a single value vector.
 
 \code{build_pixel_grid()} - returns a \code{list} contain the the number of pixels \code{n_pixel}, the pixel x coordinates
 (\code{pix_x}) and the pixel y coordinates (\code{pix_y}).

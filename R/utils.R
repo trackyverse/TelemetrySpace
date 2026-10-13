@@ -108,7 +108,12 @@ check_column_names <- function(df, arg_name = NULL, coords = FALSE) {
 
   if (isFALSE(coords)) {
     required_any <- list(
-      timestamp = c("time", "detection_timestamp_utc", "time_bin"),
+      timestamp = c(
+        "time",
+        "detection_timestamp_utc",
+        "time_bin",
+        "time_bin_unit"
+      ),
       receiver = c("rec", "station_no"),
       tag = c("tag_serial_no", "min_delay", "max_delay")
     )
