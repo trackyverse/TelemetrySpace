@@ -139,7 +139,7 @@ by the number of time bins, by the number of receivers.
 `build_rec_coords()` by the number of individuals by the number of
 timesteps.
 
-`build_ntrans()` - retruns a single value vector.
+`build_ntrans()` - returns a single value vector.
 
 `build_pixel_grid()` - returns a `list` contain the the number of pixels
 `n_pixel`, the pixel x coordinates (`pix_x`) and the pixel y coordinates
